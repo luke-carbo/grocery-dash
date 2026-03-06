@@ -56,4 +56,8 @@ public abstract class Game_Entity {
     public void setY(int y) {
         this.Position_y = y;
     }
+
+    public void destroyEntity() {
+        // Needs some sort of destructor
+    }
 }

@@ -6,11 +6,11 @@ public class Game {
     private int stopwatch;
 
     public int getScore() {
-        return score;
+        return this.score;
     }
 
     public void setScore(int newScore) {
-        score = newScore;
+        this.score = newScore;
     }
 
     public void start(){
@@ -26,5 +26,5 @@ public class Game {
     public int getStopwatch() {
         return stopwatch;
     }
-    
+
 }
