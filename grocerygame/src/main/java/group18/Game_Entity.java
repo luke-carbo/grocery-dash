@@ -7,12 +7,12 @@ public abstract class Game_Entity {
     /**
      * The entity's X-Coordinate on the Map.
      */
-    public int position_x;
+    protected int position_x;
 
     /**
      * The entity's Y-Coordinate on the Map.
      */
-    public int Position_y;
+    protected int position_y;
 
     /**
      * Abstract declaration for different collision types and handling
@@ -38,7 +38,7 @@ public abstract class Game_Entity {
      * @return the current Y-Coordinate.
      */
     public int getY() {
-        return Position_y;
+        return position_y;
     }
 
     /**
@@ -54,6 +54,6 @@ public abstract class Game_Entity {
      * @param y the new Y-Coordinate to set for this entity.
      */
     public void setY(int y) {
-        this.Position_y = y;
+        this.position_y = y;
     }
 }
