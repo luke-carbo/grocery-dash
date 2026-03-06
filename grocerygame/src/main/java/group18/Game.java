@@ -3,6 +3,7 @@ package group18;
 public class Game {
     private int score;
     private int highScore;
+    private int stopwatch;
 
 
     public int getScore() {
@@ -19,6 +20,9 @@ public class Game {
     }
     public int getHighScore() {
         return highScore;
+    }
+    public int getStopwatch() {
+        return stopwatch;
     }
 
 
