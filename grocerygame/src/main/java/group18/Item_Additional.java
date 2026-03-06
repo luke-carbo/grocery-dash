@@ -15,7 +15,7 @@ public class Item_Additional extends Item {
     @Override
     public void collision() {
         game.setScore(game.getScore() + this.value);
-        this.destroyEntity();
+//        this.destroyEntity();
     }
 
     @Override
