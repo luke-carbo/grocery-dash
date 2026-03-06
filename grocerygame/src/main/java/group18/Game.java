@@ -9,10 +9,15 @@ public class Game extends JFrame {
     private int stopwatch;
 
     public Game() {
+
         setTitle("CMPT276 Grocery Game");
         setSize(800, 600);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
+
+        GamePanel panel = new GamePanel();
+        add(panel);
+
         setVisible(true);
     }
 
