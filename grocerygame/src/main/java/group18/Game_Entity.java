@@ -41,6 +41,10 @@ public abstract class Game_Entity {
         return position_y;
     }
 
+    public void destoryEntity() {
+        // Needs some sort of destructor
+    }
+
     /**
      * Updates the X-Coordinate of this entity.
      * @param x the new X-Coordinate to set for this entity.
