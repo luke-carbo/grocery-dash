@@ -6,6 +6,9 @@ public class Game {
     public int getScore() {
         return score;
     }
+    public void start(){
+
+    }
 
 
 }
