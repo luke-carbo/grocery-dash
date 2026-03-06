@@ -10,10 +10,18 @@ public abstract class Entity_Dynamic extends Game_Entity {
      */
     private int speed;
 
+    /**
+     * Speed getter
+     * @return The current speed of this entity.
+     */
     public int getSpeed() {
         return speed;
     }
 
+    /**
+     * Speed setter
+     * @param speed The new speed for this entity.
+     */
     public void setSpeed(int speed) {
         if (speed > 0) {
             this.speed = speed;
