@@ -7,12 +7,12 @@ public abstract class Game_Entity {
     /**
      * The entity's X-Coordinate on the Map.
      */
-    public int position_x;
+    protected int position_x;
 
     /**
      * The entity's Y-Coordinate on the Map.
      */
-    public int position_y;
+    protected int position_y;
 
     /**
      * Abstract declaration for different collision types and handling
@@ -55,9 +55,5 @@ public abstract class Game_Entity {
      */
     public void setY(int y) {
         this.position_y = y;
-    }
-
-    public void destroyEntity() {
-        // Needs some sort of destructor
     }
 }

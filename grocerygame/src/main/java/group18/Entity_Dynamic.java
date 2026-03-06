@@ -9,4 +9,14 @@ public abstract class Entity_Dynamic extends Game_Entity{
      */
     private int speed;
 
+    public int getSpeed() {
+        return speed;
+    }
+
+    public void setSpeed(int speed) {
+        if(speed > 0) this.speed = speed;
+    }
+
+
+
 }
