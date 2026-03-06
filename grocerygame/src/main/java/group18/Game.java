@@ -1,12 +1,26 @@
 package group18;
 
+import javax.swing.JFrame;
+
 /**
  * Main game class for Grocery Game.
  */
-public class Game {
+public class Game extends JFrame {
     public int score;
     private int highScore;
     private int stopwatch;
+
+    public Game() {
+        setTitle("CMPT276 Grocery Game");
+        setSize(800, 600);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setLocationRelativeTo(null);
+
+        GamePanel panel = new GamePanel();
+        add(panel);
+
+        setVisible(true);
+    }
 
     /**
      * Getter for the current score.
@@ -27,21 +41,21 @@ public class Game {
     /**
      * Starts the game?
      */
-    public void start(){
+    public void start() {
 
     }
 
     /**
      * Stops the game on a loss?
      */
-    public void endLoss(){
+    public void endLoss() {
 
     }
 
     /**
      * Stops the game on a win?
      */
-    public void endWin(){
+    public void endWin() {
 
     }
 
@@ -49,7 +63,9 @@ public class Game {
      * High score getter
      * @return Current High score
      */
-    public int getHighScore() {return highScore; }
+    public int getHighScore() {
+        return highScore;
+    }
 
     /**
      * Stopwatch getter
@@ -58,5 +74,4 @@ public class Game {
     public int getStopwatch() {
         return stopwatch;
     }
-
 }
