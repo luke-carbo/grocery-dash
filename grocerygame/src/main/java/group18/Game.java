@@ -13,7 +13,7 @@ public class Game {
      * @return current score
      */
     public int getScore() {
-        return score;
+        return this.score;
     }
 
     /**
@@ -21,7 +21,7 @@ public class Game {
      * @param newScore new score value
      */
     public void setScore(int newScore) {
-        score = newScore;
+        this.score = newScore;
     }
 
     /**
@@ -58,5 +58,5 @@ public class Game {
     public int getStopwatch() {
         return stopwatch;
     }
-    
+
 }
