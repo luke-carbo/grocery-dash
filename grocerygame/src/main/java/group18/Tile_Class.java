@@ -1,5 +1,8 @@
 package group18;
 
+/**
+ * Changed "Wall" to "Barrier"
+ */
 public enum Tile_Class {
-    Normal, Wall, Start, End
+    Normal, Barrier, Start, End
 }

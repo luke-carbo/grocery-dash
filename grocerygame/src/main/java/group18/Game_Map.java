@@ -6,5 +6,6 @@ public class Game_Map extends Game{
 
     public void generateMap(){
 
+
     }
 }
