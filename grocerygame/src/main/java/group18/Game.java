@@ -9,6 +9,13 @@ public class Game {
     public void start(){
 
     }
+    public void endLoss(){
+
+    }
+    public void endWin(){
+
+    }
+
 
 
 }
