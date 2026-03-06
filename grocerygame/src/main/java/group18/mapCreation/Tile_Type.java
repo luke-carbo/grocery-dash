@@ -1,4 +1,4 @@
-package group18;
+package group18.mapCreation;
 
 /**
  * Describes all tile types

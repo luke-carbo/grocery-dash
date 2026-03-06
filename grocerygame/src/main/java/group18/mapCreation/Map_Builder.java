@@ -1,11 +1,13 @@
-package group18;
+package group18.mapCreation;
 
-public class Map_Builder extends Game_Map{
+import group18.Game_Map;
+
+public class Map_Builder extends Game_Map {
     /**
      * Creates map with all tiles
      * Iterates through a string -> displays graphics in correct position
      */
-    Map_Builder(){
+    public Map_Builder(){
         String[] map = {"fwfwffffwwfff",
                         "wwwfffffwwffw"};
         for (int i=0; i<map.length; i++){

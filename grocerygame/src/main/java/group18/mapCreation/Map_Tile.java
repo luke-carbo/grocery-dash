@@ -1,6 +1,8 @@
-package group18;
+package group18.mapCreation;
 
-public class Map_Tile extends Game_Map{
+import group18.Game_Map;
+
+public class Map_Tile extends Game_Map {
     private boolean solid;
     private Tile_Type type;
 
