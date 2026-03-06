@@ -1,4 +1,4 @@
-package group18.Entity_Dynamic.enemy;
+package group18.enemy;
 
 public class SecurityGuard extends Enemy {
     private int detectionRange;
