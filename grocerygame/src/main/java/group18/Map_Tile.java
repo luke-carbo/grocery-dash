@@ -2,10 +2,24 @@ package group18;
 
 public class Map_Tile extends Game_Map{
     private boolean solid;
-    private Tile_Class type;
+    private Tile_Type type;
 
-    public void setType(Tile_Class type) {
-        this.type = type;
+    Map_Tile(String s){
+        switch(s){
+            case "w":
+                type = Tile_Type.Wall;
+                break;
+            case "f":
+                type = Tile_Type.Floor;
+                break;
+        };
     }
+    public boolean isSolid() {
+        return solid;
+    }
+    public Tile_Type getType() {
+        return type;
+    }
+
 
 }
