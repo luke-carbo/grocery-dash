@@ -2,7 +2,10 @@ package group18;
 
 public class Item_Main extends Item{
 
-    public Item_Main() {
+    private final Game game;
+
+    public Item_Main(Game game) {
+        this.game = game;
         type = Item_Class.Main;
     }
 
