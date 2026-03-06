@@ -1,14 +1,18 @@
 package group18;
 
 public class Game {
-    private int score;
+    public int score;
     private int highScore;
     private int stopwatch;
-
 
     public int getScore() {
         return score;
     }
+
+    public void setScore(int newScore) {
+        score = newScore;
+    }
+
     public void start(){
 
     }
@@ -18,14 +22,9 @@ public class Game {
     public void endWin(){
 
     }
-    public int getHighScore() {
-        return highScore;
-    }
+    public int getHighScore() {return highScore; }
     public int getStopwatch() {
         return stopwatch;
     }
-
-
-
-
+    
 }
