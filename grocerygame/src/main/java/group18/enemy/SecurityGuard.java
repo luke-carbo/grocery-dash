@@ -1,4 +1,5 @@
 package group18.enemy;
+
 import group18.Player;
 
 public class SecurityGuard extends Enemy {
@@ -11,20 +12,20 @@ public class SecurityGuard extends Enemy {
     }
 
     public void chasePlayer(Player player) {
-        //TODO (idk if we actually have to code this here but it needs to be done somewhere)
+        // TODO
     }
 
-    public boolean catchesPlayer(Player player){
+    public boolean catchesPlayer(Player player) {
         return this.position_x == player.getX() && this.position_y == player.getY();
     }
 
     @Override
-    public void update(){
-        //TODO
+    public void update() {
+        // TODO
     }
 
     @Override
-    public void collision(){
-        //TODO
+    public void collision() {
+        // TODO
     }
 }

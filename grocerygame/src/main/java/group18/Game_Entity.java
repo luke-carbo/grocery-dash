@@ -4,6 +4,7 @@ package group18;
  * Abstract master entity class with constructors and getters for standard entity values.
  */
 public abstract class Game_Entity {
+
     /**
      * The entity's X-Coordinate on the Map.
      */
@@ -35,6 +36,7 @@ public abstract class Game_Entity {
 
     /**
      * Retrieves the Y-Coordinate of this entity.
+     *
      * @return the current Y-Coordinate.
      */
     public int getY() {
@@ -47,6 +49,7 @@ public abstract class Game_Entity {
 
     /**
      * Updates the X-Coordinate of this entity.
+     *
      * @param x the new X-Coordinate to set for this entity.
      */
     public void setX(int x) {
@@ -55,6 +58,7 @@ public abstract class Game_Entity {
 
     /**
      * Updates the Y-Coordinate of this entity.
+     *
      * @param y the new Y-Coordinate to set for this entity.
      */
     public void setY(int y) {
