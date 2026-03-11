@@ -1,8 +1,8 @@
-package group18;
+package group18.mapCreation;
 
-import group18.mapCreation.Map_Builder;
+import group18.Game;
 
-public class Game_Map extends Game{
+public class Game_Map extends Game {
     private int tiles_x;
     private int tiles_y;
 

@@ -1,7 +1,5 @@
 package group18.mapCreation;
 
-import group18.Game_Map;
-
 public class Map_Builder extends Game_Map {
     /**
      * Creates map with all tiles
