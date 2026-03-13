@@ -2,14 +2,23 @@ package group18.mapCreation;
 
 import group18.Game;
 
-public class Game_Map extends Game {
-    private int tiles_x;
-    private int tiles_y;
+import java.awt.*;
 
+public class Game_Map {
+    private Map_Builder map_builder;
+
+    public Game_Map() {
+        generateMap();
+    }
     /**
      * Calls Map builder to generate map
      */
     public void generateMap(){
-        new Map_Builder();
+        map_builder = new Map_Builder();
     }
+    public void draw(Graphics g){
+        map_builder.draw(g);
+    }
+
+
 }
