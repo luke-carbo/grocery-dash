@@ -10,7 +10,9 @@ import java.awt.image.BufferedImage;
 public class Map_Tile {
 
     private Tile_Type type;
-    private final int TILE_SIZE = 30;
+    public final int TILE_SIZE = 30;
+
+
 
     private static BufferedImage shelvesImage;
 

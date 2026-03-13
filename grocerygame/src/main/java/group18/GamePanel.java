@@ -2,20 +2,26 @@ package group18;
 
 import group18.mapCreation.Game_Map;
 
-import javax.swing.JPanel;
+import javax.swing.*;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.util.HashSet;
+import java.util.Set;
 
 public class GamePanel extends JPanel {
 
 
     private int playerX = 100;
     private int playerY = 100;
-    private int playerSpeed = 5;
+    private int playerSpeed = 3;
+    private int playerHeight = 30;
+    private int playerWidth = 30;
     private Game_Map game_map;
+    private Set<Integer> keysHeld = new HashSet<>();
+
 
 
     public GamePanel() {
@@ -29,17 +35,51 @@ public class GamePanel extends JPanel {
         addKeyListener(new KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent e) {
-
-                int key = e.getKeyCode();
-
-                if (key == KeyEvent.VK_W) playerY -= playerSpeed;
-                if (key == KeyEvent.VK_S) playerY += playerSpeed;
-                if (key == KeyEvent.VK_A) playerX -= playerSpeed;
-                if (key == KeyEvent.VK_D) playerX += playerSpeed;
-
-                repaint();
+                keysHeld.add(e.getKeyCode());
+            }
+            @Override
+            public void keyReleased(KeyEvent e) {
+                keysHeld.remove(e.getKeyCode());
             }
         });
+        Timer timer = new Timer(16, e -> {
+            update();
+            repaint();
+        });
+        timer.start();
+    }
+    private void update(){
+        int newX = playerX;
+        int newY = playerY;
+
+
+        if (keysHeld.contains(KeyEvent.VK_W)){
+            newY -= playerSpeed;
+            if(!game_map.isSolid(playerX, newY)
+                    && !game_map.isSolid(playerX + playerWidth - 1, newY)){
+                playerY = newY;
+            }
+        }
+        if (keysHeld.contains(KeyEvent.VK_S)){
+            newY += playerSpeed;
+            if(!game_map.isSolid(playerX, newY + playerHeight)
+                    && !game_map.isSolid(playerX + playerWidth - 1, newY + playerHeight)){
+                playerY = newY;
+            }
+        }
+        if (keysHeld.contains(KeyEvent.VK_A)){
+            newX -= playerSpeed;
+            if(!game_map.isSolid(newX, playerY) && !game_map.isSolid(newX, playerY + playerHeight - 1)){
+                playerX = newX;
+            }
+        }
+        if (keysHeld.contains(KeyEvent.VK_D)){
+            newX += playerSpeed;
+            if(!game_map.isSolid(newX + playerWidth, playerY) && !game_map.isSolid(newX + playerWidth, playerY + playerHeight - 1)){
+                playerX = newX;
+            }
+        }
+        repaint();
     }
 
     @Override
@@ -52,6 +92,6 @@ public class GamePanel extends JPanel {
         g.drawString("CMPT 276 Grocery Game", 320, 50);
 
         g.setColor(Color.GREEN);
-        g.fillRect(playerX, playerY, 30, 30);
+        g.fillRect(playerX, playerY, playerWidth, playerHeight);
     }
 }

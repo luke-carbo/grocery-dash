@@ -19,6 +19,9 @@ public class Game_Map {
     public void draw(Graphics g){
         map_builder.draw(g);
     }
+    public boolean isSolid(int x, int y){
+        return map_builder.isSolid(x, y);
+    }
 
 
 }
