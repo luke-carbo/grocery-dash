@@ -1,5 +1,6 @@
 package group18;
 
+import group18.ai.Pathfinder;
 import group18.enemy.SecurityGuard;
 import group18.mapCreation.Game_Map;
 
@@ -7,6 +8,7 @@ import javax.swing.*;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.awt.Point;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.util.HashSet;
@@ -17,23 +19,25 @@ public class GamePanel extends JPanel {
     private int playerX = 165;
     private int playerY = 570;
     private final int playerSpeed = 3;
-    private int playerHeight = 30;
-    private int playerWidth = 30;
+    private final int playerHeight = 30;
+    private final int playerWidth = 30;
 
     private int score = 0;
     private long startTime;
     private boolean gameOver = false;
 
-    private Game_Map game_map;
-    private Set<Integer> keysHeld = new HashSet<>();
+    private final Game_Map game_map;
+    private final Set<Integer> keysHeld = new HashSet<>();
 
-    private SecurityGuard securityGuard = new SecurityGuard(500, 300, 100);
-    private int enemySpeed = 1;
+    private final SecurityGuard securityGuard = new SecurityGuard(500, 300, 100);
+    private final int enemySize = 30;
 
-    // 3 collectible items
     private int[] itemX = {500, 650, 350};
     private int[] itemY = {200, 450, 350};
     private boolean[] itemCollected = {false, false, false};
+
+    private int enemyMoveCooldown = 0;
+    private final int enemyMoveDelay = 8;
 
     public GamePanel() {
         this.game_map = new Game_Map();
@@ -108,67 +112,30 @@ public class GamePanel extends JPanel {
                 && !game_map.isSolid(x + width - 1, y + height - 1);
     }
 
-    private void tryMoveEnemy(int dx, int dy) {
-        int newX = securityGuard.getX() + dx;
-        int newY = securityGuard.getY() + dy;
-
-        if (canMoveTo(newX, newY, 30, 30)) {
-            securityGuard.setX(newX);
-            securityGuard.setY(newY);
-        }
-    }
-
     private void moveEnemyTowardPlayer() {
-        int enemyX = securityGuard.getX();
-        int enemyY = securityGuard.getY();
-
-        int dx = Integer.compare(playerX, enemyX);
-        int dy = Integer.compare(playerY, enemyY);
-
-        // Prefer the larger-distance axis first
-        int diffX = Math.abs(playerX - enemyX);
-        int diffY = Math.abs(playerY - enemyY);
-
-        boolean moved = false;
-
-        if (diffX >= diffY) {
-            // Try horizontal first
-            if (dx != 0 && canMoveTo(enemyX + dx * enemySpeed, enemyY, 30, 30)) {
-                securityGuard.setX(enemyX + dx * enemySpeed);
-                moved = true;
-            } else if (dy != 0 && canMoveTo(enemyX, enemyY + dy * enemySpeed, 30, 30)) {
-                securityGuard.setY(enemyY + dy * enemySpeed);
-                moved = true;
-            }
-        } else {
-            // Try vertical first
-            if (dy != 0 && canMoveTo(enemyX, enemyY + dy * enemySpeed, 30, 30)) {
-                securityGuard.setY(enemyY + dy * enemySpeed);
-                moved = true;
-            } else if (dx != 0 && canMoveTo(enemyX + dx * enemySpeed, enemyY, 30, 30)) {
-                securityGuard.setX(enemyX + dx * enemySpeed);
-                moved = true;
-            }
+        enemyMoveCooldown++;
+        if (enemyMoveCooldown < enemyMoveDelay) {
+            return;
         }
+        enemyMoveCooldown = 0;
 
-        // If still blocked, try sideways alternatives
-        if (!moved) {
-            if (canMoveTo(enemyX + enemySpeed, enemyY, 30, 30)) {
-                securityGuard.setX(enemyX + enemySpeed);
-            } else if (canMoveTo(enemyX - enemySpeed, enemyY, 30, 30)) {
-                securityGuard.setX(enemyX - enemySpeed);
-            } else if (canMoveTo(enemyX, enemyY + enemySpeed, 30, 30)) {
-                securityGuard.setY(enemyY + enemySpeed);
-            } else if (canMoveTo(enemyX, enemyY - enemySpeed, 30, 30)) {
-                securityGuard.setY(enemyY - enemySpeed);
-            }
+        Point nextStep = Pathfinder.getNextStep(
+                game_map,
+                securityGuard.getX(),
+                securityGuard.getY(),
+                playerX,
+                playerY
+        );
+
+        if (nextStep != null && canMoveTo(nextStep.x, nextStep.y, enemySize, enemySize)) {
+            securityGuard.setX(nextStep.x);
+            securityGuard.setY(nextStep.y);
         }
     }
 
     private void checkEnemyCollision() {
         int enemyX = securityGuard.getX();
         int enemyY = securityGuard.getY();
-        int enemySize = 30;
 
         boolean overlap =
                 playerX < enemyX + enemySize &&
@@ -213,7 +180,7 @@ public class GamePanel extends JPanel {
         g.drawString("Time: " + elapsedSeconds + "s", 700, 50);
 
         g.setColor(Color.RED);
-        g.fillRect(securityGuard.getX(), securityGuard.getY(), 30, 30);
+        g.fillRect(securityGuard.getX(), securityGuard.getY(), enemySize, enemySize);
 
         g.setColor(Color.YELLOW);
         for (int i = 0; i < itemX.length; i++) {
