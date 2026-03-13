@@ -15,7 +15,7 @@ public class Game extends JFrame {
 
     public Game() {
         setTitle("CMPT276 Grocery Game");
-        setSize(800, 600);
+        setSize(900, 600);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         setResizable(false);

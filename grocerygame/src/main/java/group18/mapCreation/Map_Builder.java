@@ -11,21 +11,26 @@ public class Map_Builder {
      * Iterates through a string -> displays graphics in correct position
      */
     public Map_Builder(){
-        String[] map = {"fwfwffffwwffffwfwwww",
-                        "wwwfffffwwffwwfwfwff",
-                        "fwfwffffwwffffwfwwww",
-                        "fwfwffffwwffffwfwwww",
-                        "fwfwffffwwffffwfwwww",
-                        "fwfwffffwwffffwfwwww",
-                        "fwfwffffwwffffwfwwww",
-                        "fwfwffffwwffffwfwwww",
-                        "fwfwffffwwffffwfwwww",
-                        "fwfwffffwwffffwfwwww",
-                        "fwfwffffwwffffwfwwww",
-                        "fwfwffffwwffffwfwwww",
-                        "fwfwffffwwffffwfwwww",
-                        "fwfwffffwwffffwfwwww",
-                        "fwfwffffwwffffwfwwww",};
+        String[] map = {"wwwwwwwwwwwwwwwwwwwwwwwwwwwwww",
+                        "wwfffffffffffffffffffffwwwwwww",
+                        "wwfffffffssssssffffffffwwwwwww",
+                        "wwfffffffffffffffffffffwwwwwww",
+                        "wwfffffffssssssffffffffwwwwwww",
+                        "wwfffffffffffffffffffffwwwwwww",
+                        "wwfffffffffffffffffffffwwwwwww",
+                        "wwfffffffffffffffffffffwwwwwww",
+                        "wwfffffffffffffffffffffwwwwwww",
+                        "wwfffffffffffffffffffffwwwwwww",
+                        "wwfffffffffffffffffffffwwwwwww",
+                        "wwfffffffffffffffffffffwwwwwww",
+                        "wwfffffffffffffffffffffwwwwwww",
+                        "wwfffffffffffffffffffffwwwwwww",
+                        "wwffffffwwwwwwfffffffffwwwwwww",
+                        "wwffffffwwwwwwfffffffffwwwwwww",
+                        "wwffffffwwwwwwfffffffffwwwwwww",
+                        "wwffffffwwwwwwfffffffffwwwwwww",
+                        "wwffffffwwwwwwfffffffffwwwwwww",
+                        "wwffffffwwwwwwfffffffffwwwwwww",};
         int rows = map.length;
         int cols = 0;
         for (char c : map[0].toCharArray()) {

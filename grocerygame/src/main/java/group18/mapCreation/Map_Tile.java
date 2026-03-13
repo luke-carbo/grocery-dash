@@ -1,14 +1,28 @@
 package group18.mapCreation;
 
+import javax.imageio.ImageIO;
 import java.awt.*;
+import java.awt.image.BufferedImage;
 
 /**
- * Takes character 's' and creates a tile type
+ * Takes character 'c' and creates a tile type
  */
 public class Map_Tile {
 
     private Tile_Type type;
-    private final int TILE_SIZE = 40;
+    private final int TILE_SIZE = 30;
+
+    private static BufferedImage shelvesImage;
+
+    static {
+        try {
+            shelvesImage = ImageIO.read(Map_Tile.class.getResourceAsStream("/tiles/shelves.png"));
+        }
+        catch (Exception e) {
+            System.err.println("Failed to load images " + e.getMessage());
+        }
+
+    }
 
     Map_Tile(char c) {
         switch (c) {
@@ -18,19 +32,24 @@ public class Map_Tile {
             case 'f':
                 type = Tile_Type.Floor;
                 break;
+            case 's':
+                type = Tile_Type.Shelf;
+                break;
         }
     }
     public void draw(Graphics g, int row, int column) {
         switch (type) {
             case Wall:
-                g.setColor(Color.GRAY);
+                g.setColor(new Color(80, 45, 15));
                 g.fillRect(column * TILE_SIZE, row * TILE_SIZE, 40, 40);
                 break;
             case Floor:
-                g.setColor(Color.BLUE);
+                g.setColor(Color.GRAY);
                 g.fillRect(column * TILE_SIZE, row * TILE_SIZE, 40, 40);
                 break;
-
+            case Shelf:
+                g.drawImage(shelvesImage, column * TILE_SIZE, row * TILE_SIZE, 40, 40, null);
+                break;
         }
     }
 

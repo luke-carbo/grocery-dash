@@ -52,6 +52,6 @@ public class GamePanel extends JPanel {
         g.drawString("CMPT 276 Grocery Game", 320, 50);
 
         g.setColor(Color.GREEN);
-        g.fillRect(playerX, playerY, 40, 40);
+        g.fillRect(playerX, playerY, 30, 30);
     }
 }
