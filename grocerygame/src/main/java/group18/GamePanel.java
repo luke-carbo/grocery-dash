@@ -63,7 +63,6 @@ public class GamePanel extends JPanel {
     }
 
     private void update() {
-
         if (gameOver) return;
 
         int newX = playerX;
@@ -71,32 +70,28 @@ public class GamePanel extends JPanel {
 
         if (keysHeld.contains(KeyEvent.VK_W)) {
             newY -= playerSpeed;
-            if (!game_map.isSolid(playerX, newY)
-                    && !game_map.isSolid(playerX + playerWidth - 1, newY)) {
+            if (canMoveTo(playerX, newY, playerWidth, playerHeight)) {
                 playerY = newY;
             }
         }
 
         if (keysHeld.contains(KeyEvent.VK_S)) {
             newY += playerSpeed;
-            if (!game_map.isSolid(playerX, newY + playerHeight)
-                    && !game_map.isSolid(playerX + playerWidth - 1, newY + playerHeight)) {
+            if (canMoveTo(playerX, newY, playerWidth, playerHeight)) {
                 playerY = newY;
             }
         }
 
         if (keysHeld.contains(KeyEvent.VK_A)) {
             newX -= playerSpeed;
-            if (!game_map.isSolid(newX, playerY)
-                    && !game_map.isSolid(newX, playerY + playerHeight - 1)) {
+            if (canMoveTo(newX, playerY, playerWidth, playerHeight)) {
                 playerX = newX;
             }
         }
 
         if (keysHeld.contains(KeyEvent.VK_D)) {
             newX += playerSpeed;
-            if (!game_map.isSolid(newX + playerWidth, playerY)
-                    && !game_map.isSolid(newX + playerWidth, playerY + playerHeight - 1)) {
+            if (canMoveTo(newX, playerY, playerWidth, playerHeight)) {
                 playerX = newX;
             }
         }
@@ -106,46 +101,67 @@ public class GamePanel extends JPanel {
         checkItemCollection();
     }
 
+    private boolean canMoveTo(int x, int y, int width, int height) {
+        return !game_map.isSolid(x, y)
+                && !game_map.isSolid(x + width - 1, y)
+                && !game_map.isSolid(x, y + height - 1)
+                && !game_map.isSolid(x + width - 1, y + height - 1);
+    }
+
+    private void tryMoveEnemy(int dx, int dy) {
+        int newX = securityGuard.getX() + dx;
+        int newY = securityGuard.getY() + dy;
+
+        if (canMoveTo(newX, newY, 30, 30)) {
+            securityGuard.setX(newX);
+            securityGuard.setY(newY);
+        }
+    }
+
     private void moveEnemyTowardPlayer() {
         int enemyX = securityGuard.getX();
         int enemyY = securityGuard.getY();
-        int enemySize = 30;
 
-        int newEnemyX = enemyX;
-        int newEnemyY = enemyY;
+        int dx = Integer.compare(playerX, enemyX);
+        int dy = Integer.compare(playerY, enemyY);
 
-        if (playerX < enemyX) {
-            newEnemyX -= enemySpeed;
-        } else if (playerX > enemyX) {
-            newEnemyX += enemySpeed;
+        // Prefer the larger-distance axis first
+        int diffX = Math.abs(playerX - enemyX);
+        int diffY = Math.abs(playerY - enemyY);
+
+        boolean moved = false;
+
+        if (diffX >= diffY) {
+            // Try horizontal first
+            if (dx != 0 && canMoveTo(enemyX + dx * enemySpeed, enemyY, 30, 30)) {
+                securityGuard.setX(enemyX + dx * enemySpeed);
+                moved = true;
+            } else if (dy != 0 && canMoveTo(enemyX, enemyY + dy * enemySpeed, 30, 30)) {
+                securityGuard.setY(enemyY + dy * enemySpeed);
+                moved = true;
+            }
+        } else {
+            // Try vertical first
+            if (dy != 0 && canMoveTo(enemyX, enemyY + dy * enemySpeed, 30, 30)) {
+                securityGuard.setY(enemyY + dy * enemySpeed);
+                moved = true;
+            } else if (dx != 0 && canMoveTo(enemyX + dx * enemySpeed, enemyY, 30, 30)) {
+                securityGuard.setX(enemyX + dx * enemySpeed);
+                moved = true;
+            }
         }
 
-        boolean canMoveX =
-                !game_map.isSolid(newEnemyX, enemyY) &&
-                        !game_map.isSolid(newEnemyX + enemySize - 1, enemyY) &&
-                        !game_map.isSolid(newEnemyX, enemyY + enemySize - 1) &&
-                        !game_map.isSolid(newEnemyX + enemySize - 1, enemyY + enemySize - 1);
-
-        if (canMoveX) {
-            securityGuard.setX(newEnemyX);
-        }
-
-        enemyX = securityGuard.getX();
-
-        if (playerY < enemyY) {
-            newEnemyY -= enemySpeed;
-        } else if (playerY > enemyY) {
-            newEnemyY += enemySpeed;
-        }
-
-        boolean canMoveY =
-                !game_map.isSolid(enemyX, newEnemyY) &&
-                        !game_map.isSolid(enemyX + enemySize - 1, newEnemyY) &&
-                        !game_map.isSolid(enemyX, newEnemyY + enemySize - 1) &&
-                        !game_map.isSolid(enemyX + enemySize - 1, newEnemyY + enemySize - 1);
-
-        if (canMoveY) {
-            securityGuard.setY(newEnemyY);
+        // If still blocked, try sideways alternatives
+        if (!moved) {
+            if (canMoveTo(enemyX + enemySpeed, enemyY, 30, 30)) {
+                securityGuard.setX(enemyX + enemySpeed);
+            } else if (canMoveTo(enemyX - enemySpeed, enemyY, 30, 30)) {
+                securityGuard.setX(enemyX - enemySpeed);
+            } else if (canMoveTo(enemyX, enemyY + enemySpeed, 30, 30)) {
+                securityGuard.setY(enemyY + enemySpeed);
+            } else if (canMoveTo(enemyX, enemyY - enemySpeed, 30, 30)) {
+                securityGuard.setY(enemyY - enemySpeed);
+            }
         }
     }
 
@@ -184,7 +200,6 @@ public class GamePanel extends JPanel {
 
     @Override
     protected void paintComponent(Graphics g) {
-
         super.paintComponent(g);
 
         game_map.draw(g);
