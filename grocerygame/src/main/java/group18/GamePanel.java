@@ -27,15 +27,13 @@ public class GamePanel extends JPanel {
     private Game_Map game_map;
     private Set<Integer> keysHeld = new HashSet<>();
 
-    private SecurityGuard securityGuard = new SecurityGuard(300, 300, 100);
+    private SecurityGuard securityGuard = new SecurityGuard(500, 300, 100);
+    private int enemySpeed = 1;
 
-    private int enemyDirection = 1;
-    private int enemySpeed = 2;
-
-    // Item position
-    private int itemX = 500;
-    private int itemY = 200;
-    private boolean itemCollected = false;
+    // 3 collectible items
+    private int[] itemX = {500, 650, 350};
+    private int[] itemY = {200, 450, 350};
+    private boolean[] itemCollected = {false, false, false};
 
     public GamePanel() {
         this.game_map = new Game_Map();
@@ -103,29 +101,42 @@ public class GamePanel extends JPanel {
             }
         }
 
-        moveEnemy();
+        moveEnemyTowardPlayer();
         checkEnemyCollision();
         checkItemCollection();
     }
 
-    private void moveEnemy() {
+    private void moveEnemyTowardPlayer() {
+        int enemyX = securityGuard.getX();
+        int enemyY = securityGuard.getY();
 
-        int newX = securityGuard.getX() + enemySpeed * enemyDirection;
+        int newEnemyX = enemyX;
+        int newEnemyY = enemyY;
 
-        if (game_map.isSolid(newX, securityGuard.getY()) ||
-                game_map.isSolid(newX + 30, securityGuard.getY())) {
+        if (playerX < enemyX) {
+            newEnemyX -= enemySpeed;
+        } else if (playerX > enemyX) {
+            newEnemyX += enemySpeed;
+        }
 
-            enemyDirection *= -1;
+        if (!game_map.isSolid(newEnemyX, enemyY)
+                && !game_map.isSolid(newEnemyX + 29, enemyY + 29)) {
+            securityGuard.setX(newEnemyX);
+        }
 
-        } else {
+        if (playerY < enemyY) {
+            newEnemyY -= enemySpeed;
+        } else if (playerY > enemyY) {
+            newEnemyY += enemySpeed;
+        }
 
-            securityGuard.setX(newX);
-
+        if (!game_map.isSolid(enemyX, newEnemyY)
+                && !game_map.isSolid(enemyX + 29, newEnemyY + 29)) {
+            securityGuard.setY(newEnemyY);
         }
     }
 
     private void checkEnemyCollision() {
-
         int enemyX = securityGuard.getX();
         int enemyY = securityGuard.getY();
         int enemySize = 30;
@@ -142,18 +153,19 @@ public class GamePanel extends JPanel {
     }
 
     private void checkItemCollection() {
+        for (int i = 0; i < itemX.length; i++) {
+            if (itemCollected[i]) continue;
 
-        if (itemCollected) return;
+            boolean overlap =
+                    playerX < itemX[i] + 20 &&
+                            playerX + playerWidth > itemX[i] &&
+                            playerY < itemY[i] + 20 &&
+                            playerY + playerHeight > itemY[i];
 
-        boolean overlap =
-                playerX < itemX + 20 &&
-                        playerX + playerWidth > itemX &&
-                        playerY < itemY + 20 &&
-                        playerY + playerHeight > itemY;
-
-        if (overlap) {
-            itemCollected = true;
-            score += 10;
+            if (overlap) {
+                itemCollected[i] = true;
+                score += 10;
+            }
         }
     }
 
@@ -172,17 +184,16 @@ public class GamePanel extends JPanel {
         g.drawString("CMPT 276 Grocery Game", 320, 50);
         g.drawString("Time: " + elapsedSeconds + "s", 700, 50);
 
-        // enemy
         g.setColor(Color.RED);
         g.fillRect(securityGuard.getX(), securityGuard.getY(), 30, 30);
 
-        // item
-        if (!itemCollected) {
-            g.setColor(Color.YELLOW);
-            g.fillRect(itemX, itemY, 20, 20);
+        g.setColor(Color.YELLOW);
+        for (int i = 0; i < itemX.length; i++) {
+            if (!itemCollected[i]) {
+                g.fillRect(itemX[i], itemY[i], 20, 20);
+            }
         }
 
-        // player
         g.setColor(Color.GREEN);
         g.fillRect(playerX, playerY, playerWidth, playerHeight);
 
