@@ -14,26 +14,26 @@ public class Map_Builder {
      * Iterates through a string -> displays graphics in correct position
      */
     public Map_Builder(){
-        String[] map = {"wwwwwwwwwwwwwwwwwwwwwwwwwwwwww",
-                        "wwfffffffffffffffffffffwwwwwww",
-                        "wwfffffffssssssffffffffwwwwwww",
-                        "wwfffffffffffffffffffffwwwwwww",
-                        "wwfffffffssssssffffffffwwwwwww",
-                        "wwfffffffffffffffffffffwwwwwww",
-                        "wwfffffffffffffffffffffwwwwwww",
-                        "wwfffffffffffffffffffffwwwwwww",
-                        "wwfffffffffffffffffffffwwwwwww",
-                        "wwfffffffffffffffffffffwwwwwww",
-                        "wwfffffffffffffffffffffwwwwwww",
-                        "wwfffffffffffffffffffffwwwwwww",
-                        "wwfffffffffffffffffffffwwwwwww",
-                        "wwfffffffffffffffffffffwwwwwww",
-                        "wwffffffwwwwwwfffffffffwwwwwww",
-                        "wwffffffwwwwwwfffffffffwwwwwww",
-                        "wwffffffwwwwwwfffffffffwwwwwww",
-                        "wwffffffwwwwwwfffffffffwwwwwww",
-                        "wwffffffwwwwwwfffffffffwwwwwww",
-                        "wwffffffwwwwwwfffffffffwwwwwww",};
+        String[] map = {"wwwwwwwwwwwwwwwwwwwwwwwwwww",
+                        "wwfffffffffffffffffffffffww",
+                        "wwfffffffffffffffffffffffww",
+                        "wwffffsssssffffffffffffffww",
+                        "wwfffffffffffffffffffffffww",
+                        "wwffffsssssffffffffffffffww",
+                        "wwfffffffffffffffffffffffww",
+                        "wwffffsssssffffffffffffffww",
+                        "wwfffffffffffffffffffffffww",
+                        "wwfffffffffffffffffffffffww",
+                        "wwfffffffffffffffffffffffww",
+                        "wwfffffffffffffffffffffffww",
+                        "wwfffffffffffffffffffffffww",
+                        "wwfffffffffffffffffffffffww",
+                        "wwfffffffffffffffffffffffww",
+                        "wwfffffffffffffffffffffffww",
+                        "wwfffffffffffffffffffffffww",
+                        "wwfffffffffffffffffffffffww",
+                        "wwfffffffffffffffffffffffww",
+                        "wwwwwffwwwwwwwwwwwwwffwwwww"};
         rows = map.length;
         cols = map[0].length();
 

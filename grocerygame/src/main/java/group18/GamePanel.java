@@ -14,9 +14,9 @@ import java.util.Set;
 public class GamePanel extends JPanel {
 
 
-    private int playerX = 100;
-    private int playerY = 100;
-    private int playerSpeed = 3;
+    private int playerX = 165;
+    private int playerY = 570;
+    private final int playerSpeed = 3; // keep this at 3, it affects movement ability
     private int playerHeight = 30;
     private int playerWidth = 30;
     private Game_Map game_map;
