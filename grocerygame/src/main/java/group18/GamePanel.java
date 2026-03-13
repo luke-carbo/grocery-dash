@@ -24,6 +24,7 @@ public class GamePanel extends JPanel {
 
     private int score = 0;
     private long startTime;
+    private long endTime = 0;
     private boolean gameOver = false;
 
     private final Game_Map game_map;
@@ -37,7 +38,7 @@ public class GamePanel extends JPanel {
     private boolean[] itemCollected = {false, false, false};
 
     private int enemyMoveCooldown = 0;
-    private final int enemyMoveDelay = 8;
+    private final int enemyMoveDelay = 14;
 
     public GamePanel() {
         this.game_map = new Game_Map();
@@ -145,6 +146,7 @@ public class GamePanel extends JPanel {
 
         if (overlap) {
             gameOver = true;
+            endTime = System.currentTimeMillis();
         }
     }
 
@@ -171,7 +173,8 @@ public class GamePanel extends JPanel {
 
         game_map.draw(g);
 
-        long elapsedMillis = System.currentTimeMillis() - startTime;
+        long currentTime = gameOver ? endTime : System.currentTimeMillis();
+        long elapsedMillis = currentTime - startTime;
         long elapsedSeconds = elapsedMillis / 1000;
 
         g.setColor(Color.WHITE);
