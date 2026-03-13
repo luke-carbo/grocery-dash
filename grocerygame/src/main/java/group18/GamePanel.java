@@ -29,9 +29,13 @@ public class GamePanel extends JPanel {
 
     private SecurityGuard securityGuard = new SecurityGuard(300, 300, 100);
 
-    // enemy movement variables
     private int enemyDirection = 1;
     private int enemySpeed = 2;
+
+    // Item position
+    private int itemX = 500;
+    private int itemY = 200;
+    private boolean itemCollected = false;
 
     public GamePanel() {
         this.game_map = new Game_Map();
@@ -101,6 +105,7 @@ public class GamePanel extends JPanel {
 
         moveEnemy();
         checkEnemyCollision();
+        checkItemCollection();
     }
 
     private void moveEnemy() {
@@ -136,6 +141,22 @@ public class GamePanel extends JPanel {
         }
     }
 
+    private void checkItemCollection() {
+
+        if (itemCollected) return;
+
+        boolean overlap =
+                playerX < itemX + 20 &&
+                        playerX + playerWidth > itemX &&
+                        playerY < itemY + 20 &&
+                        playerY + playerHeight > itemY;
+
+        if (overlap) {
+            itemCollected = true;
+            score += 10;
+        }
+    }
+
     @Override
     protected void paintComponent(Graphics g) {
 
@@ -151,9 +172,17 @@ public class GamePanel extends JPanel {
         g.drawString("CMPT 276 Grocery Game", 320, 50);
         g.drawString("Time: " + elapsedSeconds + "s", 700, 50);
 
+        // enemy
         g.setColor(Color.RED);
         g.fillRect(securityGuard.getX(), securityGuard.getY(), 30, 30);
 
+        // item
+        if (!itemCollected) {
+            g.setColor(Color.YELLOW);
+            g.fillRect(itemX, itemY, 20, 20);
+        }
+
+        // player
         g.setColor(Color.GREEN);
         g.fillRect(playerX, playerY, playerWidth, playerHeight);
 
