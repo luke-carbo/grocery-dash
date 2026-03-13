@@ -29,6 +29,10 @@ public class GamePanel extends JPanel {
 
     private SecurityGuard securityGuard = new SecurityGuard(300, 300, 100);
 
+    // enemy movement variables
+    private int enemyDirection = 1;
+    private int enemySpeed = 2;
+
     public GamePanel() {
         this.game_map = new Game_Map();
         this.startTime = System.currentTimeMillis();
@@ -57,9 +61,8 @@ public class GamePanel extends JPanel {
     }
 
     private void update() {
-        if (gameOver) {
-            return;
-        }
+
+        if (gameOver) return;
 
         int newX = playerX;
         int newY = playerY;
@@ -96,18 +99,37 @@ public class GamePanel extends JPanel {
             }
         }
 
+        moveEnemy();
         checkEnemyCollision();
     }
 
+    private void moveEnemy() {
+
+        int newX = securityGuard.getX() + enemySpeed * enemyDirection;
+
+        if (game_map.isSolid(newX, securityGuard.getY()) ||
+                game_map.isSolid(newX + 30, securityGuard.getY())) {
+
+            enemyDirection *= -1;
+
+        } else {
+
+            securityGuard.setX(newX);
+
+        }
+    }
+
     private void checkEnemyCollision() {
+
         int enemyX = securityGuard.getX();
         int enemyY = securityGuard.getY();
         int enemySize = 30;
 
-        boolean overlap = playerX < enemyX + enemySize &&
-                playerX + playerWidth > enemyX &&
-                playerY < enemyY + enemySize &&
-                playerY + playerHeight > enemyY;
+        boolean overlap =
+                playerX < enemyX + enemySize &&
+                        playerX + playerWidth > enemyX &&
+                        playerY < enemyY + enemySize &&
+                        playerY + playerHeight > enemyY;
 
         if (overlap) {
             gameOver = true;
@@ -116,6 +138,7 @@ public class GamePanel extends JPanel {
 
     @Override
     protected void paintComponent(Graphics g) {
+
         super.paintComponent(g);
 
         game_map.draw(g);
