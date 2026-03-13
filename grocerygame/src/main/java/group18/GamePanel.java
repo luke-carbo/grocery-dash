@@ -1,5 +1,6 @@
 package group18;
 
+import group18.enemy.SecurityGuard;
 import group18.mapCreation.Game_Map;
 
 import javax.swing.*;
@@ -15,15 +16,18 @@ public class GamePanel extends JPanel {
 
     private int playerX = 165;
     private int playerY = 570;
-    private final int playerSpeed = 3; // keep this at 3, it affects movement ability
+    private final int playerSpeed = 3;
     private int playerHeight = 30;
     private int playerWidth = 30;
 
     private int score = 0;
     private long startTime;
+    private boolean gameOver = false;
 
     private Game_Map game_map;
     private Set<Integer> keysHeld = new HashSet<>();
+
+    private SecurityGuard securityGuard = new SecurityGuard(300, 300, 100);
 
     public GamePanel() {
         this.game_map = new Game_Map();
@@ -53,6 +57,10 @@ public class GamePanel extends JPanel {
     }
 
     private void update() {
+        if (gameOver) {
+            return;
+        }
+
         int newX = playerX;
         int newY = playerY;
 
@@ -87,6 +95,23 @@ public class GamePanel extends JPanel {
                 playerX = newX;
             }
         }
+
+        checkEnemyCollision();
+    }
+
+    private void checkEnemyCollision() {
+        int enemyX = securityGuard.getX();
+        int enemyY = securityGuard.getY();
+        int enemySize = 30;
+
+        boolean overlap = playerX < enemyX + enemySize &&
+                playerX + playerWidth > enemyX &&
+                playerY < enemyY + enemySize &&
+                playerY + playerHeight > enemyY;
+
+        if (overlap) {
+            gameOver = true;
+        }
     }
 
     @Override
@@ -99,11 +124,19 @@ public class GamePanel extends JPanel {
         long elapsedSeconds = elapsedMillis / 1000;
 
         g.setColor(Color.WHITE);
-        g.drawString("CMPT 276 Grocery Game", 320, 50);
         g.drawString("Score: " + score, 40, 50);
+        g.drawString("CMPT 276 Grocery Game", 320, 50);
         g.drawString("Time: " + elapsedSeconds + "s", 700, 50);
+
+        g.setColor(Color.RED);
+        g.fillRect(securityGuard.getX(), securityGuard.getY(), 30, 30);
 
         g.setColor(Color.GREEN);
         g.fillRect(playerX, playerY, playerWidth, playerHeight);
+
+        if (gameOver) {
+            g.setColor(Color.WHITE);
+            g.drawString("GAME OVER", 380, 300);
+        }
     }
 }
