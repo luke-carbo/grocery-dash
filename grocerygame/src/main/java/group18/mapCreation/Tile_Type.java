@@ -6,7 +6,7 @@ package group18.mapCreation;
  * Describes symbol for reading from a string
  */
 public enum Tile_Type {
-    Wall(true), Floor(false);
+    Wall(true), Floor(false), Shelf (true);
 
     private final boolean solid;
 
