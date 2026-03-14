@@ -19,50 +19,89 @@ import java.util.Set;
 
 public class GamePanel extends JPanel {
 
-    private int playerX = 165;
-    private int playerY = 570;
-    private final int playerSpeed = 3;
-    private final int playerHeight = 30;
-    private final int playerWidth = 30;
+    private static final int PANEL_WIDTH = 800;
+    private static final int PANEL_HEIGHT = 600;
+
+    private static final int PLAYER_WIDTH = 30;
+    private static final int PLAYER_HEIGHT = 30;
+    private static final int PLAYER_SPEED = 3;
+
+    private static final int ENEMY_SIZE = 30;
+    private static final int ENEMY_MOVE_DELAY = 14;
+
+    // Exit zone: top right, left of timer
+    private static final int EXIT_X = 620;
+    private static final int EXIT_Y = 70;
+    private static final int EXIT_SIZE = 35;
+
+    private int playerX;
+    private int playerY;
+
     private Image[] playerFrames;
-    private static final int FRAME_LEFT = 0;   // tile_0023
-    private static final int FRAME_DOWN = 1;   // tile_0024 (also idle)
-    private static final int FRAME_UP = 2;     // tile_0025
-    private static final int FRAME_RIGHT = 3;  // tile_0026
+    private static final int FRAME_LEFT = 0;
+    private static final int FRAME_DOWN = 1;
+    private static final int FRAME_UP = 2;
+    private static final int FRAME_RIGHT = 3;
     private int currentFrame = FRAME_DOWN;
 
-    private int score = 0;
-    private boolean score_saved = false;
+    private int score;
+    private boolean scoreSaved;
     private long startTime;
     private long endTime = 0;
+
     private boolean gameOver = false;
+    private boolean gameWon = false;
+    private boolean gameStarted = false;
+    private boolean gamePaused = false;
 
     private final Game_Map game_map;
     private final Set<Integer> keysHeld = new HashSet<>();
 
-    private final SecurityGuard securityGuard = new SecurityGuard(500, 300, 100);
-    private final int enemySize = 30;
-
-    private int[] itemX = {500, 650, 350};
-    private int[] itemY = {200, 450, 350};
-    private boolean[] itemCollected = {false, false, false};
-
+    private SecurityGuard securityGuard;
     private int enemyMoveCooldown = 0;
-    private final int enemyMoveDelay = 14;
+
+    private int[] itemX;
+    private int[] itemY;
+    private boolean[] itemCollected;
 
     public GamePanel() {
         this.game_map = new Game_Map();
-        this.startTime = System.currentTimeMillis();
         loadPlayerFrames();
+        resetGameState();
 
-        setPreferredSize(new Dimension(800, 600));
+        setPreferredSize(new Dimension(PANEL_WIDTH, PANEL_HEIGHT));
         setBackground(Color.BLACK);
         setFocusable(true);
 
         addKeyListener(new KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent e) {
-                keysHeld.add(e.getKeyCode());
+                int key = e.getKeyCode();
+
+                if (!gameStarted && key == KeyEvent.VK_ENTER) {
+                    gameStarted = true;
+                    startTime = System.currentTimeMillis();
+                    repaint();
+                    return;
+                }
+
+                if (key == KeyEvent.VK_R) {
+                    resetGameState();
+                    repaint();
+                    return;
+                }
+
+                if (gameStarted && !gameOver && !gameWon && key == KeyEvent.VK_ESCAPE) {
+                    gamePaused = !gamePaused;
+                    repaint();
+                    return;
+                }
+
+                if (!gameStarted || gamePaused || gameOver || gameWon) {
+                    return;
+                }
+
+                keysHeld.add(key);
             }
 
             @Override
@@ -76,6 +115,31 @@ public class GamePanel extends JPanel {
             repaint();
         });
         timer.start();
+    }
+
+    private void resetGameState() {
+        playerX = 165;
+        playerY = 570;
+
+        score = 0;
+        scoreSaved = false;
+        startTime = 0;
+        endTime = 0;
+
+        gameOver = false;
+        gameWon = false;
+        gameStarted = false;
+        gamePaused = false;
+
+        currentFrame = FRAME_DOWN;
+        keysHeld.clear();
+
+        securityGuard = new SecurityGuard(500, 300, 100);
+        enemyMoveCooldown = 0;
+
+        itemX = new int[]{500, 650, 350};
+        itemY = new int[]{200, 450, 350};
+        itemCollected = new boolean[]{false, false, false};
     }
 
     private void loadPlayerFrames() {
@@ -98,66 +162,68 @@ public class GamePanel extends JPanel {
             }
         } catch (Exception e) {
             System.err.println("Failed to load player frames: " + e.getMessage());
-            playerFrames = null; // fallback to rectangle
+            playerFrames = null;
         }
     }
 
     private void update() {
-        if (gameOver) {
-            if(!score_saved) {
-                int high_score = score + (int) ((endTime -  startTime)/1000);
-                Score_Tracker.saveScore(high_score);
-                score_saved = true;
-                return;
-            }
+        if (!gameStarted || gamePaused) {
             return;
-        };
-
-        boolean up = keysHeld.contains(KeyEvent.VK_W);
-        boolean down = keysHeld.contains(KeyEvent.VK_S);
-        boolean left = keysHeld.contains(KeyEvent.VK_A);
-        boolean right = keysHeld.contains(KeyEvent.VK_D);
-
-        boolean moved = false;
-
-        // Vertical has priority over horizontal (prevents diagonal combining)
-        if (up && !down) {
-            int newY = playerY - playerSpeed;
-            if (canMoveTo(playerX, newY, playerWidth, playerHeight)) {
-                playerY = newY;
-                moved = true;
-            }
-            currentFrame = FRAME_UP;
-        } else if (down && !up) {
-            int newY = playerY + playerSpeed;
-            if (canMoveTo(playerX, newY, playerWidth, playerHeight)) {
-                playerY = newY;
-                moved = true;
-            }
-            currentFrame = FRAME_DOWN;
-        } else if (left && !right) {
-            int newX = playerX - playerSpeed;
-            if (canMoveTo(newX, playerY, playerWidth, playerHeight)) {
-                playerX = newX;
-                moved = true;
-            }
-            currentFrame = FRAME_LEFT;
-        } else if (right && !left) {
-            int newX = playerX + playerSpeed;
-            if (canMoveTo(newX, playerY, playerWidth, playerHeight)) {
-                playerX = newX;
-                moved = true;
-            }
-            currentFrame = FRAME_RIGHT;
         }
 
-        if (!moved) {
-            currentFrame = FRAME_DOWN; // idle sprite
+        if (gameOver || gameWon) {
+            saveScoreOnce();
+            return;
+        }
+
+        int dX = 0;
+        int dY = 0;
+
+        if (keysHeld.contains(KeyEvent.VK_W)) {
+            dY -= PLAYER_SPEED;
+            currentFrame = FRAME_UP;
+        }
+        if (keysHeld.contains(KeyEvent.VK_S)) {
+            dY += PLAYER_SPEED;
+            currentFrame = FRAME_DOWN;
+        }
+        if (keysHeld.contains(KeyEvent.VK_D)) {
+            dX += PLAYER_SPEED;
+            currentFrame = FRAME_RIGHT;
+        }
+        if (keysHeld.contains(KeyEvent.VK_A)) {
+            dX -= PLAYER_SPEED;
+            currentFrame = FRAME_LEFT;
+        }
+
+        if (dX != 0 && dY != 0) {
+            dX /= 1.5;
+            dY /= 1.5;
+        }
+
+        if (dX == 0 && dY == 0) {
+            currentFrame = FRAME_DOWN;
+        }
+
+        if (canMoveTo(playerX + dX, playerY, PLAYER_WIDTH, PLAYER_HEIGHT)) {
+            playerX += dX;
+        }
+        if (canMoveTo(playerX, playerY + dY, PLAYER_WIDTH, PLAYER_HEIGHT)) {
+            playerY += dY;
         }
 
         moveEnemyTowardPlayer();
         checkEnemyCollision();
         checkItemCollection();
+        checkExitWinCondition();
+    }
+
+    private void saveScoreOnce() {
+        if (!scoreSaved) {
+            int finalScore = score + (int) ((endTime - startTime) / 1000);
+            Score_Tracker.saveScore(finalScore);
+            scoreSaved = true;
+        }
     }
 
     private boolean canMoveTo(int x, int y, int width, int height) {
@@ -169,7 +235,7 @@ public class GamePanel extends JPanel {
 
     private void moveEnemyTowardPlayer() {
         enemyMoveCooldown++;
-        if (enemyMoveCooldown < enemyMoveDelay) {
+        if (enemyMoveCooldown < ENEMY_MOVE_DELAY) {
             return;
         }
         enemyMoveCooldown = 0;
@@ -182,7 +248,7 @@ public class GamePanel extends JPanel {
                 playerY
         );
 
-        if (nextStep != null && canMoveTo(nextStep.x, nextStep.y, enemySize, enemySize)) {
+        if (nextStep != null && canMoveTo(nextStep.x, nextStep.y, ENEMY_SIZE, ENEMY_SIZE)) {
             securityGuard.setX(nextStep.x);
             securityGuard.setY(nextStep.y);
         }
@@ -193,10 +259,10 @@ public class GamePanel extends JPanel {
         int enemyY = securityGuard.getY();
 
         boolean overlap =
-                playerX < enemyX + enemySize &&
-                        playerX + playerWidth > enemyX &&
-                        playerY < enemyY + enemySize &&
-                        playerY + playerHeight > enemyY;
+                playerX < enemyX + ENEMY_SIZE &&
+                        playerX + PLAYER_WIDTH > enemyX &&
+                        playerY < enemyY + ENEMY_SIZE &&
+                        playerY + PLAYER_HEIGHT > enemyY;
 
         if (overlap) {
             gameOver = true;
@@ -210,14 +276,40 @@ public class GamePanel extends JPanel {
 
             boolean overlap =
                     playerX < itemX[i] + 20 &&
-                            playerX + playerWidth > itemX[i] &&
+                            playerX + PLAYER_WIDTH > itemX[i] &&
                             playerY < itemY[i] + 20 &&
-                            playerY + playerHeight > itemY[i];
+                            playerY + PLAYER_HEIGHT > itemY[i];
 
             if (overlap) {
                 itemCollected[i] = true;
                 score += 10;
             }
+        }
+    }
+
+    private boolean allItemsCollected() {
+        for (boolean collected : itemCollected) {
+            if (!collected) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private void checkExitWinCondition() {
+        if (!allItemsCollected()) {
+            return;
+        }
+
+        boolean overlap =
+                playerX < EXIT_X + EXIT_SIZE &&
+                        playerX + PLAYER_WIDTH > EXIT_X &&
+                        playerY < EXIT_Y + EXIT_SIZE &&
+                        playerY + PLAYER_HEIGHT > EXIT_Y;
+
+        if (overlap) {
+            gameWon = true;
+            endTime = System.currentTimeMillis();
         }
     }
 
@@ -227,7 +319,16 @@ public class GamePanel extends JPanel {
 
         game_map.draw(g);
 
-        long currentTime = gameOver ? endTime : System.currentTimeMillis();
+        if (!gameStarted) {
+            g.setColor(Color.WHITE);
+            g.drawString("CMPT 276 Grocery Game", 320, 250);
+            g.drawString("Press ENTER to Start", 335, 280);
+            g.drawString("Controls: WASD to move", 330, 310);
+            g.drawString("ESC = Pause, R = Restart", 325, 340);
+            return;
+        }
+
+        long currentTime = (gameOver || gameWon) ? endTime : System.currentTimeMillis();
         long elapsedMillis = currentTime - startTime;
         long elapsedSeconds = elapsedMillis / 1000;
 
@@ -236,8 +337,13 @@ public class GamePanel extends JPanel {
         g.drawString("CMPT 276 Grocery Game", 320, 50);
         g.drawString("Time: " + elapsedSeconds + "s", 700, 50);
 
+        g.setColor(Color.CYAN);
+        g.fillRect(EXIT_X, EXIT_Y, EXIT_SIZE, EXIT_SIZE);
+        g.setColor(Color.WHITE);
+        g.drawString("EXIT", EXIT_X - 2, EXIT_Y - 5);
+
         g.setColor(Color.RED);
-        g.fillRect(securityGuard.getX(), securityGuard.getY(), enemySize, enemySize);
+        g.fillRect(securityGuard.getX(), securityGuard.getY(), ENEMY_SIZE, ENEMY_SIZE);
 
         g.setColor(Color.YELLOW);
         for (int i = 0; i < itemX.length; i++) {
@@ -247,15 +353,34 @@ public class GamePanel extends JPanel {
         }
 
         if (playerFrames != null && playerFrames.length > 0) {
-            g.drawImage(playerFrames[currentFrame], playerX, playerY, playerWidth, playerHeight, null);
+            g.drawImage(playerFrames[currentFrame], playerX, playerY, PLAYER_WIDTH, PLAYER_HEIGHT, null);
         } else {
             g.setColor(Color.GREEN);
-            g.fillRect(playerX, playerY, playerWidth, playerHeight);
+            g.fillRect(playerX, playerY, PLAYER_WIDTH, PLAYER_HEIGHT);
         }
 
         if (gameOver) {
             g.setColor(Color.WHITE);
             g.drawString("GAME OVER", 380, 300);
+            g.drawString("Press R to Restart", 360, 330);
+        }
+
+        if (gameWon) {
+            g.setColor(Color.WHITE);
+            g.drawString("YOU WIN", 390, 300);
+            g.drawString("Press R to Restart", 360, 330);
+        }
+
+        if (gamePaused) {
+            g.setColor(Color.WHITE);
+            g.drawString("PAUSED", 390, 280);
+            g.drawString("Press ESC to Resume", 350, 310);
+            g.drawString("Press R to Restart", 355, 340);
+        }
+
+        if (!allItemsCollected()) {
+            g.setColor(Color.WHITE);
+            g.drawString("Collect all items, then go to EXIT", 290, 575);
         }
     }
 }
