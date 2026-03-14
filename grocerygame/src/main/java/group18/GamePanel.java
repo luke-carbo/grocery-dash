@@ -70,35 +70,23 @@ public class GamePanel extends JPanel {
     private void update() {
         if (gameOver) return;
 
-        int newX = playerX;
-        int newY = playerY;
+        int dX = 0;
+        int dY = 0;
 
-        if (keysHeld.contains(KeyEvent.VK_W)) {
-            newY -= playerSpeed;
-            if (canMoveTo(playerX, newY, playerWidth, playerHeight)) {
-                playerY = newY;
-            }
+        if (keysHeld.contains(KeyEvent.VK_W)) dY -= playerSpeed;
+        if (keysHeld.contains(KeyEvent.VK_S)) dY += playerSpeed;
+        if (keysHeld.contains(KeyEvent.VK_D)) dX += playerSpeed;
+        if (keysHeld.contains(KeyEvent.VK_A)) dX -= playerSpeed;
+
+        if(dX != 0 && dY != 0) {
+            dX /= 1.5;
+            dY /= 1.5;
         }
-
-        if (keysHeld.contains(KeyEvent.VK_S)) {
-            newY += playerSpeed;
-            if (canMoveTo(playerX, newY, playerWidth, playerHeight)) {
-                playerY = newY;
-            }
+        if (canMoveTo(playerX + dX, playerY, playerWidth, playerHeight)) {
+            playerX += dX;
         }
-
-        if (keysHeld.contains(KeyEvent.VK_A)) {
-            newX -= playerSpeed;
-            if (canMoveTo(newX, playerY, playerWidth, playerHeight)) {
-                playerX = newX;
-            }
-        }
-
-        if (keysHeld.contains(KeyEvent.VK_D)) {
-            newX += playerSpeed;
-            if (canMoveTo(newX, playerY, playerWidth, playerHeight)) {
-                playerX = newX;
-            }
+        if (canMoveTo(playerX, playerY + dY, playerWidth, playerHeight)) {
+            playerY += dY;
         }
 
         moveEnemyTowardPlayer();
