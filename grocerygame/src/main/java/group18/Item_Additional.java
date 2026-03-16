@@ -6,6 +6,7 @@ package group18;
 public class Item_Additional extends Item {
 
     private final Game game;
+    public Item_Addl_Class addlclass;
 
     public Item_Additional(Game game) {
         this.game = game;
@@ -15,13 +16,13 @@ public class Item_Additional extends Item {
     @Override
     public void collision() {
         game.setScore(game.getScore() + this.value);
-//        this.destroyEntity();
+        destroyEntity();
     }
 
     @Override
     public void update() {
         if(this.getCount() < this.getLimit()) {
-            // Spawn Method
+            new Spawn_Additional(game);
         }
     }
 }
