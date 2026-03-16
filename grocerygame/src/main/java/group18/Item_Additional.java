@@ -7,10 +7,12 @@ public class Item_Additional extends Item {
 
     private final Game game;
     public Item_Addl_Class addlclass;
+    public boolean collected = false;
 
     public Item_Additional(Game game) {
         this.game = game;
         type = Item_Class.Additional;
+        this.count += 1;
     }
 
     @Override
