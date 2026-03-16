@@ -32,6 +32,7 @@ public class GamePanel extends JPanel {
     private int currentFrame = FRAME_DOWN;
 
     private int score = 0;
+    private boolean score_saved = false;
     private long startTime;
     private long endTime = 0;
     private boolean gameOver = false;
@@ -102,7 +103,15 @@ public class GamePanel extends JPanel {
     }
 
     private void update() {
-        if (gameOver) return;
+        if (gameOver) {
+            if(!score_saved) {
+                int high_score = score + (int) ((endTime -  startTime)/1000);
+                Score_Tracker.saveScore(high_score);
+                score_saved = true;
+                return;
+            }
+            return;
+        };
 
         boolean up = keysHeld.contains(KeyEvent.VK_W);
         boolean down = keysHeld.contains(KeyEvent.VK_S);

@@ -63,4 +63,8 @@ public abstract class Item extends Entity_Stationary{
     public void setLimit(int newLimit) {
         limit = newLimit;
     }
+
+    public void destroyEntity() {
+
+    }
 }
