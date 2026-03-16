@@ -15,10 +15,17 @@ public class Map_Tile {
 
 
     private static BufferedImage shelvesImage;
+    private static BufferedImage wallImage;
+    private static BufferedImage floorImage;
 
     static {
         try {
             shelvesImage = ImageIO.read(Map_Tile.class.getResourceAsStream("/tiles/shelves.png"));
+//            shelvesImage = ImageIO.read(Map_Tile.class.getResourceAsStream("/tiles/grocery_shelf.png"));
+            wallImage = ImageIO.read(Map_Tile.class.getResourceAsStream("/tiles/grocery_wall.png"));
+//            wallImage = ImageIO.read(Map_Tile.class.getResourceAsStream("/tiles/grocery_wall2.png"));
+            floorImage = ImageIO.read(Map_Tile.class.getResourceAsStream("/tiles/grocery_floor.png"));
+
         }
         catch (Exception e) {
             System.err.println("Failed to load images " + e.getMessage());
@@ -42,15 +49,13 @@ public class Map_Tile {
     public void draw(Graphics g, int row, int column) {
         switch (type) {
             case Wall:
-                g.setColor(new Color(80, 45, 15));
-                g.fillRect(column * TILE_SIZE, row * TILE_SIZE, 40, 40);
+                g.drawImage(wallImage, column * TILE_SIZE, row * TILE_SIZE, null);
                 break;
             case Floor:
-                g.setColor(Color.GRAY);
-                g.fillRect(column * TILE_SIZE, row * TILE_SIZE, 40, 40);
+                g.drawImage(floorImage, column * TILE_SIZE, row * TILE_SIZE, null);
                 break;
             case Shelf:
-                g.drawImage(shelvesImage, column * TILE_SIZE, row * TILE_SIZE, 40, 40, null);
+                g.drawImage(shelvesImage, column * TILE_SIZE, row * TILE_SIZE, TILE_SIZE, TILE_SIZE, null);
                 break;
         }
     }
