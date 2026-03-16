@@ -29,7 +29,6 @@ public class GamePanel extends JPanel {
     private static final int ENEMY_SIZE = 30;
     private static final int ENEMY_MOVE_DELAY = 14;
 
-    // Exit zone: top right, left of timer
     private static final int EXIT_X = 620;
     private static final int EXIT_Y = 70;
     private static final int EXIT_SIZE = 35;
