@@ -24,12 +24,12 @@ public class Spawn_Additional {
 
     private int randomX() {
         // Random Roll for Spawn Region
-        return (int) (Math.random() * 100);
+        return (int) (Math.random() * 600 + 60); // 900 - 120 (Left Wall) - 120 (Right Wall) - 60 (Spacing) + 120(Spacing)
     }
 
     private int randomY() {
         // Random Roll for Spawn Region
-        return (int) (Math.random() * 100);
+        return (int) (Math.random() * 380 + 120); // 600 - 60 (Top Wall) - 60 (Bottom Wall) + 120 (Spacing)
     }
 
     private Item_Addl_Class randomClass() {
@@ -46,6 +46,6 @@ public class Spawn_Additional {
 
     private int randomValue() {
         // Random Roll for Spawn Value
-        return (int) (Math.random() * 100); // Produces 0 - 100
+        return (int) (Math.random() * 10); // Produces 0 - 10
     }
 }
