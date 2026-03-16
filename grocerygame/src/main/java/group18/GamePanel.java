@@ -4,13 +4,16 @@ import group18.ai.Pathfinder;
 import group18.enemy.SecurityGuard;
 import group18.mapCreation.Game_Map;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Point;
+import java.awt.Image;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.io.InputStream;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -21,8 +24,15 @@ public class GamePanel extends JPanel {
     private final int playerSpeed = 3;
     private final int playerHeight = 30;
     private final int playerWidth = 30;
+    private Image[] playerFrames;
+    private static final int FRAME_LEFT = 0;   // tile_0023
+    private static final int FRAME_DOWN = 1;   // tile_0024 (also idle)
+    private static final int FRAME_UP = 2;     // tile_0025
+    private static final int FRAME_RIGHT = 3;  // tile_0026
+    private int currentFrame = FRAME_DOWN;
 
     private int score = 0;
+    private boolean score_saved = false;
     private long startTime;
     private long endTime = 0;
     private boolean gameOver = false;
@@ -43,6 +53,7 @@ public class GamePanel extends JPanel {
     public GamePanel() {
         this.game_map = new Game_Map();
         this.startTime = System.currentTimeMillis();
+        loadPlayerFrames();
 
         setPreferredSize(new Dimension(800, 600));
         setBackground(Color.BLACK);
@@ -67,38 +78,81 @@ public class GamePanel extends JPanel {
         timer.start();
     }
 
+    private void loadPlayerFrames() {
+        String[] framePaths = {
+                "tiles/tile_0023.png",
+                "tiles/tile_0024.png",
+                "tiles/tile_0025.png",
+                "tiles/tile_0026.png"
+        };
+
+        playerFrames = new Image[framePaths.length];
+
+        try {
+            for (int i = 0; i < framePaths.length; i++) {
+                InputStream stream = getClass().getClassLoader().getResourceAsStream(framePaths[i]);
+                if (stream == null) {
+                    throw new IllegalArgumentException("Missing resource: " + framePaths[i]);
+                }
+                playerFrames[i] = ImageIO.read(stream);
+            }
+        } catch (Exception e) {
+            System.err.println("Failed to load player frames: " + e.getMessage());
+            playerFrames = null; // fallback to rectangle
+        }
+    }
+
     private void update() {
-        if (gameOver) return;
+        if (gameOver) {
+            if(!score_saved) {
+                int high_score = score + (int) ((endTime -  startTime)/1000);
+                Score_Tracker.saveScore(high_score);
+                score_saved = true;
+                return;
+            }
+            return;
+        };
 
-        int newX = playerX;
-        int newY = playerY;
+        boolean up = keysHeld.contains(KeyEvent.VK_W);
+        boolean down = keysHeld.contains(KeyEvent.VK_S);
+        boolean left = keysHeld.contains(KeyEvent.VK_A);
+        boolean right = keysHeld.contains(KeyEvent.VK_D);
 
-        if (keysHeld.contains(KeyEvent.VK_W)) {
-            newY -= playerSpeed;
+        boolean moved = false;
+
+        // Vertical has priority over horizontal (prevents diagonal combining)
+        if (up && !down) {
+            int newY = playerY - playerSpeed;
             if (canMoveTo(playerX, newY, playerWidth, playerHeight)) {
                 playerY = newY;
+                moved = true;
             }
-        }
-
-        if (keysHeld.contains(KeyEvent.VK_S)) {
-            newY += playerSpeed;
+            currentFrame = FRAME_UP;
+        } else if (down && !up) {
+            int newY = playerY + playerSpeed;
             if (canMoveTo(playerX, newY, playerWidth, playerHeight)) {
                 playerY = newY;
+                moved = true;
             }
-        }
-
-        if (keysHeld.contains(KeyEvent.VK_A)) {
-            newX -= playerSpeed;
+            currentFrame = FRAME_DOWN;
+        } else if (left && !right) {
+            int newX = playerX - playerSpeed;
             if (canMoveTo(newX, playerY, playerWidth, playerHeight)) {
                 playerX = newX;
+                moved = true;
             }
-        }
-
-        if (keysHeld.contains(KeyEvent.VK_D)) {
-            newX += playerSpeed;
+            currentFrame = FRAME_LEFT;
+        } else if (right && !left) {
+            int newX = playerX + playerSpeed;
             if (canMoveTo(newX, playerY, playerWidth, playerHeight)) {
                 playerX = newX;
+                moved = true;
             }
+            currentFrame = FRAME_RIGHT;
+        }
+
+        if (!moved) {
+            currentFrame = FRAME_DOWN; // idle sprite
         }
 
         moveEnemyTowardPlayer();
@@ -192,8 +246,12 @@ public class GamePanel extends JPanel {
             }
         }
 
-        g.setColor(Color.GREEN);
-        g.fillRect(playerX, playerY, playerWidth, playerHeight);
+        if (playerFrames != null && playerFrames.length > 0) {
+            g.drawImage(playerFrames[currentFrame], playerX, playerY, playerWidth, playerHeight, null);
+        } else {
+            g.setColor(Color.GREEN);
+            g.fillRect(playerX, playerY, playerWidth, playerHeight);
+        }
 
         if (gameOver) {
             g.setColor(Color.WHITE);
