@@ -12,12 +12,12 @@ public abstract class Item extends Entity_Stationary{
     /**
      * The current count.
      */
-    public int count;
+    public static int count;
 
     /**
      * Entity spawn limit for main and additional.
      */
-    public int limit;
+    public static int limit = 5;
 
     /**
      * Enum determining Item Class.
