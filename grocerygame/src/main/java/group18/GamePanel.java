@@ -269,7 +269,7 @@ public class GamePanel extends JPanel {
      */
     private void saveScoreOnce() {
         if (!score_saved) {
-            int finalScore = score + (int) ((endTime - startTime) / 1000);
+            int finalScore = score;
             score_saved = true;
         }
     }
