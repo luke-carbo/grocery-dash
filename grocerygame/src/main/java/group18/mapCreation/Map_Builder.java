@@ -15,16 +15,16 @@ public class Map_Builder {
      */
     public Map_Builder() {
         String[] map = {
-                "wwwwwwwwwwwwwwwwwwwwwwwwwww",
+                "wwwwwwwwwwwwwwwwwwwwwffwwww",
                 "wwfffffffffffffffffffffffww",
                 "wwfffffffffffffffffffffffww",
                 "wwffffsssssffffffffffffffww",
                 "wwfffffffffffffffffffffffww",
-                "wwffffsssssffffffffffffffww",
                 "wwfffffffffffffffffffffffww",
                 "wwffffsssssffffffffffffffww",
                 "wwfffffffffffffffffffffffww",
                 "wwfffffffffffffffffffffffww",
+                "wwffffsssssffffffffffffffww",
                 "wwfffffffffffffffffffffffww",
                 "wwfffffffffffffffffffffffww",
                 "wwfffffffffffffffffffffffww",
@@ -34,7 +34,7 @@ public class Map_Builder {
                 "wwfffffffffffffffffffffffww",
                 "wwfffffffffffffffffffffffww",
                 "wwfffffffffffffffffffffffww",
-                "wwwwwffwwwwwwwwwwwwwffwwwww"
+                "wwwwwffwwwwwwwwwwwwwwwwwwww"
         };
 
         rows = map.length;

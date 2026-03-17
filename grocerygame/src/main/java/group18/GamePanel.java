@@ -16,6 +16,8 @@ import java.awt.event.KeyEvent;
 import java.io.InputStream;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 public class GamePanel extends JPanel {
 
@@ -37,6 +39,7 @@ public class GamePanel extends JPanel {
     private long endTime = 0;
     private boolean gameOver = false;
 
+    private Game game = null;
     private final Game_Map game_map;
     private final Set<Integer> keysHeld = new HashSet<>();
 
@@ -47,10 +50,15 @@ public class GamePanel extends JPanel {
     private int[] itemY = {200, 450, 350};
     private boolean[] itemCollected = {false, false, false};
 
+    private List<Item_Additional> items = new ArrayList<>();
+    private Spawn_Additional spawner;
+
     private int enemyMoveCooldown = 0;
     private final int enemyMoveDelay = 14;
 
     public GamePanel() {
+        this.game = game;
+        this.spawner = new Spawn_Additional(game);
         this.game_map = new Game_Map();
         this.startTime = System.currentTimeMillis();
         loadPlayerFrames();
@@ -58,6 +66,11 @@ public class GamePanel extends JPanel {
         setPreferredSize(new Dimension(800, 600));
         setBackground(Color.BLACK);
         setFocusable(true);
+
+        // Starting Aditional Items
+        for (int i = 0; i < 3; i++) {
+            items.add(spawner.spawnAdditional());
+        }
 
         addKeyListener(new KeyAdapter() {
             @Override
@@ -155,6 +168,10 @@ public class GamePanel extends JPanel {
             currentFrame = FRAME_DOWN; // idle sprite
         }
 
+        if (Item.count < Item.limit) {
+            items.add(spawner.spawnAdditional());
+        }
+
         moveEnemyTowardPlayer();
         checkEnemyCollision();
         checkItemCollection();
@@ -205,18 +222,42 @@ public class GamePanel extends JPanel {
     }
 
     private void checkItemCollection() {
+
         for (int i = 0; i < itemX.length; i++) {
             if (itemCollected[i]) continue;
-
             boolean overlap =
                     playerX < itemX[i] + 20 &&
-                            playerX + playerWidth > itemX[i] &&
-                            playerY < itemY[i] + 20 &&
-                            playerY + playerHeight > itemY[i];
+                    playerX + playerWidth > itemX[i] &&
+                    playerY < itemY[i] + 20 &&
+                    playerY + playerHeight > itemY[i];
 
             if (overlap) {
                 itemCollected[i] = true;
-                score += 10;
+                score += 50;
+            }
+        }
+
+        for (Item_Additional item : items) {
+
+            if (item.collected) {
+                continue;
+            }
+
+            boolean overlap =
+                    playerX < item.position_x + 20 &&
+                            playerX + playerWidth > item.position_x &&
+                            playerY < item.position_y + 20 &&
+                            playerY + playerHeight > item.position_y;
+
+            if (overlap) {
+                item.collected = true;
+                if (item.addlclass == Item_Addl_Class.Penalty) {
+                    score -= item.value;
+                }
+                else {
+                    score += item.value;
+                }
+                Item.count -= 1;
             }
         }
     }
@@ -243,6 +284,24 @@ public class GamePanel extends JPanel {
         for (int i = 0; i < itemX.length; i++) {
             if (!itemCollected[i]) {
                 g.fillRect(itemX[i], itemY[i], 20, 20);
+            }
+        }
+
+        g.setColor(Color.ORANGE);
+        for (Item_Additional item : items) {
+            if (item.addlclass == Item_Addl_Class.Bonus) {
+                if (!item.collected) {
+                    g.fillRect(item.position_x, item.position_y, 20, 20);
+                }
+            }
+        }
+
+        g.setColor(Color.RED);
+        for (Item_Additional item : items) {
+            if (item.addlclass == Item_Addl_Class.Penalty) {
+                if (!item.collected) {
+                    g.fillRect(item.position_x, item.position_y, 20, 20);
+                }
             }
         }
 
