@@ -24,4 +24,14 @@ public class Item_Penalty extends Item {
     public void update() {
         // TBD
     }
+
+    /** this collects this penalty item if touched and returns the score loss. */
+    public int collectIfTouched(int playerX, int playerY, int playerWidth, int playerHeight) {
+        if (collected || !isTouchedByPlayer(playerX, playerY, playerWidth, playerHeight)) {
+            return 0;
+        }
+        collected = true;
+        Item.penalty_count -= 1;
+        return -value;
+    }
 }

@@ -24,4 +24,14 @@ public class Item_Bonus extends Item {
     public void update() {
         // TBD
     }
+
+    /** this collects this bonus item if touched and returns the score gained. */
+    public int collectIfTouched(int playerX, int playerY, int playerWidth, int playerHeight) {
+        if (collected || !isTouchedByPlayer(playerX, playerY, playerWidth, playerHeight)) {
+            return 0;
+        }
+        collected = true;
+        Item.bonus_count -= 1;
+        return value;
+    }
 }
