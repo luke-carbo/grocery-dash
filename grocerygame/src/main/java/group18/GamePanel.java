@@ -13,6 +13,7 @@ import java.awt.Point;
 import java.awt.Image;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.awt.image.BufferedImage;
 import java.io.InputStream;
 import java.util.HashSet;
 import java.util.Set;
@@ -36,11 +37,14 @@ public class GamePanel extends JPanel {
     private int playerY;
 
     private Image[] playerFrames;
-    private static final int FRAME_LEFT = 0;   // tile_0023
-    private static final int FRAME_DOWN = 1;   // tile_0024 (also idle)
-    private static final int FRAME_UP = 2;     // tile_0025
-    private static final int FRAME_RIGHT = 3;  // tile_0026
+    private static final int FRAME_LEFT = 0;
+    private static final int FRAME_DOWN = 1;
+    private static final int FRAME_UP = 2;
+    private static final int FRAME_RIGHT = 3;
     private int currentFrame = FRAME_DOWN;
+
+    private Image[] securityFrames;
+    private int securityCurrentFrame = FRAME_DOWN;
 
     private int score = 0;
     private boolean score_saved = false;
@@ -68,9 +72,14 @@ public class GamePanel extends JPanel {
     private Spawn_Bonus bonus_spawner;
     private Spawn_Penalty penalty_spawner;
 
-
     private int enemyMoveCooldown = 0;
-    private final int enemyMoveDelay = 14;
+    private final int enemyMoveDelay = 2;
+    private final double enemySpeed = 3;
+
+    private double enemyPosX;
+    private double enemyPosY;
+    private Point enemyTarget;
+
 
     public GamePanel() {
         this.game = game;
@@ -79,12 +88,12 @@ public class GamePanel extends JPanel {
         this.game_map = new Game_Map();
         this.startTime = System.currentTimeMillis();
         loadPlayerFrames();
+        loadSecurityFrames();
         resetGameState();
 
         setPreferredSize(new Dimension(PANEL_WIDTH, PANEL_HEIGHT));
         setBackground(Color.BLACK);
         setFocusable(true);
-
 //        // Starting Bonus Items
 //        for (int i = 0; i < 4; i++) {
 //            Bonus_Items.add(bonus_spawner.spawnBonus());
@@ -154,9 +163,13 @@ public class GamePanel extends JPanel {
         gamePaused = false;
 
         currentFrame = FRAME_DOWN;
+        securityCurrentFrame = FRAME_DOWN;
         keysHeld.clear();
 
         securityGuard = new SecurityGuard(500, 300, 100);
+        enemyPosX = securityGuard.getX();
+        enemyPosY = securityGuard.getY();
+        enemyTarget = null;
         enemyMoveCooldown = 0;
 
         itemX = new int[]{500, 650, 350};
@@ -187,6 +200,28 @@ public class GamePanel extends JPanel {
             playerFrames = null; // fallback to rectangle
         }
     }
+
+    private void loadSecurityFrames() {
+        try (InputStream stream = getClass().getClassLoader().getResourceAsStream("tiles/security.png")) {
+            if (stream == null) {
+                throw new IllegalArgumentException("Missing resource: security.png");
+            }
+
+            BufferedImage sheet = ImageIO.read(stream);
+            int frameW = sheet.getWidth() / 2;
+            int frameH = sheet.getHeight() / 2;
+
+            securityFrames = new Image[4];
+            securityFrames[FRAME_LEFT] = sheet.getSubimage(0, 0, frameW, frameH);
+            securityFrames[FRAME_DOWN] = sheet.getSubimage(frameW, 0, frameW, frameH);
+            securityFrames[FRAME_UP] = sheet.getSubimage(frameW, frameH, frameW, frameH);
+            securityFrames[FRAME_RIGHT] = sheet.getSubimage(0, frameH, frameW, frameH);
+        } catch (Exception e) {
+            System.err.println("Failed to load security frames: " + e.getMessage());
+            securityFrames = null;
+        }
+    }
+
 
     private void update() {
         if (gameOver) {
@@ -273,23 +308,63 @@ public class GamePanel extends JPanel {
     }
 
     private void moveEnemyTowardPlayer() {
-        enemyMoveCooldown++;
-        if (enemyMoveCooldown < enemyMoveDelay) {
+        enemyPosX = securityGuard.getX();
+        enemyPosY = securityGuard.getY();
+
+        if (enemyTarget == null) {
+            enemyMoveCooldown++;
+            if (enemyMoveCooldown < enemyMoveDelay) {
+                return;
+            }
+            enemyMoveCooldown = 0;
+
+            Point nextStep = Pathfinder.getNextStep(
+                    game_map,
+                    securityGuard.getX(),
+                    securityGuard.getY(),
+                    playerX,
+                    playerY
+            );
+
+            if (nextStep == null || !canMoveTo(nextStep.x, nextStep.y, enemySize, enemySize)) {
+                return;
+            }
+
+            enemyTarget = nextStep;
+        }
+
+        double dx = enemyTarget.x - enemyPosX;
+        double dy = enemyTarget.y - enemyPosY;
+        double distance = Math.hypot(dx, dy);
+
+        if (distance < 0.001) {
+            enemyTarget = null;
             return;
         }
-        enemyMoveCooldown = 0;
 
-        Point nextStep = Pathfinder.getNextStep(
-                game_map,
-                securityGuard.getX(),
-                securityGuard.getY(),
-                playerX,
-                playerY
-        );
+        if (Math.abs(dx) > Math.abs(dy)) {
+            securityCurrentFrame = dx > 0 ? FRAME_RIGHT : FRAME_LEFT;
+        } else {
+            securityCurrentFrame = dy > 0 ? FRAME_DOWN : FRAME_UP;
+        }
 
-        if (nextStep != null && canMoveTo(nextStep.x, nextStep.y, enemySize, enemySize)) {
-            securityGuard.setX(nextStep.x);
-            securityGuard.setY(nextStep.y);
+        double step = Math.min(enemySpeed, distance);
+        int nextX = (int) Math.round(enemyPosX + (dx / distance) * step);
+        int nextY = (int) Math.round(enemyPosY + (dy / distance) * step);
+
+        if (canMoveTo(nextX, nextY, enemySize, enemySize)) {
+            securityGuard.setX(nextX);
+            securityGuard.setY(nextY);
+        } else {
+            enemyTarget = null;
+            return;
+        }
+
+        if (Math.abs(securityGuard.getX() - enemyTarget.x) <= 1
+                && Math.abs(securityGuard.getY() - enemyTarget.y) <= 1) {
+            securityGuard.setX(enemyTarget.x);
+            securityGuard.setY(enemyTarget.y);
+            enemyTarget = null;
         }
     }
 
@@ -397,8 +472,12 @@ public class GamePanel extends JPanel {
         g.drawString("CMPT 276 Grocery Game", 320, 50);
         g.drawString("Time: " + elapsedSeconds + "s", 700, 50);
 
-        g.setColor(Color.RED);
-        g.fillRect(securityGuard.getX(), securityGuard.getY(), enemySize, enemySize);
+        if (securityFrames != null && securityFrames.length > 0) {
+            g.drawImage(securityFrames[securityCurrentFrame], securityGuard.getX(), securityGuard.getY(), enemySize, enemySize, null);
+        } else {
+            g.setColor(Color.RED);
+            g.fillRect(securityGuard.getX(), securityGuard.getY(), enemySize, enemySize);
+        }
 
         g.setColor(Color.YELLOW);
         for (int i = 0; i < itemX.length; i++) {
