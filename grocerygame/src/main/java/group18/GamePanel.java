@@ -16,8 +16,6 @@ import java.awt.event.KeyEvent;
 import java.io.InputStream;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.ArrayList;
-import java.util.List;
 
 public class GamePanel extends JPanel {
 
@@ -55,24 +53,10 @@ public class GamePanel extends JPanel {
     private boolean gameStarted = false;
     private boolean gamePaused = false;
 
-    private Game game = null;
     private final Game_Map game_map;
     private final Set<Integer> keysHeld = new HashSet<>();
 
-<<<<<<< HEAD
-    private final SecurityGuard securityGuard = new SecurityGuard(500, 300, 100);
-    private final int enemySize = 30;
-
-    private int[] itemX = {500, 650, 350};
-    private int[] itemY = {200, 450, 350};
-    private boolean[] itemCollected = {false, false, false};
-
-    private List<Item_Additional> items = new ArrayList<>();
-    private Spawn_Additional spawner;
-
-=======
     private SecurityGuard securityGuard;
->>>>>>> f440ee9894abafdbda4bc5545252030c75ce36dd
     private int enemyMoveCooldown = 0;
 
     private int[] itemX;
@@ -80,8 +64,6 @@ public class GamePanel extends JPanel {
     private boolean[] itemCollected;
 
     public GamePanel() {
-        this.game = game;
-        this.spawner = new Spawn_Additional(game);
         this.game_map = new Game_Map();
         loadPlayerFrames();
         resetGameState();
@@ -89,11 +71,6 @@ public class GamePanel extends JPanel {
         setPreferredSize(new Dimension(PANEL_WIDTH, PANEL_HEIGHT));
         setBackground(Color.BLACK);
         setFocusable(true);
-
-        // Starting Aditional Items
-        for (int i = 0; i < 3; i++) {
-            items.add(spawner.spawnAdditional());
-        }
 
         addKeyListener(new KeyAdapter() {
             @Override
@@ -234,14 +211,9 @@ public class GamePanel extends JPanel {
             playerY += dY;
         }
 
-        if (Item.count < Item.limit) {
-            items.add(spawner.spawnAdditional());
-        }
-
         moveEnemyTowardPlayer();
         checkEnemyCollision();
         checkItemCollection();
-        checkExitWinCondition();
     }
 
     private void saveScoreOnce() {
@@ -297,48 +269,18 @@ public class GamePanel extends JPanel {
     }
 
     private void checkItemCollection() {
-
         for (int i = 0; i < itemX.length; i++) {
             if (itemCollected[i]) continue;
+
             boolean overlap =
                     playerX < itemX[i] + 20 &&
-<<<<<<< HEAD
-                    playerX + playerWidth > itemX[i] &&
-                    playerY < itemY[i] + 20 &&
-                    playerY + playerHeight > itemY[i];
-=======
                             playerX + PLAYER_WIDTH > itemX[i] &&
                             playerY < itemY[i] + 20 &&
                             playerY + PLAYER_HEIGHT > itemY[i];
->>>>>>> f440ee9894abafdbda4bc5545252030c75ce36dd
 
             if (overlap) {
                 itemCollected[i] = true;
-                score += 50;
-            }
-        }
-
-        for (Item_Additional item : items) {
-
-            if (item.collected) {
-                continue;
-            }
-
-            boolean overlap =
-                    playerX < item.position_x + 20 &&
-                            playerX + playerWidth > item.position_x &&
-                            playerY < item.position_y + 20 &&
-                            playerY + playerHeight > item.position_y;
-
-            if (overlap) {
-                item.collected = true;
-                if (item.addlclass == Item_Addl_Class.Penalty) {
-                    score -= item.value;
-                }
-                else {
-                    score += item.value;
-                }
-                Item.count -= 1;
+                score += 10;
             }
         }
     }
@@ -352,22 +294,6 @@ public class GamePanel extends JPanel {
         return true;
     }
 
-    private void checkExitWinCondition() {
-        if (!allItemsCollected()) {
-            return;
-        }
-
-        boolean overlap =
-                playerX < EXIT_X + EXIT_SIZE &&
-                        playerX + PLAYER_WIDTH > EXIT_X &&
-                        playerY < EXIT_Y + EXIT_SIZE &&
-                        playerY + PLAYER_HEIGHT > EXIT_Y;
-
-        if (overlap) {
-            gameWon = true;
-            endTime = System.currentTimeMillis();
-        }
-    }
 
     @Override
     protected void paintComponent(Graphics g) {
@@ -393,10 +319,7 @@ public class GamePanel extends JPanel {
         g.drawString("CMPT 276 Grocery Game", 320, 50);
         g.drawString("Time: " + elapsedSeconds + "s", 700, 50);
 
-        g.setColor(Color.CYAN);
-        g.fillRect(EXIT_X, EXIT_Y, EXIT_SIZE, EXIT_SIZE);
-        g.setColor(Color.WHITE);
-        g.drawString("EXIT", EXIT_X - 2, EXIT_Y - 5);
+
 
         g.setColor(Color.RED);
         g.fillRect(securityGuard.getX(), securityGuard.getY(), ENEMY_SIZE, ENEMY_SIZE);
@@ -405,24 +328,6 @@ public class GamePanel extends JPanel {
         for (int i = 0; i < itemX.length; i++) {
             if (!itemCollected[i]) {
                 g.fillRect(itemX[i], itemY[i], 20, 20);
-            }
-        }
-
-        g.setColor(Color.ORANGE);
-        for (Item_Additional item : items) {
-            if (item.addlclass == Item_Addl_Class.Bonus) {
-                if (!item.collected) {
-                    g.fillRect(item.position_x, item.position_y, 20, 20);
-                }
-            }
-        }
-
-        g.setColor(Color.RED);
-        for (Item_Additional item : items) {
-            if (item.addlclass == Item_Addl_Class.Penalty) {
-                if (!item.collected) {
-                    g.fillRect(item.position_x, item.position_y, 20, 20);
-                }
             }
         }
 
