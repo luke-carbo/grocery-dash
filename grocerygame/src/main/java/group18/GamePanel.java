@@ -1,6 +1,5 @@
 package group18;
 
-import group18.ai.Pathfinder;
 import group18.enemy.SecurityGuard;
 import group18.mapCreation.Game_Map;
 
@@ -8,7 +7,6 @@ import javax.swing.*;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
-import java.awt.Point;
 import java.awt.Image;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
@@ -34,18 +32,11 @@ public class GamePanel extends JPanel {
     private static final int EXIT_Y = 0;
     private static final int EXIT_SIZE = 10;
 
-    private int playerX;
-    private int playerY;
+    private Player player;
 
     private Image[] playerFrames;
-    private static final int FRAME_LEFT = 0;
-    private static final int FRAME_DOWN = 1;
-    private static final int FRAME_UP = 2;
-    private static final int FRAME_RIGHT = 3;
-    private int currentFrame = FRAME_DOWN;
 
     private Image[] securityFrames;
-    private int securityCurrentFrame = FRAME_DOWN;
 
     private int score = 0;
     private boolean score_saved = false;
@@ -62,7 +53,7 @@ public class GamePanel extends JPanel {
     private final Set<Integer> keysHeld = new HashSet<>();
 
     private SecurityGuard securityGuard;
-    private final int enemySize = 30;
+    private SecurityGuard.ChaseState chaseState;
 
     private List<Item_Main> Main_Items = new ArrayList<>();
     private List<Item_Bonus> Bonus_Items = new ArrayList<>();
@@ -70,14 +61,6 @@ public class GamePanel extends JPanel {
     private Spawn_Main main_spawner;
     private Spawn_Bonus bonus_spawner;
     private Spawn_Penalty penalty_spawner;
-
-    private int enemyMoveCooldown = 0;
-    private final int enemyMoveDelay = 2;
-    private final double enemySpeed = 3;
-
-    private double enemyPosX;
-    private double enemyPosY;
-    private Point enemyTarget;
 
     /**
      * this panel runs the main gameplay loop and handles input, updates, and drawing.
@@ -157,10 +140,7 @@ public class GamePanel extends JPanel {
      * it is used when the game starts and when the player restarts.
      */
     private void resetGameState() {
-        GameStateResetHelper.ResetStateData data = GameStateResetHelper.createResetState(FRAME_DOWN);
-
-        playerX = data.playerX;
-        playerY = data.playerY;
+        GameStateResetHelper.ResetStateData data = GameStateResetHelper.createResetState(Player.FRAME_DOWN);
 
         startTime = data.startTime;
         endTime = data.endTime;
@@ -170,15 +150,21 @@ public class GamePanel extends JPanel {
         gameStarted = data.gameStarted;
         gamePaused = data.gamePaused;
 
-        currentFrame = data.currentFrame;
-        securityCurrentFrame = data.securityCurrentFrame;
         keysHeld.clear();
 
+        if (player == null) {
+            player = new Player(data.playerX, data.playerY);
+        } else {
+            player.setX(data.playerX);
+            player.setY(data.playerY);
+        }
+        player.setCurrentFrame(data.currentFrame);
+
         securityGuard = data.securityGuard;
-        enemyPosX = data.enemyPosX;
-        enemyPosY = data.enemyPosY;
-        enemyTarget = data.enemyTarget;
-        enemyMoveCooldown = data.enemyMoveCooldown;
+        if (chaseState == null) {
+            chaseState = securityGuard.createChaseState(Player.FRAME_DOWN);
+        }
+        securityGuard.resetChaseState(chaseState, data.enemyTarget, data.enemyMoveCooldown, data.securityCurrentFrame);
 
         score_saved = false;
 
@@ -232,22 +218,7 @@ public class GamePanel extends JPanel {
             return;
         }
 
-        int[] movement = PlayerMovementHelper.getMovementDelta(keysHeld, playerSpeed);
-        int dX = movement[0];
-        int dY = movement[1];
-
-        currentFrame = PlayerMovementHelper.getFrame(keysHeld, currentFrame, FRAME_LEFT, FRAME_DOWN, FRAME_UP, FRAME_RIGHT);
-
-        if (dX == 0 && dY == 0) {
-            currentFrame = FRAME_DOWN;
-        }
-
-        if (canMoveTo(playerX + dX, playerY, playerWidth, playerHeight)) {
-            playerX += dX;
-        }
-        if (canMoveTo(playerX, playerY + dY, playerWidth, playerHeight)) {
-            playerY += dY;
-        }
+        player.update(keysHeld, playerSpeed, game_map, playerWidth, playerHeight);
 
         if (Item.bonus_count < Item.bonus_limit) {
             Bonus_Items.add(bonus_spawner.spawnBonus());
@@ -257,7 +228,15 @@ public class GamePanel extends JPanel {
             Penalty_Items.add(penalty_spawner.spawnPenalty());
         }
 
-        moveEnemyTowardPlayer();
+        securityGuard.update(
+                game_map,
+                player,
+                chaseState,
+                Player.FRAME_LEFT,
+                Player.FRAME_DOWN,
+                Player.FRAME_UP,
+                Player.FRAME_RIGHT
+        );
         checkEnemyCollision();
         checkItemCollection();
         checkWinCondition();
@@ -276,102 +255,11 @@ public class GamePanel extends JPanel {
     }
 
     /**
-     * this checks whether all four corners of a rectangle are on walkable tiles.
-     * it returns true when movement to the target area is allowed.
-     *
-     * @param x the rectangle x position
-     * @param y the rectangle y position
-     * @param width the rectangle width
-     * @param height the rectangle height
-     * @return true if the rectangle does not collide with solid tiles
-     */
-    private boolean canMoveTo(int x, int y, int width, int height) {
-        return !game_map.isSolid(x, y)
-                && !game_map.isSolid(x + width - 1, y)
-                && !game_map.isSolid(x, y + height - 1)
-                && !game_map.isSolid(x + width - 1, y + height - 1);
-    }
-
-    /**
-     * this moves the enemy toward the player using pathfinding and smooth stepping.
-     * it updates the enemy facing frame based on movement direction.
-     */
-    private void moveEnemyTowardPlayer() {
-        enemyPosX = securityGuard.getX();
-        enemyPosY = securityGuard.getY();
-
-        if (enemyTarget == null) {
-            enemyMoveCooldown++;
-            if (enemyMoveCooldown < enemyMoveDelay) {
-                return;
-            }
-            enemyMoveCooldown = 0;
-
-            Point nextStep = Pathfinder.getNextStep(
-                    game_map,
-                    securityGuard.getX(),
-                    securityGuard.getY(),
-                    playerX,
-                    playerY
-            );
-
-            if (nextStep == null || !canMoveTo(nextStep.x, nextStep.y, enemySize, enemySize)) {
-                return;
-            }
-
-            enemyTarget = nextStep;
-        }
-
-        double dx = enemyTarget.x - enemyPosX;
-        double dy = enemyTarget.y - enemyPosY;
-        double distance = Math.hypot(dx, dy);
-
-        if (distance < 0.001) {
-            enemyTarget = null;
-            return;
-        }
-
-        if (Math.abs(dx) > Math.abs(dy)) {
-            securityCurrentFrame = dx > 0 ? FRAME_RIGHT : FRAME_LEFT;
-        } else {
-            securityCurrentFrame = dy > 0 ? FRAME_DOWN : FRAME_UP;
-        }
-
-        double step = Math.min(enemySpeed, distance);
-        int nextX = (int) Math.round(enemyPosX + (dx / distance) * step);
-        int nextY = (int) Math.round(enemyPosY + (dy / distance) * step);
-
-        if (canMoveTo(nextX, nextY, enemySize, enemySize)) {
-            securityGuard.setX(nextX);
-            securityGuard.setY(nextY);
-        } else {
-            enemyTarget = null;
-            return;
-        }
-
-        if (Math.abs(securityGuard.getX() - enemyTarget.x) <= 1
-                && Math.abs(securityGuard.getY() - enemyTarget.y) <= 1) {
-            securityGuard.setX(enemyTarget.x);
-            securityGuard.setY(enemyTarget.y);
-            enemyTarget = null;
-        }
-    }
-
-    /**
      * this checks overlap between the player and enemy hitboxes.
      * it ends the game when they collide.
      */
     private void checkEnemyCollision() {
-        int enemyX = securityGuard.getX();
-        int enemyY = securityGuard.getY();
-
-        boolean overlap =
-                playerX < enemyX + enemySize &&
-                        playerX + playerWidth > enemyX &&
-                        playerY < enemyY + enemySize &&
-                        playerY + playerHeight > enemyY;
-
-        if (overlap) {
+        if (securityGuard.collidesWithPlayer(player, playerWidth, playerHeight)) {
             gameOver = true;
             endTime = System.currentTimeMillis();
         }
@@ -382,90 +270,17 @@ public class GamePanel extends JPanel {
      * it updates score and item counters when items are picked up.
      */
     private void checkItemCollection() {
-
         for (Item_Main item : Main_Items) {
-
-            if (item.collected) {
-                continue;
-            }
-
-            boolean overlap =
-                    playerX < item.position_x + 20 &&
-                            playerX + playerWidth > item.position_x &&
-                            playerY < item.position_y + 20 &&
-                            playerY + playerHeight > item.position_y;
-
-            if (overlap) {
-                item.collected = true;
-                score += item.value;
-            }
+            score += item.collectIfTouched(player.getX(), player.getY(), playerWidth, playerHeight);
         }
 
         for (Item_Bonus item : Bonus_Items) {
-
-            if (item.collected) {
-                continue;
-            }
-
-            boolean overlap =
-                    playerX < item.position_x + 20 &&
-                            playerX + playerWidth > item.position_x &&
-                            playerY < item.position_y + 20 &&
-                            playerY + playerHeight > item.position_y;
-
-            if (overlap) {
-                item.collected = true;
-                score += item.value;
-                Item.bonus_count -= 1;
-            }
+            score += item.collectIfTouched(player.getX(), player.getY(), playerWidth, playerHeight);
         }
 
         for (Item_Penalty item : Penalty_Items) {
-
-            if (item.collected) {
-                continue;
-            }
-
-            boolean overlap =
-                    playerX < item.position_x + 20 &&
-                            playerX + playerWidth > item.position_x &&
-                            playerY < item.position_y + 20 &&
-                            playerY + playerHeight > item.position_y;
-
-            if (overlap) {
-                item.collected = true;
-                score -= item.value;
-                Item.penalty_count -= 1;
-            }
+            score += item.collectIfTouched(player.getX(), player.getY(), playerWidth, playerHeight);
         }
-    }
-
-    /**
-     * this checks if every required base item has been collected.
-     * it returns true only when none are left.
-     *
-     * @return true if all base items are collected
-     */
-    private boolean allItemsCollected() {
-        for (Item_Main item : Main_Items) {
-            if (!item.collected) {
-                return false;
-            }
-        }
-        return true;
-    }
-
-    /**
-     * this checks whether the player is overlapping the exit area.
-     * it is used for win condition validation.
-     *
-     * @return true if the player touches the exit
-     */
-    private boolean isPlayerAtExit() {
-        return playerX < EXIT_X + EXIT_SIZE &&
-                playerX + playerWidth > EXIT_X &&
-                playerY < EXIT_Y + EXIT_SIZE &&
-                playerY + playerHeight > EXIT_Y;
     }
 
     /**
@@ -473,7 +288,17 @@ public class GamePanel extends JPanel {
      * it also records the end time.
      */
     private void checkWinCondition() {
-        if (!gameWon && allItemsCollected() && isPlayerAtExit()) {
+        boolean allMainItemsCollected = Item_Main.areAllCollected(Main_Items);
+        boolean playerAtExit = GameRulesHelper.isPlayerAtExit(
+                player.getX(),
+                player.getY(),
+                playerWidth,
+                playerHeight,
+                EXIT_X,
+                EXIT_Y,
+                EXIT_SIZE
+        );
+        if (GameRulesHelper.hasWon(gameWon, allMainItemsCollected, playerAtExit)) {
             gameWon = true;
             endTime = System.currentTimeMillis();
         }
@@ -510,10 +335,22 @@ public class GamePanel extends JPanel {
         g.drawString("Time: " + elapsedSeconds + "s", 700, 50);
 
         if (securityFrames != null && securityFrames.length > 0) {
-            g.drawImage(securityFrames[securityCurrentFrame], securityGuard.getX(), securityGuard.getY(), enemySize, enemySize, null);
+            g.drawImage(
+                    securityFrames[chaseState.frame],
+                    securityGuard.getX(),
+                    securityGuard.getY(),
+                    securityGuard.getEnemySize(),
+                    securityGuard.getEnemySize(),
+                    null
+            );
         } else {
             g.setColor(Color.RED);
-            g.fillRect(securityGuard.getX(), securityGuard.getY(), enemySize, enemySize);
+            g.fillRect(
+                    securityGuard.getX(),
+                    securityGuard.getY(),
+                    securityGuard.getEnemySize(),
+                    securityGuard.getEnemySize()
+            );
         }
 
         g.setColor(Color.YELLOW);
@@ -538,10 +375,10 @@ public class GamePanel extends JPanel {
         }
 
         if (playerFrames != null && playerFrames.length > 0) {
-            g.drawImage(playerFrames[currentFrame], playerX, playerY, playerWidth, playerHeight, null);
+            g.drawImage(playerFrames[player.getCurrentFrame()], player.getX(), player.getY(), playerWidth, playerHeight, null);
         } else {
             g.setColor(Color.GREEN);
-            g.fillRect(playerX, playerY, playerWidth, playerHeight);
+            g.fillRect(player.getX(), player.getY(), playerWidth, playerHeight);
         }
 
         if (gameOver) {
@@ -563,7 +400,7 @@ public class GamePanel extends JPanel {
             g.drawString("Press R to Restart", 355, 340);
         }
 
-        if (!allItemsCollected()) {
+        if (!Item_Main.areAllCollected(Main_Items)) {
             g.setColor(Color.WHITE);
             g.drawString("Collect all items, then go to EXIT", 290, 575);
         }
