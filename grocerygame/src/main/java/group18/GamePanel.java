@@ -290,6 +290,7 @@ public class GamePanel extends JPanel {
         moveEnemyTowardPlayer();
         checkEnemyCollision();
         checkItemCollection();
+        checkWinCondition();
     }
 
     private void saveScoreOnce() {
@@ -446,6 +447,20 @@ public class GamePanel extends JPanel {
             }
         }
         return true;
+    }
+
+    private boolean isPlayerAtExit() {
+        return playerX < EXIT_X + EXIT_SIZE &&
+                playerX + playerWidth > EXIT_X &&
+                playerY < EXIT_Y + EXIT_SIZE &&
+                playerY + playerHeight > EXIT_Y;
+    }
+
+    private void checkWinCondition() {
+        if (!gameWon && allItemsCollected() && isPlayerAtExit()) {
+            gameWon = true;
+            endTime = System.currentTimeMillis();
+        }
     }
 
     @Override
