@@ -3,16 +3,15 @@ package group18;
 /**
  * Bonus items class (Both positive and negative)
  */
-public class Item_Additional extends Item {
+public class Item_Bonus extends Item {
 
     private final Game game;
-    public Item_Addl_Class addlclass;
     public boolean collected = false;
 
-    public Item_Additional(Game game) {
+    public Item_Bonus(Game game) {
         this.game = game;
-        type = Item_Class.Additional;
-        this.count += 1;
+        type = Item_Class.Bonus;
+        this.bonus_count += 1;
     }
 
     @Override
@@ -23,8 +22,6 @@ public class Item_Additional extends Item {
 
     @Override
     public void update() {
-        if(this.getCount() < this.getLimit()) {
-            new Spawn_Additional(game);
-        }
+        // TBD
     }
 }

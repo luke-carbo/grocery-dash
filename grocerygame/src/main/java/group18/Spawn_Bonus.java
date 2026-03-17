@@ -1,20 +1,19 @@
 package group18;
 
-public class Spawn_Additional {
+public class Spawn_Bonus {
 
     private final Game game;
 
-    public Spawn_Additional(Game game) {
+    public Spawn_Bonus(Game game) {
         this.game = game;
     }
 
-    public Item_Additional spawnAdditional() {
+    public Item_Bonus spawnBonus() {
 
-        Item_Additional Item = new Item_Additional(game);
+        Item_Bonus Item = new Item_Bonus(game);
 
         Item.position_x = randomX();
         Item.position_y = randomY();
-        Item.addlclass = randomClass();
         Item.value = randomValue();
 
         // Conditional Sprite and Value terms based on Spawn Region
@@ -30,18 +29,6 @@ public class Spawn_Additional {
     private int randomY() {
         // Random Roll for Spawn Region
         return (int) (Math.random() * 380 + 120); // 600 - 60 (Top Wall) - 60 (Bottom Wall) + 120 (Spacing)
-    }
-
-    private Item_Addl_Class randomClass() {
-        // Random Roll for Spawn Region
-        int temp = (int) (Math.random() * 100);
-        if (temp > 70) { // Or Whatever Bonus Rate
-            return Item_Addl_Class.Bonus;
-        }
-
-        else {
-            return Item_Addl_Class.Penalty;
-        }
     }
 
     private int randomValue() {

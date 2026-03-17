@@ -22,12 +22,9 @@ public class GamePanel extends JPanel {
     private static final int PANEL_WIDTH = 800;
     private static final int PANEL_HEIGHT = 600;
 
-    private static final int PLAYER_WIDTH = 30;
-    private static final int PLAYER_HEIGHT = 30;
-    private static final int PLAYER_SPEED = 3;
-
-    private static final int ENEMY_SIZE = 30;
-    private static final int ENEMY_MOVE_DELAY = 14;
+    private static final int playerWidth = 30;
+    private static final int playerHeight = 30;
+    private static final int playerSpeed = 3;
 
     private static final int EXIT_X = 620;
     private static final int EXIT_Y = 70;
@@ -57,6 +54,17 @@ public class GamePanel extends JPanel {
     private final Set<Integer> keysHeld = new HashSet<>();
 
     private SecurityGuard securityGuard;
+    private final int enemySize = 30;
+
+    private int[] itemX = {500, 650, 350};
+    private int[] itemY = {200, 450, 350};
+    private boolean[] itemCollected = {false, false, false};
+
+    private List<Item_Bonus> Bonus_Items = new ArrayList<>();
+    private List<Item_Penalty> Penalty_Items = new ArrayList<>();
+    private Spawn_Bonus bonus_spawner;
+    private Spawn_Penalty penalty_spawner;
+
     private int enemyMoveCooldown = 0;
 
     private int[] itemX;
@@ -64,6 +72,11 @@ public class GamePanel extends JPanel {
     private boolean[] itemCollected;
 
     public GamePanel() {
+
+        this.game = game;
+        this.bonus_spawner = new Spawn_Bonus(game);
+        this.penalty_spawner = new Spawn_Penalty(game);
+
         this.game_map = new Game_Map();
         loadPlayerFrames();
         resetGameState();
@@ -71,6 +84,16 @@ public class GamePanel extends JPanel {
         setPreferredSize(new Dimension(PANEL_WIDTH, PANEL_HEIGHT));
         setBackground(Color.BLACK);
         setFocusable(true);
+
+//        // Starting Bonus Items
+//        for (int i = 0; i < 4; i++) {
+//            Bonus_Items.add(bonus_spawner.spawnBonus());
+//        }
+//
+//        // Starting Penalty Items
+//        for (int i = 0; i < 2; i++) {
+//            Penalty_Items.add(penalty_spawner.spawnPenalty());
+//        }
 
         addKeyListener(new KeyAdapter() {
             @Override
@@ -121,7 +144,9 @@ public class GamePanel extends JPanel {
         playerY = 570;
 
         score = 0;
-        scoreSaved = false;
+     
+        score_saved = false;
+
         startTime = 0;
         endTime = 0;
 
@@ -166,6 +191,17 @@ public class GamePanel extends JPanel {
     }
 
     private void update() {
+
+        if (gameOver) {
+            if(!score_saved) {
+//                int high_score = score + (int) ((endTime -  startTime)/1000);
+                int high_score = score;
+                Score_Tracker.saveScore(high_score);
+                score_saved = true;
+                return;
+            }
+            return;
+        };
         if (!gameStarted || gamePaused) {
             return;
         }
@@ -179,19 +215,20 @@ public class GamePanel extends JPanel {
         int dY = 0;
 
         if (keysHeld.contains(KeyEvent.VK_W)) {
-            dY -= PLAYER_SPEED;
+
+            dY -= playerSpeed;
             currentFrame = FRAME_UP;
         }
         if (keysHeld.contains(KeyEvent.VK_S)) {
-            dY += PLAYER_SPEED;
+            dY += playerSpeed;
             currentFrame = FRAME_DOWN;
         }
         if (keysHeld.contains(KeyEvent.VK_D)) {
-            dX += PLAYER_SPEED;
+            dX += playerSpeed;
             currentFrame = FRAME_RIGHT;
         }
         if (keysHeld.contains(KeyEvent.VK_A)) {
-            dX -= PLAYER_SPEED;
+            dX -= playerSpeed;
             currentFrame = FRAME_LEFT;
         }
 
@@ -204,11 +241,19 @@ public class GamePanel extends JPanel {
             currentFrame = FRAME_DOWN;
         }
 
-        if (canMoveTo(playerX + dX, playerY, PLAYER_WIDTH, PLAYER_HEIGHT)) {
+        if (canMoveTo(playerX + dX, playerY, playerWidth, playerHeight)) {
             playerX += dX;
         }
-        if (canMoveTo(playerX, playerY + dY, PLAYER_WIDTH, PLAYER_HEIGHT)) {
+        if (canMoveTo(playerX, playerY + dY, playerWidth, playerHeight)) {
             playerY += dY;
+        }
+
+        if (Item.bonus_count < Item.bonus_limit) {
+            Bonus_Items.add(bonus_spawner.spawnBonus());
+        }
+
+        if (Item.penalty_count < Item.penalty_limit) {
+            Penalty_Items.add(penalty_spawner.spawnPenalty());
         }
 
         moveEnemyTowardPlayer();
@@ -217,10 +262,11 @@ public class GamePanel extends JPanel {
     }
 
     private void saveScoreOnce() {
-        if (!scoreSaved) {
+
+        if (!score_saved) {
             int finalScore = score + (int) ((endTime - startTime) / 1000);
             Score_Tracker.saveScore(finalScore);
-            scoreSaved = true;
+            score_saved = true;
         }
     }
 
@@ -274,9 +320,10 @@ public class GamePanel extends JPanel {
 
             boolean overlap =
                     playerX < itemX[i] + 20 &&
-                            playerX + PLAYER_WIDTH > itemX[i] &&
+                            playerX + playerWidth > itemX[i] &&
                             playerY < itemY[i] + 20 &&
-                            playerY + PLAYER_HEIGHT > itemY[i];
+                            playerY + playerHeight > itemY[i];
+
 
             if (overlap) {
                 itemCollected[i] = true;
@@ -284,6 +331,46 @@ public class GamePanel extends JPanel {
             }
         }
     }
+
+        for (Item_Bonus item : Bonus_Items) {
+
+            if (item.collected) {
+                continue;
+            }
+
+            boolean overlap =
+                    playerX < item.position_x + 20 &&
+                            playerX + playerWidth > item.position_x &&
+                            playerY < item.position_y + 20 &&
+                            playerY + playerHeight > item.position_y;
+
+            if (overlap) {
+                item.collected = true;
+                score += item.value;
+                Item.bonus_count -= 1;
+            }
+        }
+
+        for (Item_Penalty item : Penalty_Items) {
+
+            if (item.collected) {
+                continue;
+            }
+
+            boolean overlap =
+                    playerX < item.position_x + 20 &&
+                            playerX + playerWidth > item.position_x &&
+                            playerY < item.position_y + 20 &&
+                            playerY + playerHeight > item.position_y;
+
+            if (overlap) {
+                item.collected = true;
+                score -= item.value;
+                Item.penalty_count -= 1;
+            }
+        }
+    }
+
 
     private boolean allItemsCollected() {
         for (boolean collected : itemCollected) {
@@ -328,6 +415,20 @@ public class GamePanel extends JPanel {
         for (int i = 0; i < itemX.length; i++) {
             if (!itemCollected[i]) {
                 g.fillRect(itemX[i], itemY[i], 20, 20);
+            }
+        }
+
+        g.setColor(Color.ORANGE);
+        for (Item_Bonus item : Bonus_Items) {
+            if (!item.collected) {
+                g.fillRect(item.position_x, item.position_y, 20, 20);
+            }
+        }
+
+        g.setColor(Color.RED);
+        for (Item_Penalty item : Penalty_Items) {
+            if (!item.collected) {
+                g.fillRect(item.position_x, item.position_y, 20, 20);
             }
         }
 
