@@ -30,7 +30,7 @@ public abstract class Item extends Entity_Stationary{
     public static int penalty_limit = 3;
 
     /**
-     * Enum determining Item Class.
+     * Enum determining Item Class
      */
     Item_Class type;
 
