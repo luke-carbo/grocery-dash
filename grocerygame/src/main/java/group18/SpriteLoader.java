@@ -5,8 +5,18 @@ import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.InputStream;
 
+/**
+ * this utility loads sprite sheets and splits them into directional frames.
+ * it provides image arrays used by game rendering.
+ */
 public class SpriteLoader {
 
+    /**
+     * this loads and slices the player sprite sheet into four frames.
+     * it returns null if loading fails.
+     *
+     * @return an array of player frames, or null on failure
+     */
     public static Image[] loadCharacterFrames() {
         try (InputStream stream = SpriteLoader.class.getClassLoader().getResourceAsStream("tiles/character.png")) {
             if (stream == null) {
@@ -30,6 +40,12 @@ public class SpriteLoader {
         }
     }
 
+    /**
+     * this loads and slices the security sprite sheet into four frames.
+     * it returns null if loading fails.
+     *
+     * @return an array of security frames, or null on failure
+     */
     public static Image[] loadSecurityFrames() {
         try (InputStream stream = SpriteLoader.class.getClassLoader().getResourceAsStream("tiles/security.png")) {
             if (stream == null) {

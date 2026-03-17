@@ -3,11 +3,13 @@ package group18;
 import java.io.*;
 import java.util.*;
 
+/** this utility reads and writes the top scores to a local text file. */
 public class Score_Tracker{
 
     private static final String FILE = "scores.txt";
     private static final int MAX_SCORES = 5;
 
+    /** this loads saved scores from disk and returns them as a list. */
     public static List<Integer> loadScore() {
         List<Integer> scores = new ArrayList<>();
 
@@ -31,6 +33,7 @@ public class Score_Tracker{
         return scores;
     }
 
+    /** this adds a new score, keeps the best scores, and saves them to disk. */
     public static void saveScore(int newScore) {
 
         List<Integer> scores = loadScore();

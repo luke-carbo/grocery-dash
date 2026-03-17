@@ -2,8 +2,10 @@ package group18;
 
 import group18.enemy.SecurityGuard;
 
+/** this helper builds a full default state snapshot used to reset gameplay. */
 public class GameStateResetHelper {
 
+    /** this data object stores all values needed to restore a fresh game state. */
     public static class ResetStateData {
         public int playerX;
         public int playerY;
@@ -32,6 +34,7 @@ public class GameStateResetHelper {
         public boolean[] itemCollected;
     }
 
+    /** this creates and returns a reset data object with default starting values. */
     public static ResetStateData createResetState(int FRAME_DOWN) {
         ResetStateData data = new ResetStateData();
 
