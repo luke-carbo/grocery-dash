@@ -60,10 +60,6 @@ public class GameStateResetHelper {
         data.enemyTarget = null;
         data.enemyMoveCooldown = 0;
 
-        data.itemX = new int[]{500, 650, 350};
-        data.itemY = new int[]{200, 450, 350};
-        data.itemCollected = new boolean[]{false, false, false};
-
         return data;
     }
 }

@@ -1,9 +1,12 @@
 package group18;
 
-/** this class represents a main collectible item in the game. */
+/**
+ * Main Items Class (Required Items)
+ */
 public class Item_Main extends Item{
 
     private final Game game;
+    public boolean collected = false;
 
     /** this constructor sets the game reference and marks the item as main type. */
     public Item_Main(Game game) {

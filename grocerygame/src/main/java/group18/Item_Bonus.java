@@ -1,7 +1,7 @@
 package group18;
 
 /**
- * Bonus items class (Both positive and negative)
+ * Bonus items class (Additional Points)
  */
 public class Item_Bonus extends Item {
 
