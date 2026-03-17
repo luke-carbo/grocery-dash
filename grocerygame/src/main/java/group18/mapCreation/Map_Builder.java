@@ -18,20 +18,20 @@ public class Map_Builder {
                 "wwwwwwwwwwwwwwwwwwwwwffwwww",
                 "wwfffffffffffffffffffffffww",
                 "wwfffffffffffffffffffffffww",
-                "wwffffsssssffffffffffffffww",
+                "wwfffsbsbsbfffftbtbtbffffww",
+                "wwfffbbbbbbffffffffffffffww",
+                "wwfffffffffffffffffffffffww",
+                "wwffffffffffffftbtbtbffffww",
+                "wwfffsbsbsbffffbbbbbbffffww",
+                "wwfffbbbbbbffffffffffffffww",
                 "wwfffffffffffffffffffffffww",
                 "wwfffffffffffffffffffffffww",
-                "wwffffsssssffffffffffffffww",
+                "wwfffpbpbpbffffmbmbmbffffww",
+                "wwfffbbbbbbffffbbbbbbffffww",
                 "wwfffffffffffffffffffffffww",
                 "wwfffffffffffffffffffffffww",
-                "wwffffsssssffffffffffffffww",
-                "wwfffffffffffffffffffffffww",
-                "wwfffffffffffffffffffffffww",
-                "wwfffffffffffffffffffffffww",
-                "wwfffffffffffffffffffffffww",
-                "wwfffffffffffffffffffffffww",
-                "wwfffffffffffffffffffffffww",
-                "wwfffffffffffffffffffffffww",
+                "wwfffpbpbpbffffmbmbmbffffww",
+                "wwfffbbbbbbffffbbbbbbffffww",
                 "wwfffffffffffffffffffffffww",
                 "wwfffffffffffffffffffffffww",
                 "wwwwwffwwwwwwwwwwwwwwwwwwww"
@@ -52,9 +52,22 @@ public class Map_Builder {
     }
 
     public void draw(Graphics g) {
+        // Pass 1: draw floors and walls
         for (int i = 0; i < tile_Map.length; i++) {
             for (int j = 0; j < tile_Map[i].length; j++) {
-                tile_Map[i][j].draw(g, i, j);
+                Tile_Type t = tile_Map[i][j].getTileType();
+                if (t == Tile_Type.Floor || t == Tile_Type.Wall || t == Tile_Type.Blocked) {
+                    tile_Map[i][j].draw(g, i, j);
+                }
+            }
+        }
+        // Pass 2: Draw Objects in the middle
+        for (int i = 0; i < tile_Map.length; i++) {
+            for (int j = 0; j < tile_Map[i].length; j++) {
+                Tile_Type t = tile_Map[i][j].getTileType();
+                if (t == Tile_Type.Tech || t == Tile_Type.Meat || t == Tile_Type.Shelf || t == Tile_Type.Produce) {
+                    tile_Map[i][j].draw(g, i, j);
+                }
             }
         }
     }
