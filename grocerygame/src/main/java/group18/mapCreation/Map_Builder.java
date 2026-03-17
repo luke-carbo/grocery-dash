@@ -11,7 +11,7 @@ public class Map_Builder {
 
     /**
      * Creates map with all tiles
-     * Iterates through a string -> displays graphics in correct position
+     * Iterates through a string -> calls Map_Tile to draw the images in a particular spot
      */
     public Map_Builder() {
         String[] map = {
@@ -51,6 +51,10 @@ public class Map_Builder {
         }
     }
 
+    /**
+     * This draw method draws the floors and walls.
+     * @param g
+     */
     public void draw(Graphics g) {
         // Pass 1: draw floors and walls
         for (int i = 0; i < tile_Map.length; i++) {

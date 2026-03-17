@@ -7,7 +7,7 @@ import java.awt.image.BufferedImage;
 import static javax.swing.text.StyleConstants.setBackground;
 
 /**
- * Takes character 'c' and creates a tile type
+ * Gets images and tile types and draws them
  */
 public class Map_Tile {
 
@@ -31,7 +31,7 @@ public class Map_Tile {
             wallImage = ImageIO.read(Map_Tile.class.getResourceAsStream("/tiles/grocery_wall.png"));
 //            wallImage = ImageIO.read(Map_Tile.class.getResourceAsStream("/tiles/grocery_wall2.png"));
             floorImage = ImageIO.read(Map_Tile.class.getResourceAsStream("/tiles/grocery_floor.png"));
-            techStand = toCompatibleImage(ImageIO.read(Map_Tile.class.getResourceAsStream("/tiles/desktech.png")));
+            techStand = ImageIO.read(Map_Tile.class.getResourceAsStream("/tiles/desktech.png"));
             meatImage = ImageIO.read(Map_Tile.class.getResourceAsStream("/tiles/fridge.png"));
             produceImage = ImageIO.read(Map_Tile.class.getResourceAsStream("/tiles/produce.png"));
 
@@ -42,6 +42,10 @@ public class Map_Tile {
 
     }
 
+    /**
+     * Assigns types based on characters from Map_Builder
+     * @param c
+     */
     Map_Tile(char c) {
         switch (c) {
             case 'w':
@@ -67,6 +71,15 @@ public class Map_Tile {
                 break;
         }
     }
+
+    /**
+     * Draws each type of tile
+     * For Shelf, Tech, Meat, and Produce we have it draw the floor first so that the floor
+     * ends up as the background for the transparent parts of the objects
+     * @param g
+     * @param row
+     * @param column
+     */
     public void draw(Graphics g, int row, int column) {
         switch (type) {
             case Wall:
@@ -105,27 +118,14 @@ public class Map_Tile {
         }
     }
 
-
     public boolean isSolid() {
-        return type != null && type.isSolid();
+        return type.isSolid();
     }
 
     public Tile_Type getTileType() {
         return type;
     }
 
-    private static BufferedImage toCompatibleImage(BufferedImage image) {
-        BufferedImage newImage = new BufferedImage(
-                image.getWidth(),
-                image.getHeight(),
-                BufferedImage.TYPE_INT_ARGB
-        );
-        Graphics2D g = newImage.createGraphics();
-        g.setComposite(AlphaComposite.Clear);
-        g.fillRect(0, 0, image.getWidth(), image.getHeight()); // clear to transparent
-        g.setComposite(AlphaComposite.SrcOver);
-        g.drawImage(image, 0, 0, null);
-        g.dispose();
-        return newImage;
-    }
+
+
 }
