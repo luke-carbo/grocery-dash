@@ -5,8 +5,10 @@ import group18.mapCreation.Game_Map;
 import java.awt.Point;
 import java.util.*;
 
+/** this utility finds the next movement step from a start point to a target tile. */
 public class Pathfinder {
 
+    /** this runs a grid search and returns the next world-space step toward the target. */
     public static Point getNextStep(Game_Map map, int startX, int startY, int targetX, int targetY) {
 
         int tileSize = map.getTileSize();
