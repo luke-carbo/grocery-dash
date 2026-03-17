@@ -17,7 +17,7 @@ public abstract class Item extends Entity_Stationary{
     /**
      * Entity spawn limit for bonus items.
      */
-    public static int bonus_limit = 5;
+    public static int bonus_limit = 4;
 
     /**
      * The current penalty count.
@@ -27,7 +27,7 @@ public abstract class Item extends Entity_Stationary{
     /**
      * Entity spawn limit for penalty items.
      */
-    public static int penalty_limit = 2;
+    public static int penalty_limit = 3;
 
     /**
      * Enum determining Item Class.

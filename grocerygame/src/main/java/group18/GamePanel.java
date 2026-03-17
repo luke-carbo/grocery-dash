@@ -26,9 +26,9 @@ public class GamePanel extends JPanel {
     private static final int playerHeight = 30;
     private static final int playerSpeed = 3;
 
-    private static final int EXIT_X = 620;
-    private static final int EXIT_Y = 70;
-    private static final int EXIT_SIZE = 35;
+    private static final int EXIT_X = 660;
+    private static final int EXIT_Y = 0;
+    private static final int EXIT_SIZE = 10;
 
     private int playerX;
     private int playerY;
@@ -60,12 +60,10 @@ public class GamePanel extends JPanel {
     private SecurityGuard securityGuard;
     private final int enemySize = 30;
 
-    private int[] itemX = {500, 650, 350};
-    private int[] itemY = {200, 450, 350};
-    private boolean[] itemCollected = {false, false, false};
-
+    private List<Item_Main> Main_Items = new ArrayList<>();
     private List<Item_Bonus> Bonus_Items = new ArrayList<>();
     private List<Item_Penalty> Penalty_Items = new ArrayList<>();
+    private Spawn_Main main_spawner;
     private Spawn_Bonus bonus_spawner;
     private Spawn_Penalty penalty_spawner;
 
@@ -79,9 +77,10 @@ public class GamePanel extends JPanel {
 
     public GamePanel() {
         this.game = game;
-        this.bonus_spawner = new Spawn_Bonus(game);
-        this.penalty_spawner = new Spawn_Penalty(game);
         this.game_map = new Game_Map();
+        this.main_spawner = new Spawn_Main(game, game_map);
+        this.bonus_spawner = new Spawn_Bonus(game, game_map);
+        this.penalty_spawner = new Spawn_Penalty(game, game_map);
         this.startTime = System.currentTimeMillis();
         loadPlayerFrames();
         loadSecurityFrames();
@@ -90,6 +89,7 @@ public class GamePanel extends JPanel {
         setPreferredSize(new Dimension(PANEL_WIDTH, PANEL_HEIGHT));
         setBackground(Color.BLACK);
         setFocusable(true);
+
 //        // Starting Bonus Items
 //        for (int i = 0; i < 4; i++) {
 //            Bonus_Items.add(bonus_spawner.spawnBonus());
@@ -170,9 +170,13 @@ public class GamePanel extends JPanel {
         enemyTarget = data.enemyTarget;
         enemyMoveCooldown = data.enemyMoveCooldown;
 
-        itemX = data.itemX;
-        itemY = data.itemY;
-        itemCollected = data.itemCollected;
+        Main_Items.clear();
+
+        // Starting Main Items
+        for (int i = 0; i < 3; i++) {
+            Main_Items.add(main_spawner.spawnMain());
+        }
+
     }
 
     private void loadPlayerFrames() {
@@ -328,17 +332,21 @@ public class GamePanel extends JPanel {
 
     private void checkItemCollection() {
 
-        for (int i = 0; i < itemX.length; i++) {
-            if (itemCollected[i]) continue;
+        for (Item_Main item : Main_Items) {
+
+            if (item.collected) {
+                continue;
+            }
+
             boolean overlap =
-                    playerX < itemX[i] + 20 &&
-                            playerX + playerWidth > itemX[i] &&
-                            playerY < itemY[i] + 20 &&
-                            playerY + playerHeight > itemY[i];
+                    playerX < item.position_x + 20 &&
+                            playerX + playerWidth > item.position_x &&
+                            playerY < item.position_y + 20 &&
+                            playerY + playerHeight > item.position_y;
 
             if (overlap) {
-                itemCollected[i] = true;
-                score += 50;
+                item.collected = true;
+                score += item.value;
             }
         }
 
@@ -382,8 +390,8 @@ public class GamePanel extends JPanel {
     }
 
     private boolean allItemsCollected() {
-        for (boolean collected : itemCollected) {
-            if (!collected) {
+        for (Item_Main item : Main_Items) {
+            if (!item.collected) {
                 return false;
             }
         }
@@ -436,13 +444,13 @@ public class GamePanel extends JPanel {
         }
 
         g.setColor(Color.YELLOW);
-        for (int i = 0; i < itemX.length; i++) {
-            if (!itemCollected[i]) {
-                g.fillRect(itemX[i], itemY[i], 20, 20);
+        for (Item_Main item : Main_Items) {
+            if (!item.collected) {
+                g.fillRect(item.position_x, item.position_y, 20, 20);
             }
         }
 
-        g.setColor(Color.ORANGE);
+        g.setColor(Color.GREEN);
         for (Item_Bonus item : Bonus_Items) {
             if (!item.collected) {
                 g.fillRect(item.position_x, item.position_y, 20, 20);

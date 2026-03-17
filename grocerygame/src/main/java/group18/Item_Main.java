@@ -3,6 +3,7 @@ package group18;
 public class Item_Main extends Item{
 
     private final Game game;
+    public boolean collected = false;
 
     public Item_Main(Game game) {
         this.game = game;
