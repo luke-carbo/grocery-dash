@@ -4,7 +4,6 @@ import group18.ai.Pathfinder;
 import group18.enemy.SecurityGuard;
 import group18.mapCreation.Game_Map;
 
-import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -13,8 +12,6 @@ import java.awt.Point;
 import java.awt.Image;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.awt.image.BufferedImage;
-import java.io.InputStream;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.ArrayList;
@@ -79,7 +76,6 @@ public class GamePanel extends JPanel {
     private double enemyPosX;
     private double enemyPosY;
     private Point enemyTarget;
-
 
     public GamePanel() {
         this.game = game;
@@ -149,76 +145,43 @@ public class GamePanel extends JPanel {
     }
 
     private void resetGameState() {
-        playerX = 165;
-        playerY = 570;
+        GameStateResetHelper.ResetStateData data = GameStateResetHelper.createResetState(FRAME_DOWN);
 
-        score = 0;
-        score_saved = false;
-        startTime = 0;
-        endTime = 0;
+        playerX = data.playerX;
+        playerY = data.playerY;
 
-        gameOver = false;
-        gameWon = false;
-        gameStarted = false;
-        gamePaused = false;
+        score = data.score;
+        score_saved = data.score_saved;
+        startTime = data.startTime;
+        endTime = data.endTime;
 
-        currentFrame = FRAME_DOWN;
-        securityCurrentFrame = FRAME_DOWN;
+        gameOver = data.gameOver;
+        gameWon = data.gameWon;
+        gameStarted = data.gameStarted;
+        gamePaused = data.gamePaused;
+
+        currentFrame = data.currentFrame;
+        securityCurrentFrame = data.securityCurrentFrame;
         keysHeld.clear();
 
-        securityGuard = new SecurityGuard(500, 300, 100);
-        enemyPosX = securityGuard.getX();
-        enemyPosY = securityGuard.getY();
-        enemyTarget = null;
-        enemyMoveCooldown = 0;
+        securityGuard = data.securityGuard;
+        enemyPosX = data.enemyPosX;
+        enemyPosY = data.enemyPosY;
+        enemyTarget = data.enemyTarget;
+        enemyMoveCooldown = data.enemyMoveCooldown;
 
-        itemX = new int[]{500, 650, 350};
-        itemY = new int[]{200, 450, 350};
-        itemCollected = new boolean[]{false, false, false};
+        itemX = data.itemX;
+        itemY = data.itemY;
+        itemCollected = data.itemCollected;
     }
 
     private void loadPlayerFrames() {
-        try (InputStream stream = getClass().getClassLoader().getResourceAsStream("tiles/character.png")) {
-            if (stream == null) {
-                throw new IllegalArgumentException("Missing resource: character.png");
-            }
-
-            BufferedImage sheet = ImageIO.read(stream);
-            int frameW = sheet.getWidth() / 2;
-            int frameH = sheet.getHeight() / 2;
-
-            playerFrames = new Image[4];
-            playerFrames[FRAME_LEFT] = sheet.getSubimage(0, 0, frameW, frameH);
-            playerFrames[FRAME_DOWN] = sheet.getSubimage(frameW, 0, frameW, frameH);
-            playerFrames[FRAME_UP] = sheet.getSubimage(frameW, frameH, frameW, frameH);
-            playerFrames[FRAME_RIGHT] = sheet.getSubimage(0, frameH, frameW, frameH);
-        } catch (Exception e) {
-            System.err.println("Failed to load player frames: " + e.getMessage());
-            playerFrames = null; // fallback to rectangle
-        }
+        playerFrames = SpriteLoader.loadCharacterFrames();
     }
 
     private void loadSecurityFrames() {
-        try (InputStream stream = getClass().getClassLoader().getResourceAsStream("tiles/security.png")) {
-            if (stream == null) {
-                throw new IllegalArgumentException("Missing resource: security.png");
-            }
-
-            BufferedImage sheet = ImageIO.read(stream);
-            int frameW = sheet.getWidth() / 2;
-            int frameH = sheet.getHeight() / 2;
-
-            securityFrames = new Image[4];
-            securityFrames[FRAME_LEFT] = sheet.getSubimage(0, 0, frameW, frameH);
-            securityFrames[FRAME_DOWN] = sheet.getSubimage(frameW, 0, frameW, frameH);
-            securityFrames[FRAME_UP] = sheet.getSubimage(frameW, frameH, frameW, frameH);
-            securityFrames[FRAME_RIGHT] = sheet.getSubimage(0, frameH, frameW, frameH);
-        } catch (Exception e) {
-            System.err.println("Failed to load security frames: " + e.getMessage());
-            securityFrames = null;
-        }
+        securityFrames = SpriteLoader.loadSecurityFrames();
     }
-
 
     private void update() {
         if (gameOver) {
@@ -230,7 +193,8 @@ public class GamePanel extends JPanel {
                 return;
             }
             return;
-        };
+        }
+
         if (!gameStarted || gamePaused) {
             return;
         }
@@ -240,30 +204,11 @@ public class GamePanel extends JPanel {
             return;
         }
 
-        int dX = 0;
-        int dY = 0;
+        int[] movement = PlayerMovementHelper.getMovementDelta(keysHeld, playerSpeed);
+        int dX = movement[0];
+        int dY = movement[1];
 
-        if (keysHeld.contains(KeyEvent.VK_W)) {
-            dY -= playerSpeed;
-            currentFrame = FRAME_UP;
-        }
-        if (keysHeld.contains(KeyEvent.VK_S)) {
-            dY += playerSpeed;
-            currentFrame = FRAME_DOWN;
-        }
-        if (keysHeld.contains(KeyEvent.VK_D)) {
-            dX += playerSpeed;
-            currentFrame = FRAME_RIGHT;
-        }
-        if (keysHeld.contains(KeyEvent.VK_A)) {
-            dX -= playerSpeed;
-            currentFrame = FRAME_LEFT;
-        }
-
-        if (dX != 0 && dY != 0) {
-            dX /= 1.5;
-            dY /= 1.5;
-        }
+        currentFrame = PlayerMovementHelper.getFrame(keysHeld, currentFrame, FRAME_LEFT, FRAME_DOWN, FRAME_UP, FRAME_RIGHT);
 
         if (dX == 0 && dY == 0) {
             currentFrame = FRAME_DOWN;
@@ -293,7 +238,6 @@ public class GamePanel extends JPanel {
     private void saveScoreOnce() {
         if (!score_saved) {
             int finalScore = score + (int) ((endTime - startTime) / 1000);
-            Score_Tracker.saveScore(finalScore);
             score_saved = true;
         }
     }
