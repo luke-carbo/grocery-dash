@@ -10,14 +10,24 @@ public abstract class Item extends Entity_Stationary{
     public int value;
 
     /**
-     * The current count.
+     * The current bonus count.
      */
-    public static int count;
+    public static int bonus_count;
 
     /**
-     * Entity spawn limit for main and additional.
+     * Entity spawn limit for bonus items.
      */
-    public static int limit = 5;
+    public static int bonus_limit = 5;
+
+    /**
+     * The current penalty count.
+     */
+    public static int penalty_count;
+
+    /**
+     * Entity spawn limit for penalty items.
+     */
+    public static int penalty_limit = 2;
 
     /**
      * Enum determining Item Class.
@@ -40,29 +50,30 @@ public abstract class Item extends Entity_Stationary{
         value = newValue;
     }
 
-    /**
-     * Retrieves the current count.
-     * @return the item's current count.
-     */
-    public int getCount() {
-        return count;
-    }
-
-    /**
-     * Retrieves the spawn limit.
-     * @return the item's spawn limit.
-     */
-    public int getLimit() {
-        return limit;
-    }
-
-    /**
-     * Updates the item's spawn limit.
-     * @param newLimit the new item's spawn limit.
-     */
-    public void setLimit(int newLimit) {
-        limit = newLimit;
-    }
+    // Old Limit and Count Getters and Setters
+//    /**
+//     * Retrieves the current count.
+//     * @return the item's current count.
+//     */
+//    public int getCount() {
+//        return count;
+//    }
+//
+//    /**
+//     * Retrieves the spawn limit.
+//     * @return the item's spawn limit.
+//     */
+//    public int getLimit() {
+//        return limit;
+//    }
+//
+//    /**
+//     * Updates the item's spawn limit.
+//     * @param newLimit the new item's spawn limit.
+//     */
+//    public void setLimit(int newLimit) {
+//        limit = newLimit;
+//    }
 
     public void destroyEntity() {
 

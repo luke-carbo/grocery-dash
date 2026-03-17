@@ -50,15 +50,19 @@ public class GamePanel extends JPanel {
     private int[] itemY = {200, 450, 350};
     private boolean[] itemCollected = {false, false, false};
 
-    private List<Item_Additional> items = new ArrayList<>();
-    private Spawn_Additional spawner;
+    private List<Item_Bonus> Bonus_Items = new ArrayList<>();
+    private List<Item_Penalty> Penalty_Items = new ArrayList<>();
+    private Spawn_Bonus bonus_spawner;
+    private Spawn_Penalty penalty_spawner;
+
 
     private int enemyMoveCooldown = 0;
     private final int enemyMoveDelay = 14;
 
     public GamePanel() {
         this.game = game;
-        this.spawner = new Spawn_Additional(game);
+        this.bonus_spawner = new Spawn_Bonus(game);
+        this.penalty_spawner = new Spawn_Penalty(game);
         this.game_map = new Game_Map();
         this.startTime = System.currentTimeMillis();
         loadPlayerFrames();
@@ -67,10 +71,15 @@ public class GamePanel extends JPanel {
         setBackground(Color.BLACK);
         setFocusable(true);
 
-        // Starting Aditional Items
-        for (int i = 0; i < 3; i++) {
-            items.add(spawner.spawnAdditional());
-        }
+//        // Starting Bonus Items
+//        for (int i = 0; i < 4; i++) {
+//            Bonus_Items.add(bonus_spawner.spawnBonus());
+//        }
+//
+//        // Starting Penalty Items
+//        for (int i = 0; i < 2; i++) {
+//            Penalty_Items.add(penalty_spawner.spawnPenalty());
+//        }
 
         addKeyListener(new KeyAdapter() {
             @Override
@@ -168,8 +177,12 @@ public class GamePanel extends JPanel {
             currentFrame = FRAME_DOWN; // idle sprite
         }
 
-        if (Item.count < Item.limit) {
-            items.add(spawner.spawnAdditional());
+        if (Item.bonus_count < Item.bonus_limit) {
+            Bonus_Items.add(bonus_spawner.spawnBonus());
+        }
+
+        if (Item.penalty_count < Item.penalty_limit) {
+            Penalty_Items.add(penalty_spawner.spawnPenalty());
         }
 
         moveEnemyTowardPlayer();
@@ -237,7 +250,7 @@ public class GamePanel extends JPanel {
             }
         }
 
-        for (Item_Additional item : items) {
+        for (Item_Bonus item : Bonus_Items) {
 
             if (item.collected) {
                 continue;
@@ -251,13 +264,27 @@ public class GamePanel extends JPanel {
 
             if (overlap) {
                 item.collected = true;
-                if (item.addlclass == Item_Addl_Class.Penalty) {
-                    score -= item.value;
-                }
-                else {
-                    score += item.value;
-                }
-                Item.count -= 1;
+                score += item.value;
+                Item.bonus_count -= 1;
+            }
+        }
+
+        for (Item_Penalty item : Penalty_Items) {
+
+            if (item.collected) {
+                continue;
+            }
+
+            boolean overlap =
+                    playerX < item.position_x + 20 &&
+                            playerX + playerWidth > item.position_x &&
+                            playerY < item.position_y + 20 &&
+                            playerY + playerHeight > item.position_y;
+
+            if (overlap) {
+                item.collected = true;
+                score -= item.value;
+                Item.penalty_count -= 1;
             }
         }
     }
@@ -288,20 +315,16 @@ public class GamePanel extends JPanel {
         }
 
         g.setColor(Color.ORANGE);
-        for (Item_Additional item : items) {
-            if (item.addlclass == Item_Addl_Class.Bonus) {
-                if (!item.collected) {
-                    g.fillRect(item.position_x, item.position_y, 20, 20);
-                }
+        for (Item_Bonus item : Bonus_Items) {
+            if (!item.collected) {
+                g.fillRect(item.position_x, item.position_y, 20, 20);
             }
         }
 
         g.setColor(Color.RED);
-        for (Item_Additional item : items) {
-            if (item.addlclass == Item_Addl_Class.Penalty) {
-                if (!item.collected) {
-                    g.fillRect(item.position_x, item.position_y, 20, 20);
-                }
+        for (Item_Penalty item : Penalty_Items) {
+            if (!item.collected) {
+                g.fillRect(item.position_x, item.position_y, 20, 20);
             }
         }
 
