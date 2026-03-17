@@ -178,23 +178,20 @@ public class GamePanel extends JPanel {
     }
 
     private void loadPlayerFrames() {
-        String[] framePaths = {
-                "tiles/tile_0023.png",
-                "tiles/tile_0024.png",
-                "tiles/tile_0025.png",
-                "tiles/tile_0026.png"
-        };
-
-        playerFrames = new Image[framePaths.length];
-
-        try {
-            for (int i = 0; i < framePaths.length; i++) {
-                InputStream stream = getClass().getClassLoader().getResourceAsStream(framePaths[i]);
-                if (stream == null) {
-                    throw new IllegalArgumentException("Missing resource: " + framePaths[i]);
-                }
-                playerFrames[i] = ImageIO.read(stream);
+        try (InputStream stream = getClass().getClassLoader().getResourceAsStream("tiles/character.png")) {
+            if (stream == null) {
+                throw new IllegalArgumentException("Missing resource: character.png");
             }
+
+            BufferedImage sheet = ImageIO.read(stream);
+            int frameW = sheet.getWidth() / 2;
+            int frameH = sheet.getHeight() / 2;
+
+            playerFrames = new Image[4];
+            playerFrames[FRAME_LEFT] = sheet.getSubimage(0, 0, frameW, frameH);
+            playerFrames[FRAME_DOWN] = sheet.getSubimage(frameW, 0, frameW, frameH);
+            playerFrames[FRAME_UP] = sheet.getSubimage(frameW, frameH, frameW, frameH);
+            playerFrames[FRAME_RIGHT] = sheet.getSubimage(0, frameH, frameW, frameH);
         } catch (Exception e) {
             System.err.println("Failed to load player frames: " + e.getMessage());
             playerFrames = null; // fallback to rectangle
