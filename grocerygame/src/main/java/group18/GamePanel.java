@@ -17,6 +17,10 @@ import java.util.Set;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * this panel controls the playable game scene.
+ * it handles input, updates state, and renders each frame.
+ */
 public class GamePanel extends JPanel {
 
     private static final int PANEL_WIDTH = 800;
@@ -75,6 +79,10 @@ public class GamePanel extends JPanel {
     private double enemyPosY;
     private Point enemyTarget;
 
+    /**
+     * this panel runs the main gameplay loop and handles input, updates, and drawing.
+     * it also initializes the map, player, enemy, and timers.
+     */
     public GamePanel() {
         this.game = game;
         this.game_map = new Game_Map();
@@ -144,6 +152,10 @@ public class GamePanel extends JPanel {
         timer.start();
     }
 
+    /**
+     * this resets all gameplay values to their starting state.
+     * it is used when the game starts and when the player restarts.
+     */
     private void resetGameState() {
         GameStateResetHelper.ResetStateData data = GameStateResetHelper.createResetState(FRAME_DOWN);
 
@@ -179,14 +191,26 @@ public class GamePanel extends JPanel {
 
     }
 
+    /**
+     * this loads the player sprite frames from the sprite loader.
+     * it prepares images used for player direction animation.
+     */
     private void loadPlayerFrames() {
         playerFrames = SpriteLoader.loadCharacterFrames();
     }
 
+    /**
+     * this loads the security guard sprite frames.
+     * it prepares images used for enemy direction animation.
+     */
     private void loadSecurityFrames() {
         securityFrames = SpriteLoader.loadSecurityFrames();
     }
 
+    /**
+     * this updates one game tick for movement, collisions, and win or lose checks.
+     * it returns early when the game is not active.
+     */
     private void update() {
         if (gameOver) {
             if(!score_saved) {
@@ -239,6 +263,10 @@ public class GamePanel extends JPanel {
         checkWinCondition();
     }
 
+    /**
+     * this computes the final score one time when the game ends.
+     * it prevents duplicate score handling.
+     */
     private void saveScoreOnce() {
         if (!score_saved) {
             int finalScore = score + (int) ((endTime - startTime) / 1000);
@@ -246,6 +274,16 @@ public class GamePanel extends JPanel {
         }
     }
 
+    /**
+     * this checks whether all four corners of a rectangle are on walkable tiles.
+     * it returns true when movement to the target area is allowed.
+     *
+     * @param x the rectangle x position
+     * @param y the rectangle y position
+     * @param width the rectangle width
+     * @param height the rectangle height
+     * @return true if the rectangle does not collide with solid tiles
+     */
     private boolean canMoveTo(int x, int y, int width, int height) {
         return !game_map.isSolid(x, y)
                 && !game_map.isSolid(x + width - 1, y)
@@ -253,6 +291,10 @@ public class GamePanel extends JPanel {
                 && !game_map.isSolid(x + width - 1, y + height - 1);
     }
 
+    /**
+     * this moves the enemy toward the player using pathfinding and smooth stepping.
+     * it updates the enemy facing frame based on movement direction.
+     */
     private void moveEnemyTowardPlayer() {
         enemyPosX = securityGuard.getX();
         enemyPosY = securityGuard.getY();
@@ -314,6 +356,10 @@ public class GamePanel extends JPanel {
         }
     }
 
+    /**
+     * this checks overlap between the player and enemy hitboxes.
+     * it ends the game when they collide.
+     */
     private void checkEnemyCollision() {
         int enemyX = securityGuard.getX();
         int enemyY = securityGuard.getY();
@@ -330,6 +376,10 @@ public class GamePanel extends JPanel {
         }
     }
 
+    /**
+     * this checks overlap between the player and collectible items.
+     * it updates score and item counters when items are picked up.
+     */
     private void checkItemCollection() {
 
         for (Item_Main item : Main_Items) {
@@ -389,6 +439,12 @@ public class GamePanel extends JPanel {
         }
     }
 
+    /**
+     * this checks if every required base item has been collected.
+     * it returns true only when none are left.
+     *
+     * @return true if all base items are collected
+     */
     private boolean allItemsCollected() {
         for (Item_Main item : Main_Items) {
             if (!item.collected) {
@@ -398,6 +454,12 @@ public class GamePanel extends JPanel {
         return true;
     }
 
+    /**
+     * this checks whether the player is overlapping the exit area.
+     * it is used for win condition validation.
+     *
+     * @return true if the player touches the exit
+     */
     private boolean isPlayerAtExit() {
         return playerX < EXIT_X + EXIT_SIZE &&
                 playerX + playerWidth > EXIT_X &&
@@ -405,6 +467,10 @@ public class GamePanel extends JPanel {
                 playerY + playerHeight > EXIT_Y;
     }
 
+    /**
+     * this marks the game as won when all items are collected and the player reaches the exit.
+     * it also records the end time.
+     */
     private void checkWinCondition() {
         if (!gameWon && allItemsCollected() && isPlayerAtExit()) {
             gameWon = true;
@@ -412,6 +478,12 @@ public class GamePanel extends JPanel {
         }
     }
 
+    /**
+     * this draws the map, entities, ui text, and state overlays each frame.
+     * it also draws start, pause, win, and game over screens.
+     *
+     * @param g the graphics context used for rendering
+     */
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
