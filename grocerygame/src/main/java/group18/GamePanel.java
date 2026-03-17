@@ -214,7 +214,6 @@ public class GamePanel extends JPanel {
         moveEnemyTowardPlayer();
         checkEnemyCollision();
         checkItemCollection();
-        checkExitWinCondition();
     }
 
     private void saveScoreOnce() {
@@ -295,22 +294,6 @@ public class GamePanel extends JPanel {
         return true;
     }
 
-    private void checkExitWinCondition() {
-        if (!allItemsCollected()) {
-            return;
-        }
-
-        boolean overlap =
-                playerX < EXIT_X + EXIT_SIZE &&
-                        playerX + PLAYER_WIDTH > EXIT_X &&
-                        playerY < EXIT_Y + EXIT_SIZE &&
-                        playerY + PLAYER_HEIGHT > EXIT_Y;
-
-        if (overlap) {
-            gameWon = true;
-            endTime = System.currentTimeMillis();
-        }
-    }
 
     @Override
     protected void paintComponent(Graphics g) {
@@ -336,10 +319,7 @@ public class GamePanel extends JPanel {
         g.drawString("CMPT 276 Grocery Game", 320, 50);
         g.drawString("Time: " + elapsedSeconds + "s", 700, 50);
 
-        g.setColor(Color.CYAN);
-        g.fillRect(EXIT_X, EXIT_Y, EXIT_SIZE, EXIT_SIZE);
-        g.setColor(Color.WHITE);
-        g.drawString("EXIT", EXIT_X - 2, EXIT_Y - 5);
+
 
         g.setColor(Color.RED);
         g.fillRect(securityGuard.getX(), securityGuard.getY(), ENEMY_SIZE, ENEMY_SIZE);
