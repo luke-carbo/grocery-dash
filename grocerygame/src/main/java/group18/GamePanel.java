@@ -16,6 +16,8 @@ import java.awt.event.KeyEvent;
 import java.io.InputStream;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 public class GamePanel extends JPanel {
 
@@ -34,14 +36,14 @@ public class GamePanel extends JPanel {
     private int playerY;
 
     private Image[] playerFrames;
-    private static final int FRAME_LEFT = 0;
-    private static final int FRAME_DOWN = 1;
-    private static final int FRAME_UP = 2;
-    private static final int FRAME_RIGHT = 3;
+    private static final int FRAME_LEFT = 0;   // tile_0023
+    private static final int FRAME_DOWN = 1;   // tile_0024 (also idle)
+    private static final int FRAME_UP = 2;     // tile_0025
+    private static final int FRAME_RIGHT = 3;  // tile_0026
     private int currentFrame = FRAME_DOWN;
 
-    private int score;
-    private boolean scoreSaved;
+    private int score = 0;
+    private boolean score_saved = false;
     private long startTime;
     private long endTime = 0;
 
@@ -50,6 +52,7 @@ public class GamePanel extends JPanel {
     private boolean gameStarted = false;
     private boolean gamePaused = false;
 
+    private Game game = null;
     private final Game_Map game_map;
     private final Set<Integer> keysHeld = new HashSet<>();
 
@@ -65,19 +68,16 @@ public class GamePanel extends JPanel {
     private Spawn_Bonus bonus_spawner;
     private Spawn_Penalty penalty_spawner;
 
-    private int enemyMoveCooldown = 0;
 
-    private int[] itemX;
-    private int[] itemY;
-    private boolean[] itemCollected;
+    private int enemyMoveCooldown = 0;
+    private final int enemyMoveDelay = 14;
 
     public GamePanel() {
-
         this.game = game;
         this.bonus_spawner = new Spawn_Bonus(game);
         this.penalty_spawner = new Spawn_Penalty(game);
-
         this.game_map = new Game_Map();
+        this.startTime = System.currentTimeMillis();
         loadPlayerFrames();
         resetGameState();
 
@@ -144,9 +144,7 @@ public class GamePanel extends JPanel {
         playerY = 570;
 
         score = 0;
-     
         score_saved = false;
-
         startTime = 0;
         endTime = 0;
 
@@ -186,12 +184,11 @@ public class GamePanel extends JPanel {
             }
         } catch (Exception e) {
             System.err.println("Failed to load player frames: " + e.getMessage());
-            playerFrames = null;
+            playerFrames = null; // fallback to rectangle
         }
     }
 
     private void update() {
-
         if (gameOver) {
             if(!score_saved) {
 //                int high_score = score + (int) ((endTime -  startTime)/1000);
@@ -215,7 +212,6 @@ public class GamePanel extends JPanel {
         int dY = 0;
 
         if (keysHeld.contains(KeyEvent.VK_W)) {
-
             dY -= playerSpeed;
             currentFrame = FRAME_UP;
         }
@@ -262,7 +258,6 @@ public class GamePanel extends JPanel {
     }
 
     private void saveScoreOnce() {
-
         if (!score_saved) {
             int finalScore = score + (int) ((endTime - startTime) / 1000);
             Score_Tracker.saveScore(finalScore);
@@ -279,7 +274,7 @@ public class GamePanel extends JPanel {
 
     private void moveEnemyTowardPlayer() {
         enemyMoveCooldown++;
-        if (enemyMoveCooldown < ENEMY_MOVE_DELAY) {
+        if (enemyMoveCooldown < enemyMoveDelay) {
             return;
         }
         enemyMoveCooldown = 0;
@@ -292,7 +287,7 @@ public class GamePanel extends JPanel {
                 playerY
         );
 
-        if (nextStep != null && canMoveTo(nextStep.x, nextStep.y, ENEMY_SIZE, ENEMY_SIZE)) {
+        if (nextStep != null && canMoveTo(nextStep.x, nextStep.y, enemySize, enemySize)) {
             securityGuard.setX(nextStep.x);
             securityGuard.setY(nextStep.y);
         }
@@ -303,10 +298,10 @@ public class GamePanel extends JPanel {
         int enemyY = securityGuard.getY();
 
         boolean overlap =
-                playerX < enemyX + ENEMY_SIZE &&
-                        playerX + PLAYER_WIDTH > enemyX &&
-                        playerY < enemyY + ENEMY_SIZE &&
-                        playerY + PLAYER_HEIGHT > enemyY;
+                playerX < enemyX + enemySize &&
+                        playerX + playerWidth > enemyX &&
+                        playerY < enemyY + enemySize &&
+                        playerY + playerHeight > enemyY;
 
         if (overlap) {
             gameOver = true;
@@ -315,22 +310,20 @@ public class GamePanel extends JPanel {
     }
 
     private void checkItemCollection() {
+
         for (int i = 0; i < itemX.length; i++) {
             if (itemCollected[i]) continue;
-
             boolean overlap =
                     playerX < itemX[i] + 20 &&
                             playerX + playerWidth > itemX[i] &&
                             playerY < itemY[i] + 20 &&
                             playerY + playerHeight > itemY[i];
 
-
             if (overlap) {
                 itemCollected[i] = true;
-                score += 10;
+                score += 50;
             }
         }
-    }
 
         for (Item_Bonus item : Bonus_Items) {
 
@@ -371,7 +364,6 @@ public class GamePanel extends JPanel {
         }
     }
 
-
     private boolean allItemsCollected() {
         for (boolean collected : itemCollected) {
             if (!collected) {
@@ -380,7 +372,6 @@ public class GamePanel extends JPanel {
         }
         return true;
     }
-
 
     @Override
     protected void paintComponent(Graphics g) {
@@ -406,10 +397,8 @@ public class GamePanel extends JPanel {
         g.drawString("CMPT 276 Grocery Game", 320, 50);
         g.drawString("Time: " + elapsedSeconds + "s", 700, 50);
 
-
-
         g.setColor(Color.RED);
-        g.fillRect(securityGuard.getX(), securityGuard.getY(), ENEMY_SIZE, ENEMY_SIZE);
+        g.fillRect(securityGuard.getX(), securityGuard.getY(), enemySize, enemySize);
 
         g.setColor(Color.YELLOW);
         for (int i = 0; i < itemX.length; i++) {
@@ -433,10 +422,10 @@ public class GamePanel extends JPanel {
         }
 
         if (playerFrames != null && playerFrames.length > 0) {
-            g.drawImage(playerFrames[currentFrame], playerX, playerY, PLAYER_WIDTH, PLAYER_HEIGHT, null);
+            g.drawImage(playerFrames[currentFrame], playerX, playerY, playerWidth, playerHeight, null);
         } else {
             g.setColor(Color.GREEN);
-            g.fillRect(playerX, playerY, PLAYER_WIDTH, PLAYER_HEIGHT);
+            g.fillRect(playerX, playerY, playerWidth, playerHeight);
         }
 
         if (gameOver) {
