@@ -162,8 +162,6 @@ public class GamePanel extends JPanel {
         playerX = data.playerX;
         playerY = data.playerY;
 
-        score = data.score;
-        score_saved = data.score_saved;
         startTime = data.startTime;
         endTime = data.endTime;
 
@@ -181,6 +179,8 @@ public class GamePanel extends JPanel {
         enemyPosY = data.enemyPosY;
         enemyTarget = data.enemyTarget;
         enemyMoveCooldown = data.enemyMoveCooldown;
+
+        score_saved = false;
 
         Main_Items.clear();
 
@@ -214,9 +214,9 @@ public class GamePanel extends JPanel {
     private void update() {
         if (gameOver) {
             if(!score_saved) {
-//                int high_score = score + (int) ((endTime -  startTime)/1000);
-                int high_score = score;
-                Score_Tracker.saveScore(high_score);
+//                int finalScore = score + (int) ((endTime -  startTime)/1000);
+                int finalScore = score;
+                Score_Tracker.saveScore(finalScore);
                 score_saved = true;
                 return;
             }
@@ -270,6 +270,7 @@ public class GamePanel extends JPanel {
     private void saveScoreOnce() {
         if (!score_saved) {
             int finalScore = score;
+            Score_Tracker.saveScore(finalScore);
             score_saved = true;
         }
     }
