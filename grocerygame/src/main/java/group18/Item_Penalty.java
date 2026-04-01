@@ -14,17 +14,6 @@ public class Item_Penalty extends Item {
         this.penalty_count += 1;
     }
 
-    @Override
-    public void collision() {
-        game.setScore(game.getScore() + this.value);
-        destroyEntity();
-    }
-
-    @Override
-    public void update() {
-        // TBD
-    }
-
     /** this collects this penalty item if touched and returns the score loss. */
     public int collectIfTouched(int playerX, int playerY, int playerWidth, int playerHeight) {
         if (collected || !isTouchedByPlayer(playerX, playerY, playerWidth, playerHeight)) {

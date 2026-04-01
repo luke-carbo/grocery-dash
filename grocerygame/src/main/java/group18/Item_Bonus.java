@@ -14,17 +14,6 @@ public class Item_Bonus extends Item {
         this.bonus_count += 1;
     }
 
-    @Override
-    public void collision() {
-        game.setScore(game.getScore() + this.value);
-        destroyEntity();
-    }
-
-    @Override
-    public void update() {
-        // TBD
-    }
-
     /** this collects this bonus item if touched and returns the score gained. */
     public int collectIfTouched(int playerX, int playerY, int playerWidth, int playerHeight) {
         if (collected || !isTouchedByPlayer(playerX, playerY, playerWidth, playerHeight)) {

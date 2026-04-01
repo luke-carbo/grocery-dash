@@ -1,13 +1,13 @@
 package group18.enemy;
 
-import group18.Entity_Dynamic;
+import group18.Game_Entity;
 
 /**
  * The Enemy class represents a dynamic entity in the game that inherits
  * from the Entity_Dynamic class. This class handles behavior such as movement
  * and collisions, and maintains the position of the enemy.
  */
-public class Enemy extends Entity_Dynamic {
+public class Enemy extends Game_Entity {
 
     protected Enemy_Action currentAction;
     protected Enemy_Class enemyClass;
@@ -23,21 +23,5 @@ public class Enemy extends Entity_Dynamic {
         this.position_y = y;
         this.enemyClass = enemyClass;
         this.currentAction = Enemy_Action.Idle;
-    }
-
-    /**
-     * Handles collision detection and response for the enemy entity.
-     */
-    @Override
-    public void collision() {
-        // collision logic
-    }
-
-    /**
-     * Updates the state of the enemy entity.
-     */
-    @Override
-    public void update() {
-        // enemy behaviour
     }
 }

@@ -16,19 +16,6 @@ public class Item_Main extends Item{
         type = Item_Class.Main;
     }
 
-    /** this will handle what happens when the player collides with this item. */
-    @Override
-    public void collision() {
-        // Check current "Key Count"
-        // Check win condition
-    }
-
-    /** this updates this item each frame when item logic is needed. */
-    @Override
-    public void update() {
-
-    }
-
     /** this collects this item if the player overlaps it and returns the score gained. */
     public int collectIfTouched(int playerX, int playerY, int playerWidth, int playerHeight) {
         if (collected || !isTouchedByPlayer(playerX, playerY, playerWidth, playerHeight)) {

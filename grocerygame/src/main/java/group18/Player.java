@@ -7,7 +7,7 @@ import java.util.Set;
 /**
  * Represents a player character in the game.
  */
-public class Player extends Entity_Dynamic{
+public class Player extends Game_Entity {
 
     public static final int FRAME_LEFT = 0;
     public static final int FRAME_DOWN = 1;
@@ -27,16 +27,6 @@ public class Player extends Entity_Dynamic{
         this.position_x = x;
         this.position_y = y;
         this.alive = true;
-    }
-
-    @Override
-    public void collision() {
-        // Nothing (Cannot Collide with Self)
-    }
-
-    @Override
-    public void update() {
-        // default update is intentionally empty when no input/map context is provided.
     }
 
     /**

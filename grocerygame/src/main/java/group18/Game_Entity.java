@@ -16,16 +16,6 @@ public abstract class Game_Entity {
     protected int position_y;
 
     /**
-     * Abstract declaration for different collision types and handling
-     */
-    public abstract void collision();
-
-    /**
-     * Abstract declaration for different update types and handling
-     */
-    public abstract void update();
-
-    /**
      * Retrieves the X-Coordinate of this entity.
      *
      * @return the current X-Coordinate.
@@ -41,10 +31,6 @@ public abstract class Game_Entity {
      */
     public int getY() {
         return position_y;
-    }
-
-    public void destoryEntity() {
-        // Needs some sort of destructor
     }
 
     /**
