@@ -11,7 +11,6 @@ public class Item_Bonus extends Item {
     public Item_Bonus(Game game) {
         this.game = game;
         type = Item_Class.Bonus;
-        this.bonus_count += 1;
     }
 
     /** this collects this bonus item if touched and returns the score gained. */
@@ -20,7 +19,6 @@ public class Item_Bonus extends Item {
             return 0;
         }
         collected = true;
-        Item.bonus_count -= 1;
         return value;
     }
 }

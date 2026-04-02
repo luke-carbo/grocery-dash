@@ -81,16 +81,6 @@ public class GamePanel extends JPanel {
         setBackground(Color.BLACK);
         setFocusable(true);
 
-//        // Starting Bonus Items
-//        for (int i = 0; i < 4; i++) {
-//            Bonus_Items.add(bonus_spawner.spawnBonus());
-//        }
-//
-//        // Starting Penalty Items
-//        for (int i = 0; i < 2; i++) {
-//            Penalty_Items.add(penalty_spawner.spawnPenalty());
-//        }
-
         addKeyListener(new KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent e) {
@@ -220,11 +210,14 @@ public class GamePanel extends JPanel {
 
         player.update(keysHeld, playerSpeed, game_map, playerWidth, playerHeight);
 
-        if (Item.bonus_count < Item.bonus_limit) {
+        Bonus_Items.removeIf(item -> item.collected);
+        Penalty_Items.removeIf(item -> item.collected);
+
+        if (Bonus_Items.size() < 4) {
             Bonus_Items.add(bonus_spawner.spawnBonus());
         }
 
-        if (Item.penalty_count < Item.penalty_limit) {
+        if (Penalty_Items.size() < 3) {
             Penalty_Items.add(penalty_spawner.spawnPenalty());
         }
 
