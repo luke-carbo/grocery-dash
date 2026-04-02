@@ -167,6 +167,19 @@ public class GamePanel extends JPanel {
 
     }
 
+
+    boolean isGamePaused() {
+        return gamePaused;
+    }
+
+    boolean isGameOver() {
+        return gameOver;
+    }
+
+    boolean isGameWon() {
+        return gameWon;
+    }
+
     /**
      * this loads the player sprite frames from the sprite loader.
      * it prepares images used for player direction animation.
