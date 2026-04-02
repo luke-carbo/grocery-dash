@@ -210,6 +210,9 @@ public class GamePanel extends JPanel {
 
         player.update(keysHeld, playerSpeed, game_map, playerWidth, playerHeight);
 
+        Bonus_Items.removeIf(item -> item.collected);
+        Penalty_Items.removeIf(item -> item.collected);
+
         if (Bonus_Items.size() < 4) {
             Bonus_Items.add(bonus_spawner.spawnBonus());
         }
