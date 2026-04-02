@@ -11,18 +11,6 @@ public class Item_Penalty extends Item {
     public Item_Penalty(Game game) {
         this.game = game;
         type = Item_Class.Penalty;
-        this.penalty_count += 1;
-    }
-
-    @Override
-    public void collision() {
-        game.setScore(game.getScore() + this.value);
-        destroyEntity();
-    }
-
-    @Override
-    public void update() {
-        // TBD
     }
 
     /** this collects this penalty item if touched and returns the score loss. */
@@ -31,7 +19,6 @@ public class Item_Penalty extends Item {
             return 0;
         }
         collected = true;
-        Item.penalty_count -= 1;
         return -value;
     }
 }

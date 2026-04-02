@@ -182,16 +182,4 @@ public class SecurityGuard extends Enemy {
     public boolean catchesPlayer(Player player) {
         return this.position_x == player.getX() && this.position_y == player.getY();
     }
-
-    /** this runs per-frame update logic for the guard. */
-    @Override
-    public void update() {
-        this.currentAction = Enemy_Action.Idle;
-    }
-
-    /** this handles collision behavior for the guard. */
-    @Override
-    public void collision() {
-        this.currentAction = Enemy_Action.Search;
-    }
 }
