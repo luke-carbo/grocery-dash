@@ -1,7 +1,7 @@
 package group18;
 
 import group18.enemy.SecurityGuard;
-import group18.mapCreation.Game_Map;
+import group18.mapCreation.Map_Builder;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -19,7 +19,7 @@ public class PlayerEnemyIntegrationTest {
     private static final int OPEN_X = 2 * TILE_SIZE; // 60
     private static final int OPEN_Y = 1 * TILE_SIZE; // 30
 
-    private Game_Map map;
+    private Map_Builder map;
     private Player player;
     private SecurityGuard guard;
     private SecurityGuard.ChaseState chaseState;
@@ -31,7 +31,7 @@ public class PlayerEnemyIntegrationTest {
 
     @BeforeEach
     void setUp() {
-        map        = new Game_Map();
+        map        = new Map_Builder();
         player     = new Player(OPEN_X, OPEN_Y);
         guard      = new SecurityGuard(OPEN_X + 4 * TILE_SIZE, OPEN_Y, 300);
         chaseState = guard.createChaseState(0);
@@ -94,7 +94,7 @@ public class PlayerEnemyIntegrationTest {
 
     /**
      * Test 4
-     * must consult Game_Map.isSolid() via canMoveTo() and never land on a wall.
+     * must consult Map_Builder.isSolid() via canMoveTo() and never land on a wall.
      */
     @Test
     void guard_blockedBySolidTile_neverOccupiesWall() {

@@ -1,6 +1,6 @@
 package group18.ai;
 
-import group18.mapCreation.Game_Map;
+import group18.mapCreation.Map_Builder;
 
 import java.awt.Point;
 import java.util.*;
@@ -9,7 +9,7 @@ import java.util.*;
 public class Pathfinder {
 
     /** this runs a grid search and returns the next world-space step toward the target. */
-    public static Point getNextStep(Game_Map map, int startX, int startY, int targetX, int targetY) {
+    public static Point getNextStep(Map_Builder map, int startX, int startY, int targetX, int targetY) {
 
         int tileSize = map.getTileSize();
 

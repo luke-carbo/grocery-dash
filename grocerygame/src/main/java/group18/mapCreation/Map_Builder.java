@@ -92,12 +92,27 @@ public class Map_Builder {
         return tile_Map[row][col].isSolid();
     }
 
+    public int[] findTile(char c) {
+        Map_Tile tile = new Map_Tile(c);
+        for (int i = 0; i < tile_Map.length; i++) {
+            for (int j = 0; j < tile_Map[i].length; j++) {
+                if (tile_Map[i][j].getTileType() == tile.getTileType()) {
+                    return new int[]{i, j};
+                }
+            }
+        }
+        return null;
+    }
+
     public int getRows() {
         return rows;
     }
 
     public int getCols() {
         return cols;
+    }
+    public Map_Tile[][] getTileMap() {
+        return tile_Map;
     }
 
     public int getTileSize() {

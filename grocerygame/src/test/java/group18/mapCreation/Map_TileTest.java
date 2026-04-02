@@ -3,6 +3,7 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class Map_TileTest {
+    // 1. Functional Tests
     @Test
     void wallTileCreationTest(){
         Map_Tile tile = new Map_Tile('w');
@@ -45,7 +46,11 @@ public class Map_TileTest {
         assertEquals(Tile_Type.Blocked, tile.getTileType());
         assertTrue(tile.isSolid());
     }
-
+    @Test
+    void unknownTileCreationTest(){
+        Map_Tile tile = new Map_Tile('u');
+        assertNull(tile.getTileType());
+    }
 
 
 }

@@ -1,7 +1,7 @@
 package group18;
 
 import group18.ai.Pathfinder;
-import group18.mapCreation.Game_Map;
+import group18.mapCreation.Map_Builder;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -21,12 +21,12 @@ public class PathfinderUnitTest {
     private static final int TARGET_X = 6 * TILE_SIZE; // 180
     private static final int TARGET_Y = 1 * TILE_SIZE; // 30  (same row, 4 tiles right)
 
-    private Game_Map map;
+    private Map_Builder map;
 
     @BeforeEach
     void setUp() {
         // Image loading fails silently in headless env — isSolidTile() works fine without images
-        map = new Game_Map();
+        map = new Map_Builder();
     }
 
     /**

@@ -15,7 +15,6 @@ public class Map_Tile {
     public final int TILE_SIZE = 30;
 
 
-
     private static BufferedImage shelvesImage;
     private static BufferedImage wallImage;
     private static BufferedImage floorImage;

@@ -1,6 +1,7 @@
 package group18;
 
 import group18.mapCreation.Game_Map;
+import group18.mapCreation.Map_Builder;
 
 import java.awt.*;
 
@@ -10,7 +11,7 @@ import java.awt.*;
 public class Spawn_Penalty {
 
     private final Game game;
-    private final Game_Map map;
+    private final Map_Builder map;
 
     /**
      * Constructs a Spawn_Penalty object.
@@ -18,7 +19,7 @@ public class Spawn_Penalty {
      * @param game the main game instance
      * @param map  the game map used for determining valid spawn positions
      */
-    public Spawn_Penalty(Game game, Game_Map map) {
+    public Spawn_Penalty(Game game, Map_Builder map) {
         this.game = game;
         this.map = map;
     }

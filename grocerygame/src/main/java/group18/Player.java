@@ -1,6 +1,7 @@
 package group18;
 
 import group18.mapCreation.Game_Map;
+import group18.mapCreation.Map_Builder;
 
 import java.util.Set;
 
@@ -38,7 +39,7 @@ public class Player extends Game_Entity {
      * @param playerWidth hitbox width
      * @param playerHeight hitbox height
      */
-    public void update(Set<Integer> keysHeld, int playerSpeed, Game_Map map, int playerWidth, int playerHeight) {
+    public void update(Set<Integer> keysHeld, int playerSpeed, Map_Builder map, int playerWidth, int playerHeight) {
         int[] movement = PlayerMovementHelper.getMovementDelta(keysHeld, playerSpeed);
         int dX = movement[0];
         int dY = movement[1];
@@ -82,7 +83,7 @@ public class Player extends Game_Entity {
         this.currentFrame = frame;
     }
 
-    private boolean canMoveTo(Game_Map map, int x, int y, int width, int height) {
+    private boolean canMoveTo(Map_Builder map, int x, int y, int width, int height) {
         return !map.isSolid(x, y)
                 && !map.isSolid(x + width - 1, y)
                 && !map.isSolid(x, y + height - 1)
