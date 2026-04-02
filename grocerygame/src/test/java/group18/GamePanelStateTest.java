@@ -15,4 +15,16 @@ public class GamePanelStateTest {
         assertFalse(panel.isGameOver(), "Game should not be over when the panel is first created.");
         assertFalse(panel.isGameWon(), "Game should not be won when the panel is first created.");
     }
+
+    @Test
+    void startGameForTest_setsGameStartedToTrue() {
+        GamePanel panel = new GamePanel();
+
+        panel.startGameForTest();
+
+        assertTrue(panel.isGameStarted(), "Game should be started after startGameForTest is called.");
+        assertFalse(panel.isGamePaused(), "Game should not be paused when it has just started.");
+        assertFalse(panel.isGameOver(), "Game should not be over when it has just started.");
+        assertFalse(panel.isGameWon(), "Game should not be won when it has just started.");
+    }
 }
