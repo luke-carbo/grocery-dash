@@ -5,20 +5,8 @@ package group18;
  */
 public class Item_Penalty extends Item {
 
-    private final Game game;
-    public boolean collected = false;
-
     public Item_Penalty(Game game) {
-        this.game = game;
         type = Item_Class.Penalty;
     }
 
-    /** this collects this penalty item if touched and returns the score loss. */
-    public int collectIfTouched(int playerX, int playerY, int playerWidth, int playerHeight) {
-        if (collected || !isTouchedByPlayer(playerX, playerY, playerWidth, playerHeight)) {
-            return 0;
-        }
-        collected = true;
-        return -value;
-    }
 }

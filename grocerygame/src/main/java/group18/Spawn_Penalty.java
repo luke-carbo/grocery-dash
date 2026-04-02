@@ -37,7 +37,7 @@ public class Spawn_Penalty {
         Item.setX(point.x);
         Item.setY(point.y);
 
-        Item.value = SpawnHelper.randomValue();
+        Item.value = -SpawnHelper.randomValue();
 
         // Conditional Sprite and Value terms based on Spawn Region
 
