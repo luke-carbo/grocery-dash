@@ -1,4 +1,4 @@
-# 🛒 CMPT 276 Grocery Game — Group 18 🥩
+# 🛒 CMPT 276 Grocery Game — Group 18
  
 A 2D arcade-style grocery store game built in Java using Swing.
 Avoid the security guard, collect all items, and reach the exit.
