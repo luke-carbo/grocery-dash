@@ -73,19 +73,3 @@ mvn test
 | `ESC` | Pause |
 | `R` | Restart |
 | `ENTER` | Start game |
-
----
-
-## Project Structure
-
-```
-grocerygame/
-├── src/
-│   └── main/java/group18/
-│       ├── Main.java           # Entry point
-│       ├── Player.java         # Player entity & movement
-│       ├── Enemy.java          # Security guard AI & patrol
-│       └── ...
-├── src/test/                   # JUnit tests
-└── pom.xml
-```
