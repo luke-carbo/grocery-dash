@@ -37,20 +37,11 @@ public class Spawn_Penalty {
         Item.setX(point.x);
         Item.setY(point.y);
 
-        Item.value = randomValue();
+        Item.value = SpawnHelper.randomValue();
 
         // Conditional Sprite and Value terms based on Spawn Region
 
         return Item;
     }
 
-    /**
-     * Generates a random Item Value within a predefined range.
-     * <p>
-     * @return a random Item Value
-     */
-    private int randomValue() {
-        // Random Roll for Spawn Value
-        return (int) (Math.random() * 10); // Produces 0 - 10
-    }
 }

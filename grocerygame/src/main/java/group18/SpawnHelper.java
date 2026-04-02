@@ -26,4 +26,14 @@ public class SpawnHelper {
             }
         }
     }
+
+    /**
+     * Generates a random Item Value within a predefined range.
+     * <p>
+     * @return a random Item Value
+     */
+    public static int randomValue() {
+        // Random Roll for Spawn Value
+        return (int) (Math.random() * 10); // Produces 0 - 10
+    }
 }
