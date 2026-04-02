@@ -189,13 +189,7 @@ public class GamePanel extends JPanel {
      */
     private void update() {
         if (gameOver) {
-            if(!score_saved) {
-//                int finalScore = score + (int) ((endTime -  startTime)/1000);
-                int finalScore = score;
-                Score_Tracker.saveScore(finalScore);
-                score_saved = true;
-                return;
-            }
+            saveScoreOnce();
             return;
         }
 
@@ -203,7 +197,7 @@ public class GamePanel extends JPanel {
             return;
         }
 
-        if (gameOver || gameWon) {
+        if (gameWon) {
             saveScoreOnce();
             return;
         }
