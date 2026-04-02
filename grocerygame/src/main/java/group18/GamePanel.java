@@ -10,6 +10,7 @@ import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.security.Security;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.ArrayList;
@@ -24,9 +25,8 @@ public class GamePanel extends JPanel {
     private static final int PANEL_WIDTH = 800;
     private static final int PANEL_HEIGHT = 600;
 
-    private static final int playerWidth = 30;
-    private static final int playerHeight = 30;
-    private static final int playerSpeed = 3;
+    private static final int PLAYER_SIZE = 30;
+    private static final int PLAYER_SPEED = 3;
 
     private static final int EXIT_X = 660;
     private static final int EXIT_Y = 0;
@@ -49,7 +49,7 @@ public class GamePanel extends JPanel {
     private boolean gamePaused = false;
 
     private Game game = null;
-    private Map_Builder map_builder;
+    private final Map_Builder map_builder;
     private final Set<Integer> keysHeld = new HashSet<>();
 
     private SecurityGuard securityGuard;
@@ -189,13 +189,7 @@ public class GamePanel extends JPanel {
      */
     private void update() {
         if (gameOver) {
-            if(!score_saved) {
-//                int finalScore = score + (int) ((endTime -  startTime)/1000);
-                int finalScore = score;
-                Score_Tracker.saveScore(finalScore);
-                score_saved = true;
-                return;
-            }
+            saveScoreOnce();
             return;
         }
 
@@ -203,12 +197,12 @@ public class GamePanel extends JPanel {
             return;
         }
 
-        if (gameOver || gameWon) {
+        if (gameWon) {
             saveScoreOnce();
             return;
         }
 
-        player.update(keysHeld, playerSpeed, map_builder, playerWidth, playerHeight);
+        player.update(keysHeld, PLAYER_SPEED, map_builder, PLAYER_SIZE, PLAYER_SIZE);
 
         Bonus_Items.removeIf(item -> item.collected);
         Penalty_Items.removeIf(item -> item.collected);
@@ -253,7 +247,7 @@ public class GamePanel extends JPanel {
      * it ends the game when they collide.
      */
     private void checkEnemyCollision() {
-        if (securityGuard.collidesWithPlayer(player, playerWidth, playerHeight)) {
+        if (securityGuard.collidesWithPlayer(player, PLAYER_SIZE, PLAYER_SIZE)) {
             gameOver = true;
             endTime = System.currentTimeMillis();
         }
@@ -265,15 +259,15 @@ public class GamePanel extends JPanel {
      */
     private void checkItemCollection() {
         for (Item_Main item : Main_Items) {
-            score += item.collectIfTouched(player.getX(), player.getY(), playerWidth, playerHeight);
+            score += item.collectIfTouched(player.getX(), player.getY(), PLAYER_SIZE, PLAYER_SIZE);
         }
 
         for (Item_Bonus item : Bonus_Items) {
-            score += item.collectIfTouched(player.getX(), player.getY(), playerWidth, playerHeight);
+            score += item.collectIfTouched(player.getX(), player.getY(), PLAYER_SIZE, PLAYER_SIZE);
         }
 
         for (Item_Penalty item : Penalty_Items) {
-            score += item.collectIfTouched(player.getX(), player.getY(), playerWidth, playerHeight);
+            score += item.collectIfTouched(player.getX(), player.getY(), PLAYER_SIZE, PLAYER_SIZE);
         }
     }
 
@@ -286,8 +280,8 @@ public class GamePanel extends JPanel {
         boolean playerAtExit = GameRulesHelper.isPlayerAtExit(
                 player.getX(),
                 player.getY(),
-                playerWidth,
-                playerHeight,
+                PLAYER_SIZE,
+                PLAYER_SIZE,
                 EXIT_X,
                 EXIT_Y,
                 EXIT_SIZE
@@ -369,10 +363,10 @@ public class GamePanel extends JPanel {
         }
 
         if (playerFrames != null && playerFrames.length > 0) {
-            g.drawImage(playerFrames[player.getCurrentFrame()], player.getX(), player.getY(), playerWidth, playerHeight, null);
+            g.drawImage(playerFrames[player.getCurrentFrame()], player.getX(), player.getY(), PLAYER_SIZE, PLAYER_SIZE, null);
         } else {
             g.setColor(Color.GREEN);
-            g.fillRect(player.getX(), player.getY(), playerWidth, playerHeight);
+            g.fillRect(player.getX(), player.getY(), PLAYER_SIZE, PLAYER_SIZE);
         }
 
         if (gameOver) {
