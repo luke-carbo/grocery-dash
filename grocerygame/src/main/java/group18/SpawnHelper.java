@@ -1,6 +1,8 @@
 package group18;
 
 import group18.mapCreation.Game_Map;
+import group18.mapCreation.Map_Builder;
+
 import java.awt.*;
 
 /** Shared utility for item spawning logic. */
@@ -13,7 +15,7 @@ public class SpawnHelper {
      * @param map the game map to search
      * @return pixel coordinates of a valid tile
      */
-    public static Point randomMapTile(Game_Map map) {
+    public static Point randomMapTile(Map_Builder map) {
         int tileSize = map.getTileSize();
 
         while (true) {

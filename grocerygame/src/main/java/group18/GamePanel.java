@@ -1,7 +1,7 @@
 package group18;
 
 import group18.enemy.SecurityGuard;
-import group18.mapCreation.Game_Map;
+import group18.mapCreation.Map_Builder;
 
 import javax.swing.*;
 import java.awt.Color;
@@ -49,7 +49,7 @@ public class GamePanel extends JPanel {
     private boolean gamePaused = false;
 
     private Game game = null;
-    private final Game_Map game_map;
+    private Map_Builder map_builder;
     private final Set<Integer> keysHeld = new HashSet<>();
 
     private SecurityGuard securityGuard;
@@ -68,10 +68,10 @@ public class GamePanel extends JPanel {
      */
     public GamePanel() {
         this.game = game;
-        this.game_map = new Game_Map();
-        this.main_spawner = new Spawn_Main(game, game_map);
-        this.bonus_spawner = new Spawn_Bonus(game, game_map);
-        this.penalty_spawner = new Spawn_Penalty(game, game_map);
+        this.map_builder = new Map_Builder();
+        this.main_spawner = new Spawn_Main(game, map_builder);
+        this.bonus_spawner = new Spawn_Bonus(game, map_builder);
+        this.penalty_spawner = new Spawn_Penalty(game, map_builder);
         this.startTime = System.currentTimeMillis();
         loadPlayerFrames();
         loadSecurityFrames();
@@ -208,7 +208,7 @@ public class GamePanel extends JPanel {
             return;
         }
 
-        player.update(keysHeld, playerSpeed, game_map, playerWidth, playerHeight);
+        player.update(keysHeld, playerSpeed, map_builder, playerWidth, playerHeight);
 
         Bonus_Items.removeIf(item -> item.collected);
         Penalty_Items.removeIf(item -> item.collected);
@@ -226,7 +226,7 @@ public class GamePanel extends JPanel {
         );
 
         securityGuard.update(
-                game_map,
+                map_builder,
                 player,
                 chaseState,
                 frames
@@ -308,7 +308,7 @@ public class GamePanel extends JPanel {
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
 
-        game_map.draw(g);
+        map_builder.draw(g);
 
         if (!gameStarted) {
             g.setColor(Color.WHITE);

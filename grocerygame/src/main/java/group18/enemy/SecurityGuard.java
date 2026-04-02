@@ -2,7 +2,7 @@ package group18.enemy;
 
 import group18.Player;
 import group18.ai.Pathfinder;
-import group18.mapCreation.Game_Map;
+import group18.mapCreation.Map_Builder;
 
 import javax.swing.*;
 import java.awt.Point;
@@ -100,7 +100,7 @@ public class SecurityGuard extends Enemy {
 
     /** this updates guard movement against the current player state. */
     public void update(
-            Game_Map map,
+            Map_Builder map,
             Player player,
             ChaseState chaseState,
             FrameSet frames
@@ -117,7 +117,7 @@ public class SecurityGuard extends Enemy {
 
     /** this moves the guard toward the player using pathfinding and movement limits. */
     public void moveTowardPlayer(
-            Game_Map map,
+            Map_Builder map,
             int playerX,
             int playerY,
             ChaseState chaseState,
@@ -197,7 +197,7 @@ public class SecurityGuard extends Enemy {
     }
 
     /** this checks whether a movement rectangle is inside walkable map tiles. */
-    private boolean canMoveTo(Game_Map map, int x, int y, int width, int height) {
+    private boolean canMoveTo(Map_Builder map, int x, int y, int width, int height) {
         return !map.isSolid(x, y)
                 && !map.isSolid(x + width - 1, y)
                 && !map.isSolid(x, y + height - 1)
