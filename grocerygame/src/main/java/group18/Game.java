@@ -9,8 +9,6 @@ import java.awt.*;
  * Main game class for Grocery Game.
  */
 public class Game extends JFrame {
-    public int score;
-
     public Game() {
         setTitle("CMPT276 Grocery Game");
         setSize(900, 600);
