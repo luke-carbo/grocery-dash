@@ -5,13 +5,13 @@
 
 ---
 
-## 📖 Story
+## Story
 
 You've got a grocery list, an empty stomach, and zero patience for checkout lines. The plan? Grab everything you need and slip out before the security guard notices. Dodge their patrol routes, collect all the items, and make it to the exit. Easy in theory. Not so easy in practice.
 
 ---
 
-## 🎮 Gameplay
+## Gameplay
 
 - Navigate a 2D grocery store map
 - Collect all items scattered across the store
@@ -21,14 +21,14 @@ You've got a grocery list, an empty stomach, and zero patience for checkout line
 
 ---
 
-## ✅ Prerequisites
+## Prerequisites
 
 - Java 17+
 - Apache Maven 3.6+
 
 ---
 
-## 🔧 Build & Run
+## Build & Run
 
 **Navigate to the project directory first (where `pom.xml` is located):**
 
@@ -57,7 +57,7 @@ java -jar target/grocerygame-1.0-SNAPSHOT.jar
 
 ---
 
-## 🧪 Testing
+## Testing
 
 ```bash
 mvn test
@@ -65,7 +65,7 @@ mvn test
 
 ---
 
-## 🕹️ Controls
+## Controls
 
 | Key | Action |
 |-----|--------|
@@ -76,7 +76,7 @@ mvn test
 
 ---
 
-## 👥 Team — Group 18
+## Team — Group 18
 
 | Name | Role |
 |------|------|
@@ -87,7 +87,7 @@ mvn test
 
 ---
 
-## 📁 Project Structure
+## Project Structure
 
 ```
 grocerygame/
@@ -100,16 +100,3 @@ grocerygame/
 ├── src/test/                   # JUnit tests
 └── pom.xml
 ```
-
----
-
-## 🚧 Known Issues & Future Work
-
-- [ ] Add multiple levels with increasing difficulty
-- [ ] Add a scoring system based on time and items collected
-- [ ] Sound effects and background music
-- [ ] Animated sprites for player and enemy
-
----
-
-*Built for CMPT 276 — Software Engineering | Simon Fraser University*
