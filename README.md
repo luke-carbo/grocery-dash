@@ -4,7 +4,7 @@ A 2D arcade-style grocery store game built in Java using Swing.
 Avoid the security guard, collect all items, and reach the exit.
 
 ## Story
-You are a security guard bla bla bla
+You are a security guard bla bla bla (to be continued)
 
 ## Prerequisites
 
