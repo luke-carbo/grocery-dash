@@ -22,25 +22,6 @@ public class Game extends JFrame {
         add(panel);
 
         setVisible(true);
-
-        Game_Map map = new Game_Map();
-        map.generateMap();
         pack();
-    }
-
-    /**
-     * Getter for the current score.
-     * @return current score
-     */
-    public int getScore() {
-        return this.score;
-    }
-
-    /**
-     * Setter for the current score.
-     * @param newScore new score value
-     */
-    public void setScore(int newScore) {
-        this.score = newScore;
     }
 }
