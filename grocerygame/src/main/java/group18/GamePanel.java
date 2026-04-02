@@ -24,9 +24,8 @@ public class GamePanel extends JPanel {
     private static final int PANEL_WIDTH = 800;
     private static final int PANEL_HEIGHT = 600;
 
-    private static final int playerWidth = 30;
-    private static final int playerHeight = 30;
-    private static final int playerSpeed = 3;
+    private static final int PLAYER_SIZE = 30;
+    private static final int PLAYER_SPEED = 3;
 
     private static final int EXIT_X = 660;
     private static final int EXIT_Y = 0;
@@ -202,7 +201,7 @@ public class GamePanel extends JPanel {
             return;
         }
 
-        player.update(keysHeld, playerSpeed, game_map, playerWidth, playerHeight);
+        player.update(keysHeld, PLAYER_SPEED, game_map, PLAYER_SIZE, PLAYER_SIZE);
 
         Bonus_Items.removeIf(item -> item.collected);
         Penalty_Items.removeIf(item -> item.collected);
@@ -246,7 +245,7 @@ public class GamePanel extends JPanel {
      * it ends the game when they collide.
      */
     private void checkEnemyCollision() {
-        if (securityGuard.collidesWithPlayer(player, playerWidth, playerHeight)) {
+        if (securityGuard.collidesWithPlayer(player, PLAYER_SIZE, PLAYER_SIZE)) {
             gameOver = true;
             endTime = System.currentTimeMillis();
         }
@@ -258,15 +257,15 @@ public class GamePanel extends JPanel {
      */
     private void checkItemCollection() {
         for (Item_Main item : Main_Items) {
-            score += item.collectIfTouched(player.getX(), player.getY(), playerWidth, playerHeight);
+            score += item.collectIfTouched(player.getX(), player.getY(), PLAYER_SIZE, PLAYER_SIZE);
         }
 
         for (Item_Bonus item : Bonus_Items) {
-            score += item.collectIfTouched(player.getX(), player.getY(), playerWidth, playerHeight);
+            score += item.collectIfTouched(player.getX(), player.getY(), PLAYER_SIZE, PLAYER_SIZE);
         }
 
         for (Item_Penalty item : Penalty_Items) {
-            score += item.collectIfTouched(player.getX(), player.getY(), playerWidth, playerHeight);
+            score += item.collectIfTouched(player.getX(), player.getY(), PLAYER_SIZE, PLAYER_SIZE);
         }
     }
 
@@ -279,8 +278,8 @@ public class GamePanel extends JPanel {
         boolean playerAtExit = GameRulesHelper.isPlayerAtExit(
                 player.getX(),
                 player.getY(),
-                playerWidth,
-                playerHeight,
+                PLAYER_SIZE,
+                PLAYER_SIZE,
                 EXIT_X,
                 EXIT_Y,
                 EXIT_SIZE
@@ -362,10 +361,10 @@ public class GamePanel extends JPanel {
         }
 
         if (playerFrames != null && playerFrames.length > 0) {
-            g.drawImage(playerFrames[player.getCurrentFrame()], player.getX(), player.getY(), playerWidth, playerHeight, null);
+            g.drawImage(playerFrames[player.getCurrentFrame()], player.getX(), player.getY(), PLAYER_SIZE, PLAYER_SIZE, null);
         } else {
             g.setColor(Color.GREEN);
-            g.fillRect(player.getX(), player.getY(), playerWidth, playerHeight);
+            g.fillRect(player.getX(), player.getY(), PLAYER_SIZE, PLAYER_SIZE);
         }
 
         if (gameOver) {
