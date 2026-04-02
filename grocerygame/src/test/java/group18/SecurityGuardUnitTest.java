@@ -65,11 +65,11 @@ public class SecurityGuardUnitTest {
     void guard_createChaseState_initializedCorrectly() {
         SecurityGuard.ChaseState state = guard.createChaseState(Player.FRAME_DOWN);
 
-        assertNull(state.target,
+        assertNull(state.getTarget(),
                 "ChaseState target should be null on creation.");
-        assertEquals(0, state.moveCooldown,
+        assertEquals(0, state.getMoveCooldown(),
                 "ChaseState moveCooldown should be 0 on creation.");
-        assertEquals(Player.FRAME_DOWN, state.frame,
+        assertEquals(Player.FRAME_DOWN, state.getFrame(),
                 "ChaseState frame should match the initialFrame argument.");
     }
 
@@ -84,11 +84,11 @@ public class SecurityGuardUnitTest {
 
         guard.resetChaseState(state, newTarget, 5, Player.FRAME_RIGHT);
 
-        assertEquals(newTarget, state.target,
+        assertEquals(newTarget, state.getTarget(),
                 "ChaseState target should match the value passed to resetChaseState().");
-        assertEquals(5, state.moveCooldown,
+        assertEquals(5, state.getMoveCooldown(),
                 "ChaseState moveCooldown should match the value passed to resetChaseState().");
-        assertEquals(Player.FRAME_RIGHT, state.frame,
+        assertEquals(Player.FRAME_RIGHT, state.getFrame(),
                 "ChaseState frame should match the value passed to resetChaseState().");
     }
 }

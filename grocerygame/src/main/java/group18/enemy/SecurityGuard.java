@@ -4,6 +4,7 @@ import group18.Player;
 import group18.ai.Pathfinder;
 import group18.mapCreation.Game_Map;
 
+import javax.swing.*;
 import java.awt.Point;
 
 /** this enemy type represents a security guard that can catch the player. */
@@ -15,15 +16,39 @@ public class SecurityGuard extends Enemy {
 
     /** this stores chase state across update ticks. */
     public static class ChaseState {
-        public Point target;
-        public int moveCooldown;
-        public int frame;
+        private Point target;
+        private int moveCooldown;
+        private int frame;
 
         /** this creates a chase state with a starting frame. */
         public ChaseState(int initialFrame) {
             this.target = null;
             this.moveCooldown = 0;
             this.frame = initialFrame;
+        }
+
+        public Point getTarget() {
+            return target;
+        }
+
+        public void setTarget(Point target) {
+            this.target = target;
+        }
+
+        public int getMoveCooldown() {
+            return moveCooldown;
+        }
+
+        public void setMoveCooldown(int moveCooldown) {
+            this.moveCooldown = moveCooldown;
+        }
+
+        public int getFrame() {
+            return frame;
+        }
+
+        public void setFrame(int frame) {
+            this.frame = frame;
         }
     }
 
@@ -53,9 +78,9 @@ public class SecurityGuard extends Enemy {
 
     /** this resets the given chase state to specific values. */
     public void resetChaseState(ChaseState state, Point target, int cooldown, int frame) {
-        state.target = target;
-        state.moveCooldown = cooldown;
-        state.frame = frame;
+        state.setTarget(target);
+        state.setMoveCooldown(cooldown);
+        state.setFrame(frame);
     }
 
     /** this marks the guard as actively chasing the player. */
@@ -63,15 +88,22 @@ public class SecurityGuard extends Enemy {
         this.currentAction = Enemy_Action.Chase;
     }
 
+    public static class FrameSet{
+        public final int left, down, up, right;
+        public FrameSet(int left, int down, int up, int right) {
+            this.left = left;
+            this.down = down;
+            this.up = up;
+            this.right = right;
+        }
+    }
+
     /** this updates guard movement against the current player state. */
     public void update(
             Game_Map map,
             Player player,
             ChaseState chaseState,
-            int frameLeft,
-            int frameDown,
-            int frameUp,
-            int frameRight
+            FrameSet frames
     ) {
         chasePlayer(player);
         moveTowardPlayer(
@@ -79,10 +111,7 @@ public class SecurityGuard extends Enemy {
                 player.getX(),
                 player.getY(),
                 chaseState,
-                frameLeft,
-                frameDown,
-                frameUp,
-                frameRight
+                frames
         );
     }
 
@@ -92,10 +121,7 @@ public class SecurityGuard extends Enemy {
             int playerX,
             int playerY,
             ChaseState chaseState,
-            int frameLeft,
-            int frameDown,
-            int frameUp,
-            int frameRight
+            FrameSet frames
     ) {
         double enemyPosX = getX();
         double enemyPosY = getY();
@@ -132,9 +158,9 @@ public class SecurityGuard extends Enemy {
         }
 
         if (Math.abs(dx) > Math.abs(dy)) {
-            chaseState.frame = dx > 0 ? frameRight : frameLeft;
+            chaseState.frame = dx > 0 ? frames.right : frames.left;
         } else {
-            chaseState.frame = dy > 0 ? frameDown : frameUp;
+            chaseState.frame = dy > 0 ? frames.down : frames.up;
         }
 
         double step = Math.min(this.moveSpeed, distance);
@@ -180,6 +206,6 @@ public class SecurityGuard extends Enemy {
 
     /** this checks whether the guard and player are on the same position. */
     public boolean catchesPlayer(Player player) {
-        return this.position_x == player.getX() && this.position_y == player.getY();
+        return getX() == player.getX() && getY() == player.getY();
     }
 }

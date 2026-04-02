@@ -17,12 +17,13 @@ public class PlayerEnemyIntegrationTest {
     private static final int TILE_SIZE     = 30;
 
     private static final int OPEN_X = 2 * TILE_SIZE; // 60
-    private static final int OPEN_Y = 1 * TILE_SIZE; // 30
+    private static final int OPEN_Y = TILE_SIZE; // 30
 
     private Game_Map map;
     private Player player;
     private SecurityGuard guard;
     private SecurityGuard.ChaseState chaseState;
+    private SecurityGuard.FrameSet frames;
 
     //helper
     private int manhattanDistance(Player p, SecurityGuard g) {
@@ -35,6 +36,7 @@ public class PlayerEnemyIntegrationTest {
         player     = new Player(OPEN_X, OPEN_Y);
         guard      = new SecurityGuard(OPEN_X + 4 * TILE_SIZE, OPEN_Y, 300);
         chaseState = guard.createChaseState(0);
+        frames     = new SecurityGuard.FrameSet(Player.FRAME_LEFT, Player.FRAME_DOWN, Player.FRAME_UP, Player.FRAME_RIGHT);
     }
 
     /**
@@ -78,12 +80,11 @@ public class PlayerEnemyIntegrationTest {
 
         int distanceBefore = manhattanDistance(player, guard);
 
-        chaseState.moveCooldown = 99;
+        chaseState.setMoveCooldown(99);
 
         guard.update(
                 map, player, chaseState,
-                Player.FRAME_LEFT, Player.FRAME_DOWN,
-                Player.FRAME_UP, Player.FRAME_RIGHT
+                frames
         );
 
         int distanceAfter = manhattanDistance(player, guard);
@@ -105,11 +106,10 @@ public class PlayerEnemyIntegrationTest {
 
         // Run 20 update ticks — enough for the guard to take several steps toward the player
         for (int i = 0; i < 20; i++) {
-            chaseState.moveCooldown = 99; // bypass move delay every tick
+            chaseState.setMoveCooldown(99); // bypass move delay every tick
             guard.update(
                     map, player, chaseState,
-                    Player.FRAME_LEFT, Player.FRAME_DOWN,
-                    Player.FRAME_UP,   Player.FRAME_RIGHT
+                    frames
             );
 
             assertFalse(map.isSolid(guard.getX(), guard.getY()),
@@ -192,17 +192,17 @@ public class PlayerEnemyIntegrationTest {
     @Test
     void guard_chaseState_targetClearedAfterReachingWaypoint() {
         // Point the target at the guard's exact current position — it has already "arrived"
-        chaseState.target = new Point(guard.getX(), guard.getY());
+        Point TestPoint = new Point(guard.getX(), guard.getY());
+        chaseState.setTarget(TestPoint);
 
         guard.moveTowardPlayer(
                 map,
                 player.getX(), player.getY(),
                 chaseState,
-                Player.FRAME_LEFT, Player.FRAME_DOWN,
-                Player.FRAME_UP,   Player.FRAME_RIGHT
+                frames
         );
 
-        assertNull(chaseState.target,
+        assertNull(chaseState.getTarget(),
                 "ChaseState target should be null after guard reaches its waypoint.");
     }
 }
