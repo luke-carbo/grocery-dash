@@ -1,6 +1,5 @@
 package group18;
 
-import group18.mapCreation.Game_Map;
 
 import javax.swing.JFrame;
 import java.awt.*;
@@ -25,8 +24,6 @@ public class Game extends JFrame {
 
         setVisible(true);
 
-        Game_Map map = new Game_Map();
-        map.generateMap();
         pack();
     }
 
