@@ -1,7 +1,7 @@
 package group18;
 
 import group18.enemy.SecurityGuard;
-import group18.mapCreation.Game_Map;
+import group18.mapCreation.Map_Builder;
 
 import javax.swing.*;
 import java.awt.Color;
@@ -10,6 +10,7 @@ import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.security.Security;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.ArrayList;
@@ -48,7 +49,7 @@ public class GamePanel extends JPanel {
     private boolean gamePaused = false;
 
     private Game game = null;
-    private final Game_Map game_map;
+    private final Map_Builder map_builder;
     private final Set<Integer> keysHeld = new HashSet<>();
 
     private SecurityGuard securityGuard;
@@ -67,10 +68,10 @@ public class GamePanel extends JPanel {
      */
     public GamePanel() {
         this.game = game;
-        this.game_map = new Game_Map();
-        this.main_spawner = new Spawn_Main(game, game_map);
-        this.bonus_spawner = new Spawn_Bonus(game, game_map);
-        this.penalty_spawner = new Spawn_Penalty(game, game_map);
+        this.map_builder = new Map_Builder();
+        this.main_spawner = new Spawn_Main(game, map_builder);
+        this.bonus_spawner = new Spawn_Bonus(game, map_builder);
+        this.penalty_spawner = new Spawn_Penalty(game, map_builder);
         this.startTime = System.currentTimeMillis();
         loadPlayerFrames();
         loadSecurityFrames();
@@ -201,7 +202,7 @@ public class GamePanel extends JPanel {
             return;
         }
 
-        player.update(keysHeld, PLAYER_SPEED, game_map, PLAYER_SIZE, PLAYER_SIZE);
+        player.update(keysHeld, PLAYER_SPEED, map_builder, PLAYER_SIZE, PLAYER_SIZE);
 
         Bonus_Items.removeIf(item -> item.collected);
         Penalty_Items.removeIf(item -> item.collected);
@@ -214,14 +215,15 @@ public class GamePanel extends JPanel {
             Penalty_Items.add(penalty_spawner.spawnPenalty());
         }
 
+        SecurityGuard.FrameSet frames = new SecurityGuard.FrameSet(
+                Player.FRAME_LEFT, Player.FRAME_DOWN, Player.FRAME_UP, Player.FRAME_RIGHT
+        );
+
         securityGuard.update(
-                game_map,
+                map_builder,
                 player,
                 chaseState,
-                Player.FRAME_LEFT,
-                Player.FRAME_DOWN,
-                Player.FRAME_UP,
-                Player.FRAME_RIGHT
+                frames
         );
         checkEnemyCollision();
         checkItemCollection();
@@ -300,7 +302,7 @@ public class GamePanel extends JPanel {
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
 
-        game_map.draw(g);
+        map_builder.draw(g);
 
         if (!gameStarted) {
             g.setColor(Color.WHITE);
@@ -322,7 +324,7 @@ public class GamePanel extends JPanel {
 
         if (securityFrames != null && securityFrames.length > 0) {
             g.drawImage(
-                    securityFrames[chaseState.frame],
+                    securityFrames[chaseState.getFrame()],
                     securityGuard.getX(),
                     securityGuard.getY(),
                     securityGuard.getEnemySize(),
