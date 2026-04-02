@@ -221,14 +221,15 @@ public class GamePanel extends JPanel {
             Penalty_Items.add(penalty_spawner.spawnPenalty());
         }
 
+        SecurityGuard.FrameSet frames = new SecurityGuard.FrameSet(
+                Player.FRAME_LEFT, Player.FRAME_DOWN, Player.FRAME_UP, Player.FRAME_RIGHT
+        );
+
         securityGuard.update(
                 map_builder,
                 player,
                 chaseState,
-                Player.FRAME_LEFT,
-                Player.FRAME_DOWN,
-                Player.FRAME_UP,
-                Player.FRAME_RIGHT
+                frames
         );
         checkEnemyCollision();
         checkItemCollection();
@@ -329,7 +330,7 @@ public class GamePanel extends JPanel {
 
         if (securityFrames != null && securityFrames.length > 0) {
             g.drawImage(
-                    securityFrames[chaseState.frame],
+                    securityFrames[chaseState.getFrame()],
                     securityGuard.getX(),
                     securityGuard.getY(),
                     securityGuard.getEnemySize(),
