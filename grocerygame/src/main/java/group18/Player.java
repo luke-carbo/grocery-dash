@@ -45,12 +45,7 @@ public class Player extends Game_Entity {
         int dY = movement[1];
 
         currentFrame = PlayerMovementHelper.getFrame(
-                keysHeld,
-                currentFrame,
-                FRAME_LEFT,
-                FRAME_DOWN,
-                FRAME_UP,
-                FRAME_RIGHT
+                keysHeld
         );
 
         if (dX == 0 && dY == 0) {

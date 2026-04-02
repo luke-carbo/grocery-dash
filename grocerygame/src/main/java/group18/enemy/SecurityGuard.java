@@ -89,13 +89,18 @@ public class SecurityGuard extends Enemy {
     }
 
     public static class FrameSet{
-        public final int left, down, up, right;
+        private final int left, down, up, right;
         public FrameSet(int left, int down, int up, int right) {
             this.left = left;
             this.down = down;
             this.up = up;
             this.right = right;
         }
+
+        public int getLeft() { return left; }
+        public int getDown() { return down; }
+        public int getUp() { return up; }
+        public int getRight() { return right; }
     }
 
     /** this updates guard movement against the current player state. */
@@ -126,12 +131,12 @@ public class SecurityGuard extends Enemy {
         double enemyPosX = getX();
         double enemyPosY = getY();
 
-        if (chaseState.target == null) {
-            chaseState.moveCooldown++;
-            if (chaseState.moveCooldown < this.moveDelay) {
+        if (chaseState.getTarget() == null) {
+            chaseState.setMoveCooldown(chaseState.getMoveCooldown() + 1);
+            if (chaseState.getMoveCooldown() < this.moveDelay) {
                 return;
             }
-            chaseState.moveCooldown = 0;
+            chaseState.setMoveCooldown(0);
 
             Point nextStep = Pathfinder.getNextStep(
                     map,
@@ -145,22 +150,24 @@ public class SecurityGuard extends Enemy {
                 return;
             }
 
-            chaseState.target = nextStep;
+            chaseState.setTarget(nextStep);
         }
 
-        double dx = chaseState.target.x - enemyPosX;
-        double dy = chaseState.target.y - enemyPosY;
+
+
+        double dx = chaseState.getTarget().x - enemyPosX;
+        double dy = chaseState.getTarget().y - enemyPosY;
         double distance = Math.hypot(dx, dy);
 
         if (distance < 0.001) {
-            chaseState.target = null;
+            chaseState.setTarget(null);
             return;
         }
 
         if (Math.abs(dx) > Math.abs(dy)) {
-            chaseState.frame = dx > 0 ? frames.right : frames.left;
+            chaseState.setFrame(dx > 0 ? frames.getRight() : frames.getLeft());
         } else {
-            chaseState.frame = dy > 0 ? frames.down : frames.up;
+            chaseState.setFrame(dy > 0 ? frames.getDown() : frames.getUp());
         }
 
         double step = Math.min(this.moveSpeed, distance);
@@ -171,7 +178,7 @@ public class SecurityGuard extends Enemy {
             setX(nextX);
             setY(nextY);
         } else {
-            chaseState.target = null;
+            chaseState.setTarget(null);
             return;
         }
 
@@ -179,8 +186,7 @@ public class SecurityGuard extends Enemy {
                 && Math.abs(getY() - chaseState.target.y) <= 1) {
             setX(chaseState.target.x);
             setY(chaseState.target.y);
-            chaseState.target = null;
-        }
+            chaseState.setTarget(null);        }
     }
 
     /** this checks if the guard overlaps the player hitbox. */
