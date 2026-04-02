@@ -168,6 +168,10 @@ public class GamePanel extends JPanel {
     }
 
 
+    boolean isGameStarted() {
+        return gameStarted;
+    }
+
     boolean isGamePaused() {
         return gamePaused;
     }
