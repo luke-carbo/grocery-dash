@@ -76,17 +76,6 @@ mvn test
 
 ---
 
-## Team — Group 18
-
-| Name | Role |
-|------|------|
-| Armin | Player & Enemy (Dynamic Entities) |
-| *(teammate)* | *(role)* |
-| *(teammate)* | *(role)* |
-| *(teammate)* | *(role)* |
-
----
-
 ## Project Structure
 
 ```
