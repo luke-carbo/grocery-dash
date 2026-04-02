@@ -24,4 +24,8 @@ public class Enemy extends Game_Entity {
         this.enemyClass = enemyClass;
         this.currentAction = Enemy_Action.Idle;
     }
+
+    public Enemy_Action getCurrentAction() {
+        return currentAction;
+    }
 }
