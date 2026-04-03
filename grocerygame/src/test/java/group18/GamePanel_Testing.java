@@ -39,55 +39,6 @@ public class GamePanel_Testing {
         return img.getGraphics();
     }
 
-    /**
-     * Create Testing Item {@link Item_Main}
-     */
-    private Item_Main Create_Main(int x, int y, int value) {
-        Item_Main item = new Item_Main(null); // null Game is safe for collection tests
-        item.setX(x);
-        item.setY(y);
-        item.value = value;
-        return item;
-    }
-
-    /**
-     * Create Testing Item {@link Item_Bonus}
-     */
-    private Item_Bonus Create_Bonus(int x, int y, int value) {
-        Item_Bonus item = new Item_Bonus(null);
-        item.setX(x);
-        item.setY(y);
-        item.value = value;
-        return item;
-    }
-
-    /**
-     * Create Testing Item {@link Item_Penalty}
-     */
-    private Item_Penalty Create_Penalty(int x, int y, int value) {
-        Item_Penalty item = new Item_Penalty(null);
-        item.setX(x);
-        item.setY(y);
-        item.value = value;
-        return item;
-    }
-
-    /**
-     * Create Testing Item {@link Player}
-     */
-    private Player Create_Player() {
-        Player player = new Player(60, 90);
-        return player;
-    }
-
-    /**
-     * Create Testing Item {@link SecurityGuard}
-     */
-    private SecurityGuard Create_Guard() {
-        SecurityGuard guard = new SecurityGuard(120, 150, 300);
-        return guard;
-    }
-
     // GamePanel Key Testing
     @Test
     void test_reset() {

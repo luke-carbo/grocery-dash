@@ -12,7 +12,7 @@ import static org.junit.jupiter.api.Assertions.*;
 /**
  * Unit tests for the Pathfinder class.
  */
-public class PathfinderUnitTest {
+public class PathfinderIntegrationTest {
 
     private static final int TILE_SIZE = 30;
 
