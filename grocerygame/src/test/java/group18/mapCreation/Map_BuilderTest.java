@@ -2,14 +2,38 @@ package group18.mapCreation;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import java.awt.*;
+import java.awt.image.BufferedImage;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 public class Map_BuilderTest {
     private Map_Builder map_builder;
+    private BufferedImage image;
+    private Graphics graphics;
+    private Map_Tile[][] tile_map;
+    private static final int TILE_SIZE = 30;
+
+    private boolean regionHasPixels(BufferedImage image,int x, int y, int width, int height) {
+        for (int i = 0; i < width; i++) {
+            for (int j = 0; j < height; j++) {
+                if(image.getRGB(i, j) != 0) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
 
     @BeforeEach
     void setUp() {
         map_builder = new Map_Builder();
+        tile_map = map_builder.getTileMap();
+        image = new BufferedImage(map_builder.getCols() * TILE_SIZE,
+                map_builder.getRows() * TILE_SIZE, BufferedImage.TYPE_INT_ARGB);
+        graphics = image.getGraphics();
+
     }
 
     @Test
@@ -81,10 +105,20 @@ public class Map_BuilderTest {
         assertTrue(map_builder.isSolid(10, 50));
     }
 
+    // Drawing tests
+    @Test
+    void drawPixelsOnScreen(){
+        map_builder.draw(graphics);
+        assertTrue(regionHasPixels(image,0,0,TILE_SIZE,TILE_SIZE));
+    }
+
 
     @AfterEach
     void tearDown() {
         map_builder = null;
+        tile_map = null;
+        image = null;
+        graphics = null;
     }
 
 }
