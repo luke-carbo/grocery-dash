@@ -8,12 +8,12 @@ public abstract class Game_Entity {
     /**
      * The entity's X-Coordinate on the Map.
      */
-    protected int position_x;
+    private int position_x;
 
     /**
      * The entity's Y-Coordinate on the Map.
      */
-    protected int position_y;
+    private int position_y;
 
     /**
      * Retrieves the X-Coordinate of this entity.

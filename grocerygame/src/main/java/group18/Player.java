@@ -25,8 +25,8 @@ public class Player extends Game_Entity {
      * @param y The initial y-coordinate of the player.
      */
     public Player(int x, int y) {
-        this.position_x = x;
-        this.position_y = y;
+        setX(x);
+        setY(y);
         this.alive = true;
     }
 

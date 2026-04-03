@@ -19,8 +19,8 @@ public class Enemy extends Game_Entity {
      * @param enemyClass starting class
      */
     public Enemy(int x, int y, Enemy_Class enemyClass) {
-        this.position_x = x;
-        this.position_y = y;
+        setX(x);
+        setY(y);
         this.enemyClass = enemyClass;
         this.currentAction = Enemy_Action.Idle;
     }
