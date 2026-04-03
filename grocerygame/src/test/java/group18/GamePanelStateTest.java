@@ -60,4 +60,16 @@ public class GamePanelStateTest {
         assertTrue(panel.isGameOver(), "Game should be over after setGameOverForTest(true) is called.");
         assertFalse(panel.isGameWon(), "Game won should remain false when only game over state is set.");
     }
+
+    @Test
+    void setGamePausedForTest_setsPausedStateToTrue() {
+        GamePanel panel = new GamePanel();
+
+        panel.setGamePausedForTest(true);
+
+        assertTrue(panel.isGamePaused(), "Game should be paused after setGamePausedForTest(true) is called.");
+        assertFalse(panel.isGameStarted(), "Game should remain not started unless explicitly started.");
+        assertFalse(panel.isGameOver(), "Game over should remain false when only paused state is set.");
+        assertFalse(panel.isGameWon(), "Game won should remain false when only paused state is set.");
+    }
 }
