@@ -18,9 +18,9 @@ public class Map_BuilderTest {
     private Map_Tile[][] tile_map;
     private static final int TILE_SIZE = 30;
 
-    private boolean regionHasPixels(BufferedImage image,int x, int y, int width, int height) {
-        for (int i = 0; i < width; i++) {
-            for (int j = 0; j < height; j++) {
+    private boolean regionHasPixels(BufferedImage image) {
+        for (int i = 0; i < TILE_SIZE; i++) {
+            for (int j = 0; j < TILE_SIZE; j++) {
                 if(image.getRGB(i, j) != 0) {
                     return true;
                 }
@@ -170,7 +170,7 @@ public class Map_BuilderTest {
     @Test
     void drawPixelsOnScreen(){
         map_builder.draw(graphics);
-        assertTrue(regionHasPixels(image,0,0,TILE_SIZE,TILE_SIZE));
+        assertTrue(regionHasPixels(image));
     }
 
 // test
