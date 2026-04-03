@@ -11,7 +11,7 @@ You've got a grocery list, an empty stomach, and zero patience for checkout line
 
 ---
 
-Demo:
+## Demo
 
 ![Demo Gameplay Gif](https://media4.giphy.com/media/v1.Y2lkPTc5MGI3NjExb2RrNm5uanVuOGJkZmY1dWhyZXltczRqdzVoYW1yaGg1ajQ5ejFrcCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/7uDOO4h5N1CijVfLc0/giphy.gif)
 
