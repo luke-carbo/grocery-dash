@@ -4,8 +4,14 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * Unit tests for the GamePanelState class.
+ */
 public class GamePanelStateTest {
 
+    /**
+     * tests that a new game panel starts with default game states
+     */
     @Test
     void newGamePanel_startsWithDefaultGameStates() {
         GamePanel panel = new GamePanel();
@@ -16,6 +22,9 @@ public class GamePanelStateTest {
         assertFalse(panel.isGameWon(), "Game should not be won when the panel is first created.");
     }
 
+    /**
+     * tests that the game starts when the startGameForTest method is called
+     */
     @Test
     void startGameForTest_setsGameStartedToTrue() {
         GamePanel panel = new GamePanel();
@@ -28,6 +37,9 @@ public class GamePanelStateTest {
         assertFalse(panel.isGameWon(), "Game should not be won when it has just started.");
     }
 
+    /**
+     * tests that the game resets to default states when resetGameStateForTest is called
+     */
     @Test
     void resetGameStateForTest_restoresDefaultGameStates() {
         GamePanel panel = new GamePanel();
@@ -41,6 +53,9 @@ public class GamePanelStateTest {
         assertFalse(panel.isGameWon(), "Game should not be won after reset.");
     }
 
+    /**
+     * tests that the game is won when setGameWonForTest is called
+     */
     @Test
     void setGameWonForTest_setsWonStateToTrue() {
         GamePanel panel = new GamePanel();
@@ -51,6 +66,9 @@ public class GamePanelStateTest {
         assertFalse(panel.isGameOver(), "Game over should remain false when only win state is set.");
     }
 
+    /**
+     * tests that the game is over when setGameOverForTest is called
+     */
     @Test
     void setGameOverForTest_setsGameOverStateToTrue() {
         GamePanel panel = new GamePanel();
@@ -61,6 +79,9 @@ public class GamePanelStateTest {
         assertFalse(panel.isGameWon(), "Game won should remain false when only game over state is set.");
     }
 
+    /**
+     * tests that the game is paused when setGamePausedForTest is called
+     */
     @Test
     void setGamePausedForTest_setsPausedStateToTrue() {
         GamePanel panel = new GamePanel();

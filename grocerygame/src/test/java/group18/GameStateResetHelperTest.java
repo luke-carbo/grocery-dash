@@ -4,8 +4,14 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * Unit tests for the GameStateResetHelper class.
+ */
 public class GameStateResetHelperTest {
 
+    /**
+     * tests that reset state sets the default player position correctly.
+     */
     @Test
     void createResetState_setsDefaultPlayerPositionCorrectly() {
         GameStateResetHelper.ResetStateData data =
@@ -15,6 +21,9 @@ public class GameStateResetHelperTest {
         assertEquals(570, data.playerY, "Player Y should reset to the default starting position.");
     }
 
+    /**
+     * tests that reset state sets the default game flags to false.
+     */
     @Test
     void createResetState_setsDefaultGameFlagsToFalse() {
         GameStateResetHelper.ResetStateData data =
@@ -26,6 +35,9 @@ public class GameStateResetHelperTest {
         assertFalse(data.gamePaused, "gamePaused should be false after reset.");
     }
 
+    /**
+     * tests that reset state sets the default frames correctly.
+     */
     @Test
     void createResetState_setsDefaultFramesToFrameDown() {
         GameStateResetHelper.ResetStateData data =
@@ -37,6 +49,9 @@ public class GameStateResetHelperTest {
                 "Security frame should reset to FRAME_DOWN.");
     }
 
+    /**
+     * tests that reset state creates a security guard with default values.
+     */
     @Test
     void createResetState_createsSecurityGuardWithDefaultValues() {
         GameStateResetHelper.ResetStateData data =
@@ -49,6 +64,9 @@ public class GameStateResetHelperTest {
                 "Security guard Y should reset to default position.");
     }
 
+    /**
+     * tests that reset state sets the default timing and enemy state values.
+     */
     @Test
     void createResetState_setsDefaultTimingAndEnemyStateValues() {
         GameStateResetHelper.ResetStateData data =
