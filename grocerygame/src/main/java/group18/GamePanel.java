@@ -161,7 +161,7 @@ public class GamePanel extends JPanel {
         Main_Items.clear();
 
         // Starting Main Items
-        for (int i = 0; i < 3; i++) {
+        for (int i = 0; i < Item.main_limit; i++) {
             Main_Items.add(main_spawner.spawnMain());
         }
 
@@ -245,11 +245,11 @@ public class GamePanel extends JPanel {
         Bonus_Items.removeIf(item -> item.collected);
         Penalty_Items.removeIf(item -> item.collected);
 
-        if (Bonus_Items.size() < 4) {
+        if (Bonus_Items.size() < Item.bonus_limit) {
             Bonus_Items.add(bonus_spawner.spawnBonus());
         }
 
-        if (Penalty_Items.size() < 3) {
+        if (Penalty_Items.size() < Item.penalty_limit) {
             Penalty_Items.add(penalty_spawner.spawnPenalty());
         }
 

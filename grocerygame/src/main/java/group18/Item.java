@@ -10,6 +10,10 @@ Item extends Game_Entity {
      */
     public int value;
 
+    public static int main_limit = 3;
+    public static int bonus_limit = 4;
+    public static int penalty_limit = 3;
+
     /**
      * Enum determining Item Class
      */
@@ -17,6 +21,21 @@ Item extends Game_Entity {
 
     public boolean collected = false;
 
+    /**
+     * Sets the value of the item
+     *
+     * @param value the new entity value.
+     */
+    public void setValue(int value) {
+        this.value = value;
+    }
+
+    /**
+     * Gets the value of the item.
+     */
+    public int getValue() {
+        return value;
+    }
 
     /**
      * checks if the player hitbox overlaps this item hitbox.
