@@ -1,45 +1,75 @@
-# 🛒 CMPT 276 Grocery Game — Group 18
- 
-A 2D arcade-style grocery store game built in Java using Swing.
-Avoid the security guard, collect all items, and reach the exit.
+# 🛒 Grocery Dash — CMPT 276 Group 18
+
+> A 2D arcade-style grocery store game built in Java with Swing.  
+> Grab every item on your list and reach the exit — without getting caught.
+
+---
 
 ## Story
-You are a security guard bla bla bla (to be continued)
+
+You've got a grocery list, an empty stomach, and zero patience for checkout lines. The plan? Grab everything you need and slip out before the security guard notices. Dodge their patrol routes, collect all the items, and make it to the exit. Easy in theory. Not so easy in practice.
+
+---
+
+## Gameplay
+
+- Navigate a 2D grocery store map
+- Collect all items scattered across the store
+- Avoid the patrolling security guard
+- Reach the exit to win the level
+- Get caught — and it's game over
+
+---
 
 ## Prerequisites
 
 - Java 17+
 - Apache Maven 3.6+
 
-## How to Build
+---
 
-Navigate to the `grocerygame` directory (where `pom.xml` is located):
+## Build & Run
 
-Run the following command:
+**Navigate to the project directory first (where `pom.xml` is located):**
 
-`mvn compile`
+```bash
+cd grocerygame
+```
 
-## How to Run
-You can either run the game using the Maven command below (Recommended)
+**Compile:**
 
-**Maven Command**: ```mvn exec:java -Dexec.mainClass="group18.Main"```
+```bash
+mvn compile
+```
 
-Alternatively, you can use Maven to build a jar and run it that way.
+**Run (recommended):**
 
-```c
+```bash
+mvn exec:java -Dexec.mainClass="group18.Main"
+```
+
+**Or build and run a JAR:**
+
+```bash
 mvn package
 java -jar target/grocerygame-1.0-SNAPSHOT.jar
 ```
 
-## How to Test
+---
 
-**In order to run all tests, use the following commands:**
+## Testing
 
-```mvn test```
+```bash
+mvn test
+```
+
+---
 
 ## Controls
 
-- `WASD` — Move
-- `ESC`  — Pause
-- `R`    — Restart
-- `ENTER` — Start game
+| Key | Action |
+|-----|--------|
+| `W` `A` `S` `D` | Move |
+| `ESC` | Pause |
+| `R` | Restart |
+| `ENTER` | Start game |
