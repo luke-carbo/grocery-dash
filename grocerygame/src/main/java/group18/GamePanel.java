@@ -344,21 +344,21 @@ public class GamePanel extends JPanel {
         g.setColor(Color.YELLOW);
         for (Item_Main item : Main_Items) {
             if (!item.collected) {
-                g.fillRect(item.position_x, item.position_y, 20, 20);
+                g.fillRect(item.getX(), item.getY(), 20, 20);
             }
         }
 
         g.setColor(Color.GREEN);
         for (Item_Bonus item : Bonus_Items) {
             if (!item.collected) {
-                g.fillRect(item.position_x, item.position_y, 20, 20);
+                g.fillRect(item.getX(), item.getY(), 20, 20);
             }
         }
 
         g.setColor(Color.RED);
         for (Item_Penalty item : Penalty_Items) {
             if (!item.collected) {
-                g.fillRect(item.position_x, item.position_y, 20, 20);
+                g.fillRect(item.getX(), item.getY(), 20, 20);
             }
         }
 

@@ -33,19 +33,19 @@ public class PlayerMovementHelper {
     }
 
     /** this returns the sprite frame index that matches the current movement key. */
-    public static int getFrame(Set<Integer> keysHeld, int currentFrame, int FRAME_LEFT, int FRAME_DOWN, int FRAME_UP, int FRAME_RIGHT) {
+    public static int getFrame(Set<Integer> keysHeld) {
         if (keysHeld.contains(KeyEvent.VK_W)) {
-            return FRAME_UP;
+            return Player.FRAME_UP;
         }
         if (keysHeld.contains(KeyEvent.VK_S)) {
-            return FRAME_DOWN;
+            return Player.FRAME_DOWN;
         }
         if (keysHeld.contains(KeyEvent.VK_D)) {
-            return FRAME_RIGHT;
+            return Player.FRAME_RIGHT;
         }
         if (keysHeld.contains(KeyEvent.VK_A)) {
-            return FRAME_LEFT;
+            return Player.FRAME_LEFT;
         }
-        return FRAME_DOWN;
+        return Player.FRAME_DOWN;
     }
 }

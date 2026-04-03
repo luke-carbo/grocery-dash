@@ -25,8 +25,8 @@ public class Player extends Game_Entity {
      * @param y The initial y-coordinate of the player.
      */
     public Player(int x, int y) {
-        this.position_x = x;
-        this.position_y = y;
+        setX(x);
+        setY(y);
         this.alive = true;
     }
 
@@ -45,12 +45,7 @@ public class Player extends Game_Entity {
         int dY = movement[1];
 
         currentFrame = PlayerMovementHelper.getFrame(
-                keysHeld,
-                currentFrame,
-                FRAME_LEFT,
-                FRAME_DOWN,
-                FRAME_UP,
-                FRAME_RIGHT
+                keysHeld
         );
 
         if (dX == 0 && dY == 0) {
