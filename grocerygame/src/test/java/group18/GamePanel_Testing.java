@@ -267,7 +267,12 @@ public class GamePanel_Testing {
             pressKey(KeyEvent.VK_W);
             pressKey(KeyEvent.VK_D);
         });
-        Thread.sleep(10000);
+        int maxWaitTime = 10000;
+        int elapsedTime = 0;
+        while(!panel.isGameOver() && elapsedTime < maxWaitTime) {
+            Thread.sleep(200);
+            elapsedTime += 200;
+        }
         assertTrue(panel.isGameOver());
         g.dispose();
     }
