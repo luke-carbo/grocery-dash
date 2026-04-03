@@ -112,7 +112,7 @@ public class Map_BuilderTest {
         assertTrue(regionHasPixels(image,0,0,TILE_SIZE,TILE_SIZE));
     }
 
-
+// test
     @AfterEach
     void tearDown() {
         map_builder = null;
