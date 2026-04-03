@@ -150,6 +150,7 @@ public class Entity_Stationary_Testing {
         assertEquals(50, result);
     }
 
+    @Test
     void test_collection_range_N() {
         Item_Main item = Create_Main(100, 100, 50);
         // Player at same position, 30x30 — clearly overlaps 20x20 item
