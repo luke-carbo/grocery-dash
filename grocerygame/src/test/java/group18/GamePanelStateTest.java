@@ -40,4 +40,24 @@ public class GamePanelStateTest {
         assertFalse(panel.isGameOver(), "Game should not be over after reset.");
         assertFalse(panel.isGameWon(), "Game should not be won after reset.");
     }
+
+    @Test
+    void setGameWonForTest_setsWonStateToTrue() {
+        GamePanel panel = new GamePanel();
+
+        panel.setGameWonForTest(true);
+
+        assertTrue(panel.isGameWon(), "Game should be won after setGameWonForTest(true) is called.");
+        assertFalse(panel.isGameOver(), "Game over should remain false when only win state is set.");
+    }
+
+    @Test
+    void setGameOverForTest_setsGameOverStateToTrue() {
+        GamePanel panel = new GamePanel();
+
+        panel.setGameOverForTest(true);
+
+        assertTrue(panel.isGameOver(), "Game should be over after setGameOverForTest(true) is called.");
+        assertFalse(panel.isGameWon(), "Game won should remain false when only game over state is set.");
+    }
 }
