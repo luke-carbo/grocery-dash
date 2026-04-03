@@ -7,7 +7,6 @@ import org.junit.jupiter.api.Test;
 import javax.swing.*;
 import java.awt.Graphics;
 
-import java.awt.*;
 import java.awt.event.KeyEvent;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -15,7 +14,7 @@ import static org.junit.jupiter.api.Assertions.*;
 /**
  * Unit tests for the GamePanel class.
  */
-public class GamePanel_Testing {
+public class GamePanel_Test {
 
     private GamePanel panel;
     private JFrame testFrame;

@@ -10,7 +10,7 @@ import java.util.List;
 /**
  * Unit tests for the Entity_Stationary class.
  */
-public class Entity_Stationary_Testing {
+public class Entity_Stationary_Test {
 
     /**
      * Create Testing Item {@link Item_Main}
