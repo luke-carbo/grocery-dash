@@ -2,8 +2,12 @@ package group18;
 
 import group18.enemy.SecurityGuard;
 
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import javax.swing.*;
+import java.awt.Graphics;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
@@ -14,10 +18,19 @@ import static org.junit.jupiter.api.Assertions.*;
 public class GamePanel_Testing {
 
     private GamePanel panel;
+    private JFrame testFrame;
 
     @BeforeEach
     void setup_game() {
         panel = new GamePanel();
+    }
+
+    @AfterEach
+    void delete_game() {
+        if (testFrame != null) {
+            testFrame.dispose();
+            testFrame = null;
+        }
     }
 
     // Key Press Simulation
@@ -35,8 +48,12 @@ public class GamePanel_Testing {
 
     // Imaginary GUI
     private Graphics Imaginary_GUI() {
-        BufferedImage img = new BufferedImage(800, 600, BufferedImage.TYPE_INT_ARGB);
-        return img.getGraphics();
+        testFrame = new JFrame();
+        testFrame.setSize(800, 600);
+        testFrame.add(panel);
+        testFrame.setUndecorated(true);
+        testFrame.setVisible(true);
+        return panel.getGraphics();
     }
 
     // GamePanel Key Testing
@@ -129,8 +146,8 @@ public class GamePanel_Testing {
 
     @Test
     void test_paint_items() {
-        Graphics g = Imaginary_GUI();
         panel.startGameForTest();
+        Graphics g = Imaginary_GUI();
         assertDoesNotThrow(() -> panel.paintComponent(g));
         g.dispose();
     }
