@@ -27,4 +27,17 @@ public class GamePanelStateTest {
         assertFalse(panel.isGameOver(), "Game should not be over when it has just started.");
         assertFalse(panel.isGameWon(), "Game should not be won when it has just started.");
     }
+
+    @Test
+    void resetGameStateForTest_restoresDefaultGameStates() {
+        GamePanel panel = new GamePanel();
+
+        panel.startGameForTest();
+        panel.resetGameStateForTest();
+
+        assertFalse(panel.isGameStarted(), "Game should not be started after reset.");
+        assertFalse(panel.isGamePaused(), "Game should not be paused after reset.");
+        assertFalse(panel.isGameOver(), "Game should not be over after reset.");
+        assertFalse(panel.isGameWon(), "Game should not be won after reset.");
+    }
 }
