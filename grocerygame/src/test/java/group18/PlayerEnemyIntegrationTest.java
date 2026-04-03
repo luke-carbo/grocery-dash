@@ -9,6 +9,9 @@ import java.awt.Point;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * Integration tests for the Player-SecurityGuard interaction.
+ */
 public class PlayerEnemyIntegrationTest {
 
     private static final int PLAYER_WIDTH  = 30;
@@ -26,10 +29,20 @@ public class PlayerEnemyIntegrationTest {
     private SecurityGuard.FrameSet frames;
 
     //helper
+
+    /**
+     * calculates the distance between two points
+     * @param p 1st point
+     * @param g 2nd point
+     * @return distance between the two points
+     */
     private int manhattanDistance(Player p, SecurityGuard g) {
         return Math.abs(p.getX() - g.getX()) + Math.abs(p.getY() - g.getY());
     }
 
+    /**
+     * setup the test environment
+     */
     @BeforeEach
     void setUp() {
         map        = new Map_Builder();

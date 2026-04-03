@@ -12,6 +12,9 @@ public class PlayerUnitTest {
 
     private Player player;
 
+    /**
+     * Setup before each test
+     */
     @BeforeEach
     void setUp() {
         player = new Player(60, 90);

@@ -17,6 +17,9 @@ public class SecurityGuardUnitTest {
     private SecurityGuard guard;
     private Player player;
 
+    /**
+     * Setup before each test
+     */
     @BeforeEach
     void setUp() {
         guard  = new SecurityGuard(120, 150, 300);

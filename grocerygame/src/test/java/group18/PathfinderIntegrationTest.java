@@ -23,6 +23,9 @@ public class PathfinderIntegrationTest {
 
     private Map_Builder map;
 
+    /**
+     * Sets up the test environment.
+     */
     @BeforeEach
     void setUp() {
         // Image loading fails silently in headless env — isSolidTile() works fine without images
