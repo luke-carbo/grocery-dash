@@ -36,19 +36,12 @@ public class Map_Builder {
                 "wwfffffffffffffffffffffffww",
                 "wwwwwffwwwwwwwwwwwwwwwwwwww"
         };
-
         rows = map.length;
         cols = map[0].length();
 
         tile_Map = new Map_Tile[rows][cols];
+        createTileMap(map);
 
-        for (int i = 0; i < map.length; i++) {
-            for (int j = 0; j < map[i].length(); j++) {
-                char c = map[i].charAt(j);
-                Map_Tile tile = new Map_Tile(c);
-                tile_Map[i][j] = tile;
-            }
-        }
     }
 
     /**
@@ -76,6 +69,15 @@ public class Map_Builder {
         }
     }
 
+    public void createTileMap(String[] map) {
+        for (int i = 0; i < map.length; i++) {
+            for (int j = 0; j < map[i].length(); j++) {
+                char c = map[i].charAt(j);
+                Map_Tile tile = new Map_Tile(c);
+                tile_Map[i][j] = tile;
+            }
+        }
+    }
     public boolean isSolid(int x, int y) {
         int col = x / TILE_SIZE;
         int row = y / TILE_SIZE;

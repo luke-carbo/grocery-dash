@@ -26,9 +26,7 @@ public class Map_Tile {
     static {
         try {
             shelvesImage = ImageIO.read(Map_Tile.class.getResourceAsStream("/tiles/shelves.png"));
-//            shelvesImage = ImageIO.read(Map_Tile.class.getResourceAsStream("/tiles/grocery_shelf.png"));
             wallImage = ImageIO.read(Map_Tile.class.getResourceAsStream("/tiles/grocery_wall.png"));
-//            wallImage = ImageIO.read(Map_Tile.class.getResourceAsStream("/tiles/grocery_wall2.png"));
             floorImage = ImageIO.read(Map_Tile.class.getResourceAsStream("/tiles/grocery_floor.png"));
             techStand = ImageIO.read(Map_Tile.class.getResourceAsStream("/tiles/desktech.png"));
             meatImage = ImageIO.read(Map_Tile.class.getResourceAsStream("/tiles/fridge.png"));

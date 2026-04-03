@@ -1,6 +1,5 @@
 package group18;
 
-import group18.mapCreation.Game_Map;
 import group18.mapCreation.Map_Builder;
 
 import java.awt.*;
