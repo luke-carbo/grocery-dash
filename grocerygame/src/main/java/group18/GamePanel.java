@@ -189,6 +189,10 @@ public class GamePanel extends JPanel {
         startTime = System.currentTimeMillis();
     }
 
+    void resetGameStateForTest() {
+        resetGameState();
+    }
+
     /**
      * this loads the player sprite frames from the sprite loader.
      * it prepares images used for player direction animation.
