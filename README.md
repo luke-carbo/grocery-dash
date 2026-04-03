@@ -30,7 +30,7 @@ You've got a grocery list, an empty stomach, and zero patience for checkout line
 
 ## Build & Run
 
-**Navigate to the project directory first (where `pom.xml` is located):**
+**Navigate to the project directory first (We stored `pom.xml` here):**
 
 ```bash
 cd grocerygame
