@@ -24,9 +24,9 @@ public abstract class Item extends Game_Entity {
      * @return true when the player touches the item
      */
     protected boolean isTouchedByPlayer(int playerX, int playerY, int playerWidth, int playerHeight) {
-        return playerX < position_x + 20
-                && playerX + playerWidth > position_x
-                && playerY < position_y + 20
-                && playerY + playerHeight > position_y;
+        return playerX < getX() + 20
+                && playerX + playerWidth > getX()
+                && playerY < getY() + 20
+                && playerY + playerHeight > getY();
     }
 }

@@ -34,8 +34,8 @@ public class Spawn_Penalty {
 
         Point point = SpawnHelper.randomMapTile(map);
 
-        Item.position_x = point.x;
-        Item.position_y = point.y;
+        Item.setX(point.x);
+        Item.setY(point.y);
 
         Item.value = randomValue();
 
