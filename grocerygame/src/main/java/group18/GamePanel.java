@@ -24,14 +24,14 @@ public class GamePanel extends JPanel {
 
     private Game_Painting Painter;
 
-    private static final int PANEL_WIDTH = 800;
-    private static final int PANEL_HEIGHT = 600;
+    private static final int PANEL_WIDTH = 810;
+    private static final int PANEL_HEIGHT = 660;
 
     private static final int PLAYER_SIZE = 30;
     private static final int PLAYER_SPEED = 3;
 
     private static final int EXIT_X = 660;
-    private static final int EXIT_Y = 0;
+    private static final int EXIT_Y = 60;
     private static final int EXIT_SIZE = 10;
 
     private Player player;
@@ -339,102 +339,6 @@ public class GamePanel extends JPanel {
      *
      * @param g the graphics context used for rendering
      */
-//    @Override
-//    protected void paintComponent(Graphics g) {
-//        super.paintComponent(g);
-//
-//        map_builder.draw(g);
-//
-//        if (!gameStarted) {
-//            g.setColor(Color.WHITE);
-//            g.drawString("CMPT 276 Grocery Game", 320, 250);
-//            g.drawString("Press ENTER to Start", 335, 280);
-//            g.drawString("Controls: WASD to move", 330, 310);
-//            g.drawString("ESC = Pause, R = Restart", 325, 340);
-//            return;
-//        }
-//
-//        long currentTime = (gameOver || gameWon) ? endTime : System.currentTimeMillis();
-//        long elapsedMillis = currentTime - startTime;
-//        long elapsedSeconds = elapsedMillis / 1000;
-//
-//        g.setColor(Color.WHITE);
-//        g.drawString("Score: " + score, 40, 50);
-//        g.drawString("CMPT 276 Grocery Game", 320, 50);
-//        g.drawString("Time: " + elapsedSeconds + "s", 700, 50);
-//
-//        if (securityFrames != null && securityFrames.length > 0) {
-//            g.drawImage(
-//                    securityFrames[chaseState.getFrame()],
-//                    securityGuard.getX(),
-//                    securityGuard.getY(),
-//                    securityGuard.getEnemySize(),
-//                    securityGuard.getEnemySize(),
-//                    null
-//            );
-//        } else {
-//            g.setColor(Color.RED);
-//            g.fillRect(
-//                    securityGuard.getX(),
-//                    securityGuard.getY(),
-//                    securityGuard.getEnemySize(),
-//                    securityGuard.getEnemySize()
-//            );
-//        }
-//
-//        g.setColor(Color.YELLOW);
-//        for (Item_Main item : Main_Items) {
-//            if (!item.collected) {
-//                g.fillRect(item.getX(), item.getY(), 20, 20);
-//            }
-//        }
-//
-//        g.setColor(Color.GREEN);
-//        for (Item_Bonus item : Bonus_Items) {
-//            if (!item.collected) {
-//                g.fillRect(item.getX(), item.getY(), 20, 20);
-//            }
-//        }
-//
-//        g.setColor(Color.RED);
-//        for (Item_Penalty item : Penalty_Items) {
-//            if (!item.collected) {
-//                g.fillRect(item.getX(), item.getY(), 20, 20);
-//            }
-//        }
-//
-//        if (playerFrames != null && playerFrames.length > 0) {
-//            g.drawImage(playerFrames[player.getCurrentFrame()], player.getX(), player.getY(), PLAYER_SIZE, PLAYER_SIZE, null);
-//        } else {
-//            g.setColor(Color.GREEN);
-//            g.fillRect(player.getX(), player.getY(), PLAYER_SIZE, PLAYER_SIZE);
-//        }
-//
-//        if (gameOver) {
-//            g.setColor(Color.WHITE);
-//            g.drawString("GAME OVER", 380, 300);
-//            g.drawString("Press R to Restart", 360, 330);
-//        }
-//
-//        if (gameWon) {
-//            g.setColor(Color.WHITE);
-//            g.drawString("YOU WIN", 390, 300);
-//            g.drawString("Press R to Restart", 360, 330);
-//        }
-//
-//        if (gamePaused) {
-//            g.setColor(Color.WHITE);
-//            g.drawString("PAUSED", 390, 280);
-//            g.drawString("Press ESC to Resume", 350, 310);
-//            g.drawString("Press R to Restart", 355, 340);
-//        }
-//
-//        if (!Item_Main.areAllCollected(Main_Items)) {
-//            g.setColor(Color.WHITE);
-//            g.drawString("Collect all items, then go to EXIT", 290, 575);
-//        }
-//    }
-
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);

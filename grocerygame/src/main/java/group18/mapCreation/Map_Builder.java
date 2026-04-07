@@ -15,6 +15,8 @@ public class Map_Builder {
      */
     public Map_Builder() {
         String[] map = {
+                "wwwwwwwwwwwwwwwwwwwwwwwwwww",
+                "wwwwwwwwwwwwwwwwwwwwwwwwwww",
                 "wwwwwwwwwwwwwwwwwwwwwffwwww",
                 "wwfffffffffffffffffffffffww",
                 "wwfffffffffffffffffffffffww",

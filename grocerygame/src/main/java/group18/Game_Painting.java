@@ -41,13 +41,15 @@ public class Game_Painting {
 
         if (!gameStarted) {
             Paint_Start(g);
+            Paint_HUD(g);
             return;
         }
 
         long currentTime = (gameOver || gameWon) ? endTime : System.currentTimeMillis();
         long elapsedSeconds = (currentTime - startTime) / 1000;
 
-        Paint_HUD(g, score, elapsedSeconds);
+        Paint_HUD(g);
+        Start_Stats(g, score, elapsedSeconds);
         Paint_Enemy(g, securityGuard, chaseState);
         Paint_Items(g, mainItems, bonusItems, penaltyItems);
         Paint_Player(g, player, playerSize);
@@ -63,11 +65,32 @@ public class Game_Painting {
         g.drawString("ESC = Pause, R = Restart", 325, 340);
     }
 
-    private void Paint_HUD(Graphics g, int score, long elapsedSeconds) {
+    private void Paint_HUD(Graphics g) {
         g.setColor(Color.WHITE);
-        g.drawString("Score: " + score,          40,  50);
-        g.drawString("CMPT 276 Grocery Game",    320, 50);
-        g.drawString("Time: " + elapsedSeconds + "s", 700, 50);
+        g.fillRect(0, 0, 810, 60);
+        g.setColor(Color.BLACK);
+        g.drawLine(0, 60, 810, 60);
+
+        Paint_Stats(g, 12, 8, "SCORE", "");
+        Paint_Stats(g, 680, 8, "TIME", "");
+
+        g.setColor(Color.BLUE);
+        g.drawString("CMPT 276 GROCERY GAME", 310, 30);
+    }
+
+    private void Paint_Stats(Graphics g, int x, int y, String label, String value) {
+        g.setColor(Color.LIGHT_GRAY);
+        g.fillRect(x, y, 108, 28);
+        g.drawRect(x, y, 108, 28);
+
+        g.setColor(Color.RED);
+        g.drawString(label, x + 8, y + 11);
+        g.drawString(value, x + 8, y + 24);
+    }
+
+    private void Start_Stats(Graphics g, int score, long elapsedSeconds) {
+        Paint_Stats(g, 12, 8, "SCORE", String.valueOf(score));
+        Paint_Stats(g, 680, 8, "TIME", elapsedSeconds + "s");
     }
 
     private void Paint_Enemy(Graphics g, SecurityGuard securityGuard, SecurityGuard.ChaseState chaseState) {
