@@ -63,10 +63,12 @@ public class Game_Painting {
 
     private void Paint_Start(Graphics g) {
         g.setColor(Color.WHITE);
-        g.drawString("CMPT 276 Grocery Game", 320, 250);
+        g.drawString("CMPT 276 Grocery Game", 335, 250);
         g.drawString("Press ENTER to Start",   335, 280);
-        g.drawString("Controls: WASD to move", 330, 310);
-        g.drawString("ESC = Pause, R = Restart", 325, 340);
+        g.drawString("Controls: WASD to move", 335, 310);
+        g.drawString("ESC = Pause, R = Restart", 335, 340);
+        g.drawString("H = View Highscores", 335, 370);
+
     }
 
     private void Paint_HUD(Graphics g) {
