@@ -158,7 +158,7 @@ public class Game_Painting {
     private void Paint_Notification(Graphics g, List<Item_Main> mainItems) {
         if (!Item_Main.areAllCollected(mainItems)) {
             g.setColor(Color.WHITE);
-            g.drawString("Collect all items, then go to EXIT", 290, 575);
+            g.drawString("Collect all items, then go to EXIT", 290, 645);
         }
     }
 
