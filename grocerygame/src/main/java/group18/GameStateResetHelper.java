@@ -1,6 +1,9 @@
 package group18;
 
 import group18.enemy.SecurityGuard;
+import group18.Score_Tracker;
+
+import java.util.List;
 
 /** this helper builds a full default state snapshot used to reset gameplay. */
 public class GameStateResetHelper {
@@ -14,6 +17,7 @@ public class GameStateResetHelper {
         public boolean score_saved;
         public long startTime;
         public long endTime;
+        public List<Integer> Highscores;
 
         public boolean gameOver;
         public boolean gameWon;
@@ -39,12 +43,13 @@ public class GameStateResetHelper {
         ResetStateData data = new ResetStateData();
 
         data.playerX = 165;
-        data.playerY = 570;
+        data.playerY = 630;
 
         data.score = 0;
         data.score_saved = false;
         data.startTime = 0;
         data.endTime = 0;
+        data.Highscores = Score_Tracker.loadScore();
 
         data.gameOver = false;
         data.gameWon = false;
