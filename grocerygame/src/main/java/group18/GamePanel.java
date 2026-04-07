@@ -44,6 +44,8 @@ public class GamePanel extends JPanel {
     private boolean score_saved = false;
     private long startTime;
     private long endTime = 0;
+    private List<Integer> Highscores;
+    private boolean showHighscores = false;
 
     private boolean gameOver = false;
     private boolean gameWon = false;
@@ -88,6 +90,13 @@ public class GamePanel extends JPanel {
             @Override
             public void keyPressed(KeyEvent e) {
                 int key = e.getKeyCode();
+
+                if (!gameStarted && key == KeyEvent.VK_H) {
+                    Highscores = Score_Tracker.loadScore();
+                    showHighscores = true;
+                    repaint();
+                    return;
+                }
 
                 if (!gameStarted && key == KeyEvent.VK_ENTER) {
                     gameStarted = true;
@@ -159,6 +168,10 @@ public class GamePanel extends JPanel {
         }
         securityGuard.resetChaseState(chaseState, data.enemyTarget, data.enemyMoveCooldown, data.securityCurrentFrame);
 
+        Highscores = data.Highscores;
+        showHighscores = false;
+
+        score = data.score;
         score_saved = false;
 
         Main_Items.clear();
@@ -348,7 +361,8 @@ public class GamePanel extends JPanel {
                 score, startTime, endTime,
                 player, PLAYER_SIZE,
                 securityGuard, chaseState,
-                Main_Items, Bonus_Items, Penalty_Items
+                Main_Items, Bonus_Items, Penalty_Items,
+                Highscores, showHighscores
         );
     }
 }

@@ -6,6 +6,7 @@ import group18.mapCreation.Map_Builder;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Image;
+import java.security.PrivateKey;
 import java.util.List;
 
 public class Game_Painting {
@@ -35,13 +36,16 @@ public class Game_Painting {
             SecurityGuard.ChaseState chaseState,
             List<Item_Main> mainItems,
             List<Item_Bonus> bonusItems,
-            List<Item_Penalty> penaltyItems
+            List<Item_Penalty> penaltyItems,
+            List<Integer> Highscores,
+            boolean showHighscores
     ) {
         mapBuilder.draw(g);
 
         if (!gameStarted) {
             Paint_Start(g);
             Paint_HUD(g);
+            Paint_Scores(g, showHighscores, Highscores);
             return;
         }
 
@@ -71,26 +75,26 @@ public class Game_Painting {
         g.setColor(Color.BLACK);
         g.drawLine(0, 60, 810, 60);
 
-        Paint_Stats(g, 12, 8, "SCORE", "");
-        Paint_Stats(g, 680, 8, "TIME", "");
+        Paint_Stats(g, 10, 10, "SCORE", "");
+        Paint_Stats(g, 680, 10, "TIME", "");
 
         g.setColor(Color.BLUE);
-        g.drawString("CMPT 276 GROCERY GAME", 310, 30);
+        g.drawString("CMPT 276 GROCERY GAME", 320, 30);
     }
 
     private void Paint_Stats(Graphics g, int x, int y, String label, String value) {
         g.setColor(Color.LIGHT_GRAY);
-        g.fillRect(x, y, 108, 28);
-        g.drawRect(x, y, 108, 28);
+        g.fillRect(x, y, 120, 30);
+        g.drawRect(x, y, 120, 30);
 
         g.setColor(Color.RED);
-        g.drawString(label, x + 8, y + 11);
-        g.drawString(value, x + 8, y + 24);
+        g.drawString(label, x + 10, y + 11);
+        g.drawString(value, x + 10, y + 24);
     }
 
     private void Start_Stats(Graphics g, int score, long elapsedSeconds) {
-        Paint_Stats(g, 12, 8, "SCORE", String.valueOf(score));
-        Paint_Stats(g, 680, 8, "TIME", elapsedSeconds + "s");
+        Paint_Stats(g, 10, 10, "SCORE", String.valueOf(score));
+        Paint_Stats(g, 680, 10, "TIME", elapsedSeconds + "s");
     }
 
     private void Paint_Enemy(Graphics g, SecurityGuard securityGuard, SecurityGuard.ChaseState chaseState) {
@@ -153,6 +157,19 @@ public class Game_Painting {
         if (!Item_Main.areAllCollected(mainItems)) {
             g.setColor(Color.WHITE);
             g.drawString("Collect all items, then go to EXIT", 290, 575);
+        }
+    }
+
+    private void Paint_Scores(Graphics g, boolean showHighscores, List<Integer> Highscores) {
+        if (showHighscores) {
+            g.setColor(Color.WHITE);
+            g.fillRect(0, 0, 810, 660);
+            g.setColor(Color.BLACK);
+            g.drawString("HIGHSCORES",355, 180);
+            for (int i = 0; i < Highscores.size(); i++) {
+                g.drawString(String.valueOf(Highscores.get(i)),390, 210 + (30*i));
+            }
+            g.drawString("PRESS R TO RETURN TO GAME",310, 390);
         }
     }
 }
