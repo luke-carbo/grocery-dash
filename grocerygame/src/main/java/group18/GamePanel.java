@@ -26,6 +26,7 @@ public class GamePanel extends JPanel {
 
     private static final int PANEL_WIDTH = 810;
     private static final int PANEL_HEIGHT = 660;
+    private static final int GAME_LOOP_DELAY_MS = 16;
 
     private static final int PLAYER_SIZE = 30;
     private static final int PLAYER_SPEED = 3;
@@ -71,57 +72,44 @@ public class GamePanel extends JPanel {
      * it also initializes the map, player, enemy, and timers.
      */
     public GamePanel() {
-        this.game = game;
         this.map_builder = new Map_Builder();
+        initializeDependencies();
+        loadAssets();
+        initializePainterAndState();
+        configurePanel();
+        setupInputHandling();
+        startGameLoop();
+    }
+
+    private void initializeDependencies() {
+        this.game = game;
         this.main_spawner = new Spawn_Main(game, map_builder);
         this.bonus_spawner = new Spawn_Bonus(game, map_builder);
         this.penalty_spawner = new Spawn_Penalty(game, map_builder);
         this.startTime = System.currentTimeMillis();
+    }
+
+    private void loadAssets() {
         loadPlayerFrames();
         loadSecurityFrames();
+    }
+
+    private void initializePainterAndState() {
         Painter = new Game_Painting(map_builder, playerFrames, securityFrames);
         resetGameState();
+    }
 
+    private void configurePanel() {
         setPreferredSize(new Dimension(PANEL_WIDTH, PANEL_HEIGHT));
         setBackground(Color.BLACK);
         setFocusable(true);
+    }
 
+    private void setupInputHandling() {
         addKeyListener(new KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent e) {
-                int key = e.getKeyCode();
-
-                if (!gameStarted && key == KeyEvent.VK_H) {
-                    Highscores = Score_Tracker.loadScore();
-                    showHighscores = true;
-                    repaint();
-                    return;
-                }
-
-                if (!gameStarted && key == KeyEvent.VK_ENTER) {
-                    gameStarted = true;
-                    startTime = System.currentTimeMillis();
-                    repaint();
-                    return;
-                }
-
-                if (key == KeyEvent.VK_R) {
-                    resetGameState();
-                    repaint();
-                    return;
-                }
-
-                if (gameStarted && !gameOver && !gameWon && key == KeyEvent.VK_ESCAPE) {
-                    gamePaused = !gamePaused;
-                    repaint();
-                    return;
-                }
-
-                if (!gameStarted || gamePaused || gameOver || gameWon) {
-                    return;
-                }
-
-                keysHeld.add(key);
+                handleKeyPressed(e.getKeyCode());
             }
 
             @Override
@@ -129,8 +117,64 @@ public class GamePanel extends JPanel {
                 keysHeld.remove(e.getKeyCode());
             }
         });
+    }
 
-        Timer timer = new Timer(16, e -> {
+    private void handleKeyPressed(int key) {
+        if (handleMenuKey(key)) {
+            return;
+        }
+
+        if (handleControlKey(key)) {
+            return;
+        }
+
+        if (!isGameplayInputAllowed()) {
+            return;
+        }
+
+        keysHeld.add(key);
+    }
+
+    private boolean handleMenuKey(int key) {
+        if (!gameStarted && key == KeyEvent.VK_H) {
+            Highscores = Score_Tracker.loadScore();
+            showHighscores = true;
+            repaint();
+            return true;
+        }
+
+        if (!gameStarted && key == KeyEvent.VK_ENTER) {
+            gameStarted = true;
+            startTime = System.currentTimeMillis();
+            repaint();
+            return true;
+        }
+
+        return false;
+    }
+
+    private boolean handleControlKey(int key) {
+        if (key == KeyEvent.VK_R) {
+            resetGameState();
+            repaint();
+            return true;
+        }
+
+        if (gameStarted && !gameOver && !gameWon && key == KeyEvent.VK_ESCAPE) {
+            gamePaused = !gamePaused;
+            repaint();
+            return true;
+        }
+
+        return false;
+    }
+
+    private boolean isGameplayInputAllowed() {
+        return gameStarted && !gamePaused && !gameOver && !gameWon;
+    }
+
+    private void startGameLoop() {
+        Timer timer = new Timer(GAME_LOOP_DELAY_MS, e -> {
             update();
             repaint();
         });
