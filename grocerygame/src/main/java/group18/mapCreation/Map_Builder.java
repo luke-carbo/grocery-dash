@@ -1,6 +1,12 @@
 package group18.mapCreation;
 
+
 import java.awt.*;
+import java.io.InputStream;
+import javax.json.Json;
+import javax.json.JsonArray;
+import javax.json.JsonObject;
+import javax.json.JsonReader;
 
 public class Map_Builder {
 
@@ -14,30 +20,7 @@ public class Map_Builder {
      * Iterates through a string -> calls Map_Tile to draw the images in a particular spot
      */
     public Map_Builder() {
-        String[] map = {
-                "wwwwwwwwwwwwwwwwwwwwwwwwwww",
-                "wwwwwwwwwwwwwwwwwwwwwwwwwww",
-                "wwwwwwwwwwwwwwwwwwwwwffwwww",
-                "wwfffffffffffffffffffffffww",
-                "wwfffffffffffffffffffffffww",
-                "wwfffsbsbsbfffftbtbtbffffww",
-                "wwfffbbbbbbffffffffffffffww",
-                "wwfffffffffffffffffffffffww",
-                "wwffffffffffffftbtbtbffffww",
-                "wwfffsbsbsbffffbbbbbbffffww",
-                "wwfffbbbbbbffffffffffffffww",
-                "wwfffffffffffffffffffffffww",
-                "wwfffffffffffffffffffffffww",
-                "wwfffpbpbpbffffmbmbmbffffww",
-                "wwfffbbbbbbffffbbbbbbffffww",
-                "wwfffffffffffffffffffffffww",
-                "wwfffffffffffffffffffffffww",
-                "wwfffpbpbpbffffmbmbmbffffww",
-                "wwfffbbbbbbffffbbbbbbffffww",
-                "wwfffffffffffffffffffffffww",
-                "wwfffffffffffffffffffffffww",
-                "wwwwwffwwwwwwwwwwwwwwwwwwww"
-        };
+        String[] map = loadMapFromJson("/map.json");
         rows = map.length;
         cols = map[0].length();
 
@@ -46,6 +29,30 @@ public class Map_Builder {
 
     }
 
+    /**
+     * Loads the map layout from a JSON resource file.
+     *
+     * @param resourcePath path to the JSON file (e.g. "/map.json")
+     * @return array of row strings representing the tile layout
+     * @throws RuntimeException if the file cannot be read or parsed
+     */
+    private String[] loadMapFromJson(String resourcePath) {
+        try (InputStream is = Map_Builder.class.getResourceAsStream(resourcePath);
+             JsonReader reader = Json.createReader(is)) {
+
+            JsonObject root = reader.readObject();
+            JsonArray mapArray = root.getJsonArray("map");
+
+            String[] map = new String[mapArray.size()];
+            for (int i = 0; i < mapArray.size(); i++) {
+                map[i] = mapArray.getString(i);
+            }
+            return map;
+
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to load map from JSON: " + resourcePath, e);
+        }
+    }
     /**
      * This draw method draws the floors and walls.
      * @param g
