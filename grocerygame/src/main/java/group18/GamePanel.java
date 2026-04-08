@@ -26,6 +26,7 @@ public class GamePanel extends JPanel {
 
     private static final int PANEL_WIDTH = 810;
     private static final int PANEL_HEIGHT = 660;
+    private static final int GAME_LOOP_DELAY_MS = 16;
 
     private static final int PLAYER_SIZE = 30;
     private static final int PLAYER_SPEED = 3;
@@ -173,7 +174,7 @@ public class GamePanel extends JPanel {
     }
 
     private void startGameLoop() {
-        Timer timer = new Timer(16, e -> {
+        Timer timer = new Timer(GAME_LOOP_DELAY_MS, e -> {
             update();
             repaint();
         });
