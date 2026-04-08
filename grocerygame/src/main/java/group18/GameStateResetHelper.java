@@ -43,7 +43,7 @@ public class GameStateResetHelper {
         ResetStateData data = new ResetStateData();
 
         data.playerX = 165;
-        data.playerY = 630;
+        data.playerY = 730;
 
         data.score = 0;
         data.score_saved = false;

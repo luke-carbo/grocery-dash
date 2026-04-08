@@ -21,6 +21,7 @@ public class Map_Tile {
     private static BufferedImage techStand;
     private static BufferedImage meatImage;
     private static BufferedImage produceImage;
+    private static BufferedImage exitImage;
 
 
     static {
@@ -31,7 +32,7 @@ public class Map_Tile {
             techStand = ImageIO.read(Map_Tile.class.getResourceAsStream("/tiles/desktech.png"));
             meatImage = ImageIO.read(Map_Tile.class.getResourceAsStream("/tiles/fridge.png"));
             produceImage = ImageIO.read(Map_Tile.class.getResourceAsStream("/tiles/produce.png"));
-
+            exitImage = ImageIO.read(Map_Tile.class.getResourceAsStream("/tiles/exit.png"));
         }
         catch (Exception e) {
             System.err.println("Failed to load images " + e.getMessage());
@@ -66,6 +67,9 @@ public class Map_Tile {
             case 'p':
                 type = Tile_Type.Produce;
                 break;
+            case 'e':
+                type = Tile_Type.Exit;
+                break;
         }
     }
 
@@ -89,29 +93,36 @@ public class Map_Tile {
                 for (int i = 0; i < 2; i++) {
                     g.drawImage(floorImage, (column + i) * TILE_SIZE, row * TILE_SIZE, TILE_SIZE, TILE_SIZE, null);
                 }
-                g.drawImage(shelvesImage, column * TILE_SIZE, row * TILE_SIZE, TILE_SIZE*2, TILE_SIZE*2, null);
+                g.drawImage(shelvesImage, column * TILE_SIZE, row * TILE_SIZE, TILE_SIZE*3, TILE_SIZE, null);
                 break;
             case Tech:
-                for (int i = 0; i < 2; i++) {
+                for (int i = 0; i < 3; i++) {
                     g.drawImage(floorImage, (column + i) * TILE_SIZE, row * TILE_SIZE, TILE_SIZE, TILE_SIZE, null);
                 }
-                g.drawImage(techStand, column * TILE_SIZE, row * TILE_SIZE, TILE_SIZE * 2, TILE_SIZE * 2, null);
+                g.drawImage(techStand, column * TILE_SIZE, row * TILE_SIZE, TILE_SIZE * 6, TILE_SIZE * 2, null);
                 break;
             case Meat:
                 for (int i = 0; i < 2; i++) {
                     g.drawImage(floorImage, (column + i) * TILE_SIZE, row * TILE_SIZE, TILE_SIZE, TILE_SIZE, null);
                 }
-                g.drawImage(meatImage, column * TILE_SIZE, row * TILE_SIZE, TILE_SIZE*2, TILE_SIZE*2, null);
+                g.drawImage(meatImage, column * TILE_SIZE, row * TILE_SIZE, TILE_SIZE*3, TILE_SIZE*3, null);
                 break;
             case Produce:
-                for (int i = 0; i < 2; i++) {
+                for (int i = 0; i < 3; i++) {
                     g.drawImage(floorImage, (column + i) * TILE_SIZE, row * TILE_SIZE, TILE_SIZE, TILE_SIZE, null);
                 }
-                g.drawImage(produceImage, column * TILE_SIZE, row * TILE_SIZE, TILE_SIZE*2, 2*TILE_SIZE, null);
+                g.drawImage(produceImage, column * TILE_SIZE, row * TILE_SIZE, TILE_SIZE*6, 3*TILE_SIZE, null);
                 break;
             case Blocked:
                 g.drawImage(floorImage, column * TILE_SIZE, row * TILE_SIZE, TILE_SIZE, TILE_SIZE, null);
                 break;
+            case Exit:
+                for (int i = 0; i < 1; i++) {
+                    g.drawImage(floorImage, (column + i) * TILE_SIZE, row * TILE_SIZE, TILE_SIZE, TILE_SIZE, null);
+                }
+                g.drawImage(exitImage, column * TILE_SIZE, row * TILE_SIZE, TILE_SIZE*2, TILE_SIZE, null);
+                break;
+
         }
     }
 

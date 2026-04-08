@@ -73,9 +73,9 @@ public class Game_Painting {
 
     private void Paint_HUD(Graphics g) {
         g.setColor(Color.WHITE);
-        g.fillRect(0, 0, 810, 60);
+        g.fillRect(0, 0, g.getClipBounds().width, 60);
         g.setColor(Color.BLACK);
-        g.drawLine(0, 60, 810, 60);
+        g.drawLine(0, 60, g.getClipBounds().width, 60);
 
         Paint_Stats(g, 10, 10, "SCORE", "");
         Paint_Stats(g, 680, 10, "TIME", "");
@@ -165,7 +165,7 @@ public class Game_Painting {
     private void Paint_Scores(Graphics g, boolean showHighscores, List<Integer> Highscores) {
         if (showHighscores) {
             g.setColor(Color.WHITE);
-            g.fillRect(0, 0, 810, 660);
+            g.fillRect(0, 0, g.getClipBounds().width, g.getClipBounds().height);
             g.setColor(Color.BLACK);
             g.drawString("HIGHSCORES",355, 180);
             for (int i = 0; i < Highscores.size(); i++) {

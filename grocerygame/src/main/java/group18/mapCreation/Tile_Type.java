@@ -5,7 +5,9 @@ package group18.mapCreation;
  * Describes if solid or not
  */
 public enum Tile_Type {
-    Wall(true), Floor(false), Shelf (true), Tech(true), Meat(true), Produce(true), Blocked(true);
+    Wall(true), Floor(false), Shelf (true),
+    Tech(true), Meat(true), Produce(true),
+    Blocked(true), Exit(false);
 
     private final boolean solid;
 

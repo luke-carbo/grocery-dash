@@ -71,7 +71,7 @@ public class Map_Builder {
         for (int i = 0; i < tile_Map.length; i++) {
             for (int j = 0; j < tile_Map[i].length; j++) {
                 Tile_Type t = tile_Map[i][j].getTileType();
-                if (t == Tile_Type.Tech || t == Tile_Type.Meat || t == Tile_Type.Shelf || t == Tile_Type.Produce) {
+                if (t == Tile_Type.Tech || t == Tile_Type.Meat || t == Tile_Type.Shelf || t == Tile_Type.Produce || t == Tile_Type.Exit) {
                     tile_Map[i][j].draw(g, i, j);
                 }
             }
