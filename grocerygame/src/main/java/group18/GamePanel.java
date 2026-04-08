@@ -108,39 +108,7 @@ public class GamePanel extends JPanel {
         addKeyListener(new KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent e) {
-                int key = e.getKeyCode();
-
-                if (!gameStarted && key == KeyEvent.VK_H) {
-                    Highscores = Score_Tracker.loadScore();
-                    showHighscores = true;
-                    repaint();
-                    return;
-                }
-
-                if (!gameStarted && key == KeyEvent.VK_ENTER) {
-                    gameStarted = true;
-                    startTime = System.currentTimeMillis();
-                    repaint();
-                    return;
-                }
-
-                if (key == KeyEvent.VK_R) {
-                    resetGameState();
-                    repaint();
-                    return;
-                }
-
-                if (gameStarted && !gameOver && !gameWon && key == KeyEvent.VK_ESCAPE) {
-                    gamePaused = !gamePaused;
-                    repaint();
-                    return;
-                }
-
-                if (!gameStarted || gamePaused || gameOver || gameWon) {
-                    return;
-                }
-
-                keysHeld.add(key);
+                handleKeyPressed(e.getKeyCode());
             }
 
             @Override
@@ -148,6 +116,60 @@ public class GamePanel extends JPanel {
                 keysHeld.remove(e.getKeyCode());
             }
         });
+    }
+
+    private void handleKeyPressed(int key) {
+        if (handleMenuKey(key)) {
+            return;
+        }
+
+        if (handleControlKey(key)) {
+            return;
+        }
+
+        if (!isGameplayInputAllowed()) {
+            return;
+        }
+
+        keysHeld.add(key);
+    }
+
+    private boolean handleMenuKey(int key) {
+        if (!gameStarted && key == KeyEvent.VK_H) {
+            Highscores = Score_Tracker.loadScore();
+            showHighscores = true;
+            repaint();
+            return true;
+        }
+
+        if (!gameStarted && key == KeyEvent.VK_ENTER) {
+            gameStarted = true;
+            startTime = System.currentTimeMillis();
+            repaint();
+            return true;
+        }
+
+        return false;
+    }
+
+    private boolean handleControlKey(int key) {
+        if (key == KeyEvent.VK_R) {
+            resetGameState();
+            repaint();
+            return true;
+        }
+
+        if (gameStarted && !gameOver && !gameWon && key == KeyEvent.VK_ESCAPE) {
+            gamePaused = !gamePaused;
+            repaint();
+            return true;
+        }
+
+        return false;
+    }
+
+    private boolean isGameplayInputAllowed() {
+        return gameStarted && !gamePaused && !gameOver && !gameWon;
     }
 
     private void startGameLoop() {
