@@ -63,6 +63,9 @@ public class GamePanel extends JPanel {
     private SecurityGuard securityGuard;
     private SecurityGuard.ChaseState chaseState;
 
+    private long stunTime;
+    private boolean stunned = false;
+
     private List<Item_Main> Main_Items = new ArrayList<>();
     private List<Item_Bonus> Bonus_Items = new ArrayList<>();
     private List<Item_Penalty> Penalty_Items = new ArrayList<>();
@@ -224,6 +227,8 @@ public class GamePanel extends JPanel {
         score = data.score;
         score_saved = false;
 
+        stunned = false;
+
         Main_Items.clear();
 
         // Starting Main Items
@@ -329,7 +334,13 @@ public class GamePanel extends JPanel {
             return;
         }
 
-        player.update(keysHeld, PLAYER_SPEED, map_builder, PLAYER_SIZE, PLAYER_SIZE);
+        if (stunned && System.currentTimeMillis() >= stunTime) {
+            stunned = false;
+        }
+
+        if (!stunned) {
+            player.update(keysHeld, PLAYER_SPEED, map_builder, PLAYER_SIZE, PLAYER_SIZE);
+        }
 
         Bonus_Items.removeIf(item -> item.collected);
         Penalty_Items.removeIf(item -> item.collected);
@@ -385,6 +396,7 @@ public class GamePanel extends JPanel {
      * it updates score and item counters when items are picked up.
      */
     private void checkItemCollection() {
+        int old_value = score;
         for (Item_Main item : Main_Items) {
             score += item.collectIfTouched(player.getX(), player.getY(), PLAYER_SIZE, PLAYER_SIZE);
         }
@@ -395,6 +407,10 @@ public class GamePanel extends JPanel {
 
         for (Item_Penalty item : Penalty_Items) {
             score += item.collectIfTouched(player.getX(), player.getY(), PLAYER_SIZE, PLAYER_SIZE);
+            if (old_value > score) {
+                stunned = true;
+                stunTime = System.currentTimeMillis() + 500;
+            }
         }
     }
 
