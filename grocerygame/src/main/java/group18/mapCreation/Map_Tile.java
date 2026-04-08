@@ -90,10 +90,10 @@ public class Map_Tile {
                 g.drawImage(floorImage, column * TILE_SIZE, row * TILE_SIZE, TILE_SIZE,  TILE_SIZE, null);
                 break;
             case Shelf:
-                for (int i = 0; i < 2; i++) {
+                for (int i = 0; i < 4; i++) {
                     g.drawImage(floorImage, (column + i) * TILE_SIZE, row * TILE_SIZE, TILE_SIZE, TILE_SIZE, null);
                 }
-                g.drawImage(shelvesImage, column * TILE_SIZE, row * TILE_SIZE, TILE_SIZE*3, TILE_SIZE, null);
+                g.drawImage(shelvesImage, column * TILE_SIZE, row * TILE_SIZE, TILE_SIZE*4, TILE_SIZE, null);
                 break;
             case Tech:
                 for (int i = 0; i < 3; i++) {

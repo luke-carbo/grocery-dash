@@ -13,6 +13,7 @@ public class Player extends Game_Entity {
     public static final int FRAME_DOWN = 1;
     public static final int FRAME_UP = 2;
     public static final int FRAME_RIGHT = 3;
+    private int hitboxTolerance = 3;
 
     private boolean alive;
     private int currentFrame = FRAME_DOWN;
@@ -78,9 +79,9 @@ public class Player extends Game_Entity {
     }
 
     private boolean canMoveTo(Map_Builder map, int x, int y, int width, int height) {
-        return !map.isSolid(x, y)
-                && !map.isSolid(x + width - 1, y)
-                && !map.isSolid(x, y + height - 1)
-                && !map.isSolid(x + width - 1, y + height - 1);
+        return !map.isSolid(x+hitboxTolerance, y+hitboxTolerance)
+                && !map.isSolid(x + width - 1-hitboxTolerance, y+hitboxTolerance)
+                && !map.isSolid(x+hitboxTolerance, y + height - 1-hitboxTolerance)
+                && !map.isSolid(x + width - 1-hitboxTolerance, y + height - 1-hitboxTolerance);
     }
 }

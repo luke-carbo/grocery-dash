@@ -3,9 +3,7 @@ package group18;
 import group18.enemy.SecurityGuard;
 import group18.mapCreation.Map_Builder;
 
-import java.awt.Color;
-import java.awt.Graphics;
-import java.awt.Image;
+import java.awt.*;
 import java.util.List;
 
 public class Game_Painting {
@@ -67,13 +65,36 @@ public class Game_Painting {
     }
 
     private void Paint_Start(Graphics g) {
-        g.setColor(Color.WHITE);
-        g.drawString("CMPT 276 Grocery Game", 335, 250);
-        g.drawString("Press ENTER to Start",   335, 280);
-        g.drawString("Controls: WASD to move", 335, 310);
-        g.drawString("ESC = Pause, R = Restart", 335, 340);
-        g.drawString("H = View Highscores", 335, 370);
+        int panelWidth = 420;
+        int panelHeight = 240;
 
+        int x = (g.getClipBounds().width - panelWidth) / 2;
+        int y = (g.getClipBounds().height - panelHeight) / 2;
+
+        // Background box (no transparency, solid color)
+        g.setColor(Color.BLUE);
+        g.fillRect(x, y, panelWidth, panelHeight);
+
+        // Border
+        g.setColor(Color.WHITE);
+        g.drawRect(x, y, panelWidth, panelHeight);
+
+        // Title
+        g.setColor(Color.WHITE);
+        g.setFont(new Font("SansSerif", Font.BOLD, 26));
+        g.drawString("GROCERY GAME", x + 95, y + 45);
+
+        // Start text
+        g.setColor(Color.WHITE);
+        g.setFont(new Font("SansSerif", Font.BOLD, 18));
+        g.drawString("Press ENTER to Start", x + 105, y + 85);
+
+        // Controls
+        g.setFont(new Font("SansSerif", Font.PLAIN, 15));
+        g.drawString("WASD  -  Move", x + 130, y + 120);
+        g.drawString("ESC   -  Pause", x + 130, y + 145);
+        g.drawString("R     -  Restart", x + 130, y + 170);
+        g.drawString("H     -  Highscores", x + 130, y + 195);
     }
 
     private void Paint_HUD(Graphics g) {
