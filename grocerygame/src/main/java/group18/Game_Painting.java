@@ -4,6 +4,8 @@ import group18.enemy.SecurityGuard;
 import group18.mapCreation.Map_Builder;
 
 import java.awt.*;
+import java.util.ArrayList;
+import java.awt.*;
 import java.util.List;
 
 public class Game_Painting {
@@ -214,14 +216,41 @@ public class Game_Painting {
 
     private void Paint_Scores(Graphics g, boolean showHighscores, List<Integer> Highscores) {
         if (showHighscores) {
+            List <String> Highscores_Label = new ArrayList<>();
+            Highscores_Label.add("1st");
+            Highscores_Label.add("2nd");
+            Highscores_Label.add("3rd");
+            Highscores_Label.add("4th");
+            Highscores_Label.add("5th");
+
             g.setColor(Color.WHITE);
             g.fillRect(0, 0, g.getClipBounds().width, g.getClipBounds().height);
+
+            g.setColor(Color.LIGHT_GRAY);
+            g.drawRoundRect(30,20,930,50,5,5);
+            g.fillRoundRect(30,20,930,50,5,5);
+
+            g.setColor(Color.LIGHT_GRAY);
+            g.drawRoundRect(30,100,930,600,5,5);
+            g.fillRoundRect(30,100,930,600,5,5);
+
             g.setColor(Color.BLACK);
-            g.drawString("HIGHSCORES",355, 180);
+            Font font = new Font("Dialog", Font.BOLD, 48); // 48pt font
+            g.setFont(font);
+            g.drawString("HIGHSCORES",340, 65);
+
+            Font font2 = new Font("DialogInput", Font.BOLD, 36); // 48pt font
+            g.setFont(font2);
+
             for (int i = 0; i < Highscores.size(); i++) {
-                g.drawString(String.valueOf(Highscores.get(i)),390, 210 + (30*i));
+                g.drawString(String.valueOf(Highscores_Label.get(i)),410, 210 + (60*i));
+                g.drawString(String.valueOf(Highscores.get(i)),510, 210 + (60*i));
             }
-            g.drawString("PRESS R TO RETURN TO GAME",310, 390);
+
+            Font font3 = new Font("DialogInput", Font.BOLD, 24); // 48pt font
+            g.setFont(font3);
+
+            g.drawString("Press R to Return to the Main Menu",50, 750);
         }
     }
 }

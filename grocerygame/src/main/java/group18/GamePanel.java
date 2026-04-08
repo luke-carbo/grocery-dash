@@ -327,17 +327,16 @@ public class GamePanel extends JPanel {
      * it returns early when the game is not active.
      */
     private void update() {
-        if (gameOver) {
+        if (gameWon) {
             saveScoreOnce();
+            return;
+        }
+
+        if (gameOver) {
             return;
         }
 
         if (!gameStarted || gamePaused) {
-            return;
-        }
-
-        if (gameWon) {
-            saveScoreOnce();
             return;
         }
 
@@ -429,6 +428,7 @@ public class GamePanel extends JPanel {
      */
     private void checkItemCollection() {
         int old_value = score;
+
         for (Item_Main item : Main_Items) {
             score += item.collectIfTouched(player.getX(), player.getY(), PLAYER_SIZE, PLAYER_SIZE);
             if (old_value < score) {
