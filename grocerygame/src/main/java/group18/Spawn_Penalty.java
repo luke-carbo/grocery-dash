@@ -3,6 +3,7 @@ package group18;
 import group18.mapCreation.Map_Builder;
 
 import java.awt.*;
+import java.util.Set;
 
 /**
  * Class contains constructors and spawn parameters for new {@link Item_Penalty}.
@@ -28,11 +29,11 @@ public class Spawn_Penalty {
      *
      * @return a newly spawned Item_Penalty object
      */
-    public Item_Penalty spawnPenalty() {
+    public Item_Penalty spawnPenalty(Set<Point> occupied) {
 
         Item_Penalty Item = new Item_Penalty(game);
 
-        Point point = SpawnHelper.randomMapTile(map);
+        Point point = SpawnHelper.randomMapTile(map, occupied);
 
         Item.setX(point.x);
         Item.setY(point.y);

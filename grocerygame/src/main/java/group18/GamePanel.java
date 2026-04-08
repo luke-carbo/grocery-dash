@@ -4,10 +4,7 @@ import group18.enemy.SecurityGuard;
 import group18.mapCreation.Map_Builder;
 
 import javax.swing.*;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Graphics;
-import java.awt.Image;
+import java.awt.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.util.HashSet;
@@ -235,8 +232,15 @@ public class GamePanel extends JPanel {
         Main_Items.clear();
 
         // Starting Main Items
+//        for (int i = 0; i < Item.main_limit; i++) {
+//            Main_Items.add(main_spawner.spawnMain());
+//        }
+
+        Set<Point> occupied = new HashSet<>();
         for (int i = 0; i < Item.main_limit; i++) {
-            Main_Items.add(main_spawner.spawnMain());
+            Item_Main spawned = main_spawner.spawnMain(occupied);
+            occupied.add(new Point(spawned.getX(), spawned.getY()));
+            Main_Items.add(spawned);
         }
 
     }
@@ -348,12 +352,30 @@ public class GamePanel extends JPanel {
         Bonus_Items.removeIf(item -> item.collected);
         Penalty_Items.removeIf(item -> item.collected);
 
+//        if (Bonus_Items.size() < Item.bonus_limit) {
+//            Bonus_Items.add(bonus_spawner.spawnBonus());
+//        }
+
         if (Bonus_Items.size() < Item.bonus_limit) {
-            Bonus_Items.add(bonus_spawner.spawnBonus());
+            Set<Point> occupied = SpawnHelper.occupiedPoints(Main_Items);
+            Bonus_Items.stream().filter(i -> !i.collected)
+                    .forEach(i -> occupied.add(new Point(i.getX(), i.getY())));
+            Penalty_Items.stream().filter(i -> !i.collected)
+                    .forEach(i -> occupied.add(new Point(i.getX(), i.getY())));
+            Bonus_Items.add(bonus_spawner.spawnBonus(occupied));
         }
+//
+//        if (Penalty_Items.size() < Item.penalty_limit) {
+//            Penalty_Items.add(penalty_spawner.spawnPenalty());
+//        }
 
         if (Penalty_Items.size() < Item.penalty_limit) {
-            Penalty_Items.add(penalty_spawner.spawnPenalty());
+            Set<Point> occupied = SpawnHelper.occupiedPoints(Main_Items);
+            Bonus_Items.stream().filter(i -> !i.collected)
+                    .forEach(i -> occupied.add(new Point(i.getX(), i.getY())));
+            Penalty_Items.stream().filter(i -> !i.collected)
+                    .forEach(i -> occupied.add(new Point(i.getX(), i.getY())));
+            Penalty_Items.add(penalty_spawner.spawnPenalty(occupied));
         }
 
         if (guard_stunned && System.currentTimeMillis() >= guard_stunTime) {

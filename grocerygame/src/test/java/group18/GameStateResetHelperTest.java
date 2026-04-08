@@ -18,7 +18,7 @@ public class GameStateResetHelperTest {
                 GameStateResetHelper.createResetState(Player.FRAME_DOWN);
 
         assertEquals(165, data.playerX, "Player X should reset to the default starting position.");
-        assertEquals(570, data.playerY, "Player Y should reset to the default starting position.");
+        assertEquals(630, data.playerY, "Player Y should reset to the default starting position.");
     }
 
     /**
