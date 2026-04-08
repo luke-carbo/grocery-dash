@@ -63,8 +63,10 @@ public class GamePanel extends JPanel {
     private SecurityGuard securityGuard;
     private SecurityGuard.ChaseState chaseState;
 
-    private long stunTime;
-    private boolean stunned = false;
+    private long player_stunTime;
+    private boolean player_stunned = false;
+    private long guard_stunTime;
+    private boolean guard_stunned = false;
 
     private List<Item_Main> Main_Items = new ArrayList<>();
     private List<Item_Bonus> Bonus_Items = new ArrayList<>();
@@ -227,7 +229,8 @@ public class GamePanel extends JPanel {
         score = data.score;
         score_saved = false;
 
-        stunned = false;
+        player_stunned = false;
+        guard_stunned = false;
 
         Main_Items.clear();
 
@@ -334,11 +337,11 @@ public class GamePanel extends JPanel {
             return;
         }
 
-        if (stunned && System.currentTimeMillis() >= stunTime) {
-            stunned = false;
+        if (player_stunned && System.currentTimeMillis() >= player_stunTime) {
+            player_stunned = false;
         }
 
-        if (!stunned) {
+        if (!player_stunned) {
             player.update(keysHeld, PLAYER_SPEED, map_builder, PLAYER_SIZE, PLAYER_SIZE);
         }
 
@@ -353,16 +356,23 @@ public class GamePanel extends JPanel {
             Penalty_Items.add(penalty_spawner.spawnPenalty());
         }
 
+        if (guard_stunned && System.currentTimeMillis() >= guard_stunTime) {
+            guard_stunned = false;
+        }
+
+        if (!guard_stunned) {
         SecurityGuard.FrameSet frames = new SecurityGuard.FrameSet(
                 Player.FRAME_LEFT, Player.FRAME_DOWN, Player.FRAME_UP, Player.FRAME_RIGHT
         );
 
-        securityGuard.update(
-                map_builder,
-                player,
-                chaseState,
-                frames
-        );
+            securityGuard.update(
+                    map_builder,
+                    player,
+                    chaseState,
+                    frames
+            );
+        }
+
         checkEnemyCollision();
         checkItemCollection();
         checkWinCondition();
@@ -399,6 +409,10 @@ public class GamePanel extends JPanel {
         int old_value = score;
         for (Item_Main item : Main_Items) {
             score += item.collectIfTouched(player.getX(), player.getY(), PLAYER_SIZE, PLAYER_SIZE);
+            if (old_value < score) {
+                guard_stunned = true;
+                guard_stunTime = System.currentTimeMillis() + 1000;
+            }
         }
 
         for (Item_Bonus item : Bonus_Items) {
@@ -408,8 +422,8 @@ public class GamePanel extends JPanel {
         for (Item_Penalty item : Penalty_Items) {
             score += item.collectIfTouched(player.getX(), player.getY(), PLAYER_SIZE, PLAYER_SIZE);
             if (old_value > score) {
-                stunned = true;
-                stunTime = System.currentTimeMillis() + 500;
+                player_stunned = true;
+                player_stunTime = System.currentTimeMillis() + 500;
             }
         }
     }
