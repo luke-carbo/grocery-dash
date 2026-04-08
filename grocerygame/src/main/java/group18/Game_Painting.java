@@ -14,11 +14,17 @@ public class Game_Painting {
     private final Map_Builder mapBuilder;
     private final Image[] playerFrames;
     private final Image[] securityFrames;
+    private final Image bonusSprite;
+    private final Image penaltySprite;
+    private final Image mainSprite;
 
-    public Game_Painting(Map_Builder mapBuilder, Image[] playerFrames, Image[] securityFrames) {
+    public Game_Painting(Map_Builder mapBuilder, Image[] playerFrames, Image[] securityFrames, Image bonusSprite, Image penaltySprite, Image mainSprite) {
         this.mapBuilder = mapBuilder;
         this.playerFrames = playerFrames;
         this.securityFrames = securityFrames;
+        this.bonusSprite = bonusSprite;
+        this.mainSprite = mainSprite;
+        this.penaltySprite = penaltySprite;
     }
 
     public void Paint(
@@ -118,14 +124,38 @@ public class Game_Painting {
 
     private void Paint_Items(Graphics g, List<Item_Main> mainItems,
                            List<Item_Bonus> bonusItems, List<Item_Penalty> penaltyItems) {
-        g.setColor(Color.YELLOW);
-        for (Item_Main item : mainItems)    if (!item.collected) g.fillRect(item.getX(), item.getY(), 20, 20);
+        for (Item_Main item : mainItems) {
+            if (!item.collected) {
+                if (mainSprite != null) {
+                    g.drawImage(mainSprite, item.getX(), item.getY(), 35, 35, null);
+                } else {
+                    g.setColor(Color.YELLOW);
+                    g.fillRect(item.getX(), item.getY(), 20, 20);
+                }
+            }
+        }
 
-        g.setColor(Color.GREEN);
-        for (Item_Bonus item : bonusItems)  if (!item.collected) g.fillRect(item.getX(), item.getY(), 20, 20);
+        for (Item_Bonus item : bonusItems) {
+            if (!item.collected) {
+                if (bonusSprite != null) {
+                    g.drawImage(bonusSprite, item.getX(), item.getY(), 30, 30, null);
+                } else {
+                    g.setColor(Color.GREEN);
+                    g.fillRect(item.getX(), item.getY(), 20, 20);
+                }
+            }
+        }
 
-        g.setColor(Color.RED);
-        for (Item_Penalty item : penaltyItems) if (!item.collected) g.fillRect(item.getX(), item.getY(), 20, 20);
+        for (Item_Penalty item : penaltyItems) {
+            if (!item.collected) {
+                if (penaltySprite != null) {
+                    g.drawImage(penaltySprite, item.getX(), item.getY(), 33, 33, null);
+                } else {
+                    g.setColor(Color.RED);
+                    g.fillRect(item.getX(), item.getY(), 20, 20);
+                }
+            }
+        }
     }
 
     private void Paint_Player(Graphics g, Player player, int playerSize) {

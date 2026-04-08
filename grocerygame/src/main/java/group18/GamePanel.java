@@ -10,7 +10,6 @@ import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.security.Security;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.ArrayList;
@@ -40,6 +39,10 @@ public class GamePanel extends JPanel {
     private Image[] playerFrames;
 
     private Image[] securityFrames;
+
+    private Image bonusSprite;
+    private Image penaltySprite;
+    private Image mainSprite;
 
     private int score = 0;
     private boolean score_saved = false;
@@ -92,10 +95,13 @@ public class GamePanel extends JPanel {
     private void loadAssets() {
         loadPlayerFrames();
         loadSecurityFrames();
+        loadBonusSprite();
+        loadPenaltySprite();
+        loadMainSprite();
     }
 
     private void initializePainterAndState() {
-        Painter = new Game_Painting(map_builder, playerFrames, securityFrames);
+        Painter = new Game_Painting(map_builder, playerFrames, securityFrames, bonusSprite, penaltySprite, mainSprite);
         resetGameState();
     }
 
@@ -280,6 +286,29 @@ public class GamePanel extends JPanel {
     private void loadSecurityFrames() {
         securityFrames = SpriteLoader.loadSecurityFrames();
     }
+
+    /**
+     * this loads the bonus item sprite.
+     */
+    private void loadBonusSprite() {
+        bonusSprite = SpriteLoader.loadBonusSprite();
+    }
+
+    /**
+     * this loads the penalty item sprite.
+     */
+    private void loadPenaltySprite() {
+        penaltySprite = SpriteLoader.loadPenaltySprite();
+    }
+
+    /**
+     * this loads the main item sprite.
+     */
+    private void loadMainSprite() {
+        mainSprite = SpriteLoader.loadMainSprite();
+    }
+
+
 
     /**
      * this updates one game tick for movement, collisions, and win or lose checks.
