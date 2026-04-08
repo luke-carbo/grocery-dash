@@ -33,6 +33,9 @@ public class SpawnHelper {
         }
     }
 
+    /**
+     * Creates a list of occupied points as Items are spawned in.
+     */
     public static Set<Point> occupiedPoints(List<? extends Item> items) {
         Set<Point> points = new HashSet<>();
         for (Item item : items) {
