@@ -24,14 +24,14 @@ public class GamePanel extends JPanel {
 
     private Game_Painting Painter;
 
-    private static final int PANEL_WIDTH = 810;
-    private static final int PANEL_HEIGHT = 660;
+    private static final int PANEL_WIDTH = 990;
+    private static final int PANEL_HEIGHT = 780;
     private static final int GAME_LOOP_DELAY_MS = 16;
 
     private static final int PLAYER_SIZE = 30;
     private static final int PLAYER_SPEED = 3;
 
-    private static final int EXIT_X = 660;
+    private static final int EXIT_X = 840;
     private static final int EXIT_Y = 60;
     private static final int EXIT_SIZE = 10;
 

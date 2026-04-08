@@ -59,7 +59,7 @@ public class GameStateResetHelper {
         data.currentFrame = FRAME_DOWN;
         data.securityCurrentFrame = FRAME_DOWN;
 
-        data.securityGuard = new SecurityGuard(500, 300, 100);
+        data.securityGuard = new SecurityGuard(500, 350, 100);
         data.enemyPosX = data.securityGuard.getX();
         data.enemyPosY = data.securityGuard.getY();
         data.enemyTarget = null;
