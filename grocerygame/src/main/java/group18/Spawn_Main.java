@@ -3,6 +3,7 @@ package group18;
 import group18.mapCreation.Map_Builder;
 
 import java.awt.*;
+import java.util.Set;
 
 /**
  * Class contains constructors and spawn parameters for new {@link Item_Main}.
@@ -28,19 +29,18 @@ public class Spawn_Main {
      *
      * @return a newly spawned Item_Main object
      */
-    public Item_Main spawnMain() {
+    public Item_Main spawnMain(Set<Point> occupied) {
+        Item_Main item = new Item_Main(game);
 
-        Item_Main Item = new Item_Main(game);
+        Point point = SpawnHelper.randomMapTile(map, occupied);
 
-        Point point = SpawnHelper.randomMapTile(map);
+        item.setX(point.x);
+        item.setY(point.y);
 
-        Item.setX(point.x);
-        Item.setY(point.y);
-
-        Item.value = 50;
+        item.value = 50;
 
         // Conditional Sprite and Value terms based on Spawn Region
 
-        return Item;
+        return item;
     }
 }

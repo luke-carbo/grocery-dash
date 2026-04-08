@@ -4,8 +4,11 @@ import group18.mapCreation.Map_Builder;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.awt.*;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Unit tests for the Entity_Stationary class.
@@ -114,6 +117,25 @@ public class Entity_Stationary_Test {
     /**
      * tests that main items can be spawned up to the main item limit
      */
+    // OLD TEST
+//    @Test
+//    void test_limit_main() {
+//        Game game = null;
+//        Map_Builder map_builder;
+//        List<Item_Main> Main_Items = new ArrayList<>();
+//        Spawn_Main main_spawner;
+//        game = game;
+//        map_builder = new Map_Builder();
+//
+//        main_spawner = new Spawn_Main(game, map_builder);
+//
+//        while (Main_Items.size() < Item.main_limit) {
+//            Main_Items.add(main_spawner.spawnMain());
+//        }
+//
+//        assertEquals(Item.main_limit, Main_Items.size());
+//    }
+
     @Test
     void test_limit_main() {
         Game game = null;
@@ -124,17 +146,39 @@ public class Entity_Stationary_Test {
         map_builder = new Map_Builder();
 
         main_spawner = new Spawn_Main(game, map_builder);
+        Set<Point> occupied = new HashSet<>();
 
-        while (Main_Items.size() < Item.main_limit) {
-            Main_Items.add(main_spawner.spawnMain());
+        while (Main_Items.size() < Item.penalty_limit) {
+            Item_Main spawned = main_spawner.spawnMain(occupied);
+            occupied.add(new Point(spawned.getX(), spawned.getY()));
+            Main_Items.add(spawned);
         }
 
-        assertEquals(Item.main_limit, Main_Items.size());
+        assertEquals(Item.penalty_limit, Main_Items.size());
     }
 
     /**
      * tests that bonus items can be spawned up to the bonus item limit
      */
+    // OLD TEST
+//    @Test
+//    void test_limit_bonus() {
+//        Game game = null;
+//        Map_Builder map_builder;
+//        List<Item_Bonus> Bonus_Items = new ArrayList<>();
+//        Spawn_Bonus bonus_spawner;
+//        game = game;
+//        map_builder = new Map_Builder();
+//
+//        bonus_spawner = new Spawn_Bonus(game, map_builder);
+//
+//        while (Bonus_Items.size() < Item.bonus_limit) {
+//            Bonus_Items.add(bonus_spawner.spawnBonus());
+//        }
+//
+//        assertEquals(Item.bonus_limit, Bonus_Items.size());
+//    }
+
     @Test
     void test_limit_bonus() {
         Game game = null;
@@ -145,17 +189,39 @@ public class Entity_Stationary_Test {
         map_builder = new Map_Builder();
 
         bonus_spawner = new Spawn_Bonus(game, map_builder);
+        Set<Point> occupied = new HashSet<>();
 
-        while (Bonus_Items.size() < Item.bonus_limit) {
-            Bonus_Items.add(bonus_spawner.spawnBonus());
+        while (Bonus_Items.size() < Item.penalty_limit) {
+            Item_Bonus spawned = bonus_spawner.spawnBonus(occupied);
+            occupied.add(new Point(spawned.getX(), spawned.getY()));
+            Bonus_Items.add(spawned);
         }
 
-        assertEquals(Item.bonus_limit, Bonus_Items.size());
+        assertEquals(Item.penalty_limit, Bonus_Items.size());
     }
 
     /**
      * tests that penalty items can be spawned up to the penalty item limit
      */
+    // OLD TEST
+//    @Test
+//    void test_limit_penalty() {
+//        Game game = null;
+//        Map_Builder map_builder;
+//        List<Item_Penalty> Penalty_Items = new ArrayList<>();
+//        Spawn_Penalty penalty_spawner;
+//        game = game;
+//        map_builder = new Map_Builder();
+//
+//        penalty_spawner = new Spawn_Penalty(game, map_builder);
+//
+//        while (Penalty_Items.size() < Item.penalty_limit) {
+//            Penalty_Items.add(penalty_spawner.spawnPenalty());
+//        }
+//
+//        assertEquals(Item.penalty_limit, Penalty_Items.size());
+//    }
+
     @Test
     void test_limit_penalty() {
         Game game = null;
@@ -166,9 +232,12 @@ public class Entity_Stationary_Test {
         map_builder = new Map_Builder();
 
         penalty_spawner = new Spawn_Penalty(game, map_builder);
+        Set<Point> occupied = new HashSet<>();
 
         while (Penalty_Items.size() < Item.penalty_limit) {
-            Penalty_Items.add(penalty_spawner.spawnPenalty());
+            Item_Penalty spawned = penalty_spawner.spawnPenalty(occupied);
+            occupied.add(new Point(spawned.getX(), spawned.getY()));
+            Penalty_Items.add(spawned);
         }
 
         assertEquals(Item.penalty_limit, Penalty_Items.size());

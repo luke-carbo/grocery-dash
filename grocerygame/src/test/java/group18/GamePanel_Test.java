@@ -325,6 +325,17 @@ public class GamePanel_Test {
     }
 
     /**
+     * tests the painting of the pause screen
+     */
+    @Test
+    void test_paint_highscore_screen() {
+        Graphics g = Imaginary_GUI();
+        pressKey(KeyEvent.VK_H);
+        assertDoesNotThrow(() -> panel.paintComponent(g));
+        g.dispose();
+    }
+
+    /**
      * tests the painting of the items
      */
     @Test

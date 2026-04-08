@@ -6,7 +6,6 @@ import group18.mapCreation.Map_Builder;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Image;
-import java.security.PrivateKey;
 import java.util.List;
 
 public class Game_Painting {

@@ -3,6 +3,7 @@ package group18;
 import group18.mapCreation.Map_Builder;
 
 import java.awt.*;
+import java.util.Set;
 
 /**
  * Class contains constructors and spawn parameters for new {@link Item_Bonus}.
@@ -28,14 +29,11 @@ public class Spawn_Bonus {
      *
      * @return a newly spawned Item_Bonus object
      */
-    public Item_Bonus spawnBonus() {
+    public Item_Bonus spawnBonus(Set<Point> occupied) {
 
         Item_Bonus Item = new Item_Bonus(game);
 
-//        Item.position_x = randomX();
-//        Item.position_y = randomY();
-
-        Point point = SpawnHelper.randomMapTile(map);
+        Point point = SpawnHelper.randomMapTile(map, occupied);
 
         Item.setX(point.x);
         Item.setY(point.y);

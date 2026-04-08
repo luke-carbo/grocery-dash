@@ -4,10 +4,7 @@ import group18.enemy.SecurityGuard;
 import group18.mapCreation.Map_Builder;
 
 import javax.swing.*;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Graphics;
-import java.awt.Image;
+import java.awt.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.util.HashSet;
@@ -62,6 +59,11 @@ public class GamePanel extends JPanel {
 
     private SecurityGuard securityGuard;
     private SecurityGuard.ChaseState chaseState;
+
+    private long player_stunTime;
+    private boolean player_stunned = false;
+    private long guard_stunTime;
+    private boolean guard_stunned = false;
 
     private List<Item_Main> Main_Items = new ArrayList<>();
     private List<Item_Bonus> Bonus_Items = new ArrayList<>();
@@ -224,11 +226,21 @@ public class GamePanel extends JPanel {
         score = data.score;
         score_saved = false;
 
+        player_stunned = false;
+        guard_stunned = false;
+
         Main_Items.clear();
 
         // Starting Main Items
+//        for (int i = 0; i < Item.main_limit; i++) {
+//            Main_Items.add(main_spawner.spawnMain());
+//        }
+
+        Set<Point> occupied = new HashSet<>();
         for (int i = 0; i < Item.main_limit; i++) {
-            Main_Items.add(main_spawner.spawnMain());
+            Item_Main spawned = main_spawner.spawnMain(occupied);
+            occupied.add(new Point(spawned.getX(), spawned.getY()));
+            Main_Items.add(spawned);
         }
 
     }
@@ -329,29 +341,60 @@ public class GamePanel extends JPanel {
             return;
         }
 
-        player.update(keysHeld, PLAYER_SPEED, map_builder, PLAYER_SIZE, PLAYER_SIZE);
+        if (player_stunned && System.currentTimeMillis() >= player_stunTime) {
+            player_stunned = false;
+        }
+
+        if (!player_stunned) {
+            player.update(keysHeld, PLAYER_SPEED, map_builder, PLAYER_SIZE, PLAYER_SIZE);
+        }
 
         Bonus_Items.removeIf(item -> item.collected);
         Penalty_Items.removeIf(item -> item.collected);
 
+//        if (Bonus_Items.size() < Item.bonus_limit) {
+//            Bonus_Items.add(bonus_spawner.spawnBonus());
+//        }
+
         if (Bonus_Items.size() < Item.bonus_limit) {
-            Bonus_Items.add(bonus_spawner.spawnBonus());
+            Set<Point> occupied = SpawnHelper.occupiedPoints(Main_Items);
+            Bonus_Items.stream().filter(i -> !i.collected)
+                    .forEach(i -> occupied.add(new Point(i.getX(), i.getY())));
+            Penalty_Items.stream().filter(i -> !i.collected)
+                    .forEach(i -> occupied.add(new Point(i.getX(), i.getY())));
+            Bonus_Items.add(bonus_spawner.spawnBonus(occupied));
         }
+//
+//        if (Penalty_Items.size() < Item.penalty_limit) {
+//            Penalty_Items.add(penalty_spawner.spawnPenalty());
+//        }
 
         if (Penalty_Items.size() < Item.penalty_limit) {
-            Penalty_Items.add(penalty_spawner.spawnPenalty());
+            Set<Point> occupied = SpawnHelper.occupiedPoints(Main_Items);
+            Bonus_Items.stream().filter(i -> !i.collected)
+                    .forEach(i -> occupied.add(new Point(i.getX(), i.getY())));
+            Penalty_Items.stream().filter(i -> !i.collected)
+                    .forEach(i -> occupied.add(new Point(i.getX(), i.getY())));
+            Penalty_Items.add(penalty_spawner.spawnPenalty(occupied));
         }
 
+        if (guard_stunned && System.currentTimeMillis() >= guard_stunTime) {
+            guard_stunned = false;
+        }
+
+        if (!guard_stunned) {
         SecurityGuard.FrameSet frames = new SecurityGuard.FrameSet(
                 Player.FRAME_LEFT, Player.FRAME_DOWN, Player.FRAME_UP, Player.FRAME_RIGHT
         );
 
-        securityGuard.update(
-                map_builder,
-                player,
-                chaseState,
-                frames
-        );
+            securityGuard.update(
+                    map_builder,
+                    player,
+                    chaseState,
+                    frames
+            );
+        }
+
         checkEnemyCollision();
         checkItemCollection();
         checkWinCondition();
@@ -385,8 +428,13 @@ public class GamePanel extends JPanel {
      * it updates score and item counters when items are picked up.
      */
     private void checkItemCollection() {
+        int old_value = score;
         for (Item_Main item : Main_Items) {
             score += item.collectIfTouched(player.getX(), player.getY(), PLAYER_SIZE, PLAYER_SIZE);
+            if (old_value < score) {
+                guard_stunned = true;
+                guard_stunTime = System.currentTimeMillis() + 1000;
+            }
         }
 
         for (Item_Bonus item : Bonus_Items) {
@@ -395,6 +443,10 @@ public class GamePanel extends JPanel {
 
         for (Item_Penalty item : Penalty_Items) {
             score += item.collectIfTouched(player.getX(), player.getY(), PLAYER_SIZE, PLAYER_SIZE);
+            if (old_value > score) {
+                player_stunned = true;
+                player_stunTime = System.currentTimeMillis() + 500;
+            }
         }
     }
 

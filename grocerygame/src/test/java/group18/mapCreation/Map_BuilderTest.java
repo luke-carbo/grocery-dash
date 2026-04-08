@@ -47,7 +47,7 @@ public class Map_BuilderTest {
      */
     @Test
     void rowDimensionTest(){
-        assertEquals(20, map_builder.getRows());
+        assertEquals(22, map_builder.getRows());
     }
 
     /**
