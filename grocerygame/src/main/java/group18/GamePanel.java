@@ -71,21 +71,40 @@ public class GamePanel extends JPanel {
      * it also initializes the map, player, enemy, and timers.
      */
     public GamePanel() {
-        this.game = game;
         this.map_builder = new Map_Builder();
+        initializeDependencies();
+        loadAssets();
+        initializePainterAndState();
+        configurePanel();
+        setupInputHandling();
+        startGameLoop();
+    }
+
+    private void initializeDependencies() {
+        this.game = game;
         this.main_spawner = new Spawn_Main(game, map_builder);
         this.bonus_spawner = new Spawn_Bonus(game, map_builder);
         this.penalty_spawner = new Spawn_Penalty(game, map_builder);
         this.startTime = System.currentTimeMillis();
+    }
+
+    private void loadAssets() {
         loadPlayerFrames();
         loadSecurityFrames();
+    }
+
+    private void initializePainterAndState() {
         Painter = new Game_Painting(map_builder, playerFrames, securityFrames);
         resetGameState();
+    }
 
+    private void configurePanel() {
         setPreferredSize(new Dimension(PANEL_WIDTH, PANEL_HEIGHT));
         setBackground(Color.BLACK);
         setFocusable(true);
+    }
 
+    private void setupInputHandling() {
         addKeyListener(new KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent e) {
@@ -129,7 +148,9 @@ public class GamePanel extends JPanel {
                 keysHeld.remove(e.getKeyCode());
             }
         });
+    }
 
+    private void startGameLoop() {
         Timer timer = new Timer(16, e -> {
             update();
             repaint();
