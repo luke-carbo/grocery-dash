@@ -208,26 +208,107 @@ public class Game_Painting {
     }
 
     private void Paint_Overlay(Graphics g, boolean gameOver, boolean gameWon, boolean gamePaused) {
-        g.setColor(Color.WHITE);
+        Graphics2D g2d = (Graphics2D) g;
+
         if (gameOver) {
-            g.drawString("GAME OVER",          380, 300);
-            g.drawString("Press R to Restart", 360, 330);
+            g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.8f));
+            g2d.setColor(Color.BLACK);
+            g2d.fillRect(0, 0, 990, 780);
+            g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f));
+
+            int panelWidth = 340;
+            int panelHeight = 180;
+            int x = (990 - panelWidth) / 2;
+            int y = (780 - panelHeight) / 2;
+
+            g2d.setColor(Color.BLUE);
+            g2d.fillRect(x, y, panelWidth, panelHeight);
+            g2d.setColor(Color.WHITE);
+            g2d.drawRect(x, y, panelWidth, panelHeight);
+
+            FontMetrics fm;
+
+            g2d.setFont(new Font("SansSerif", Font.BOLD, 28));
+            fm = g2d.getFontMetrics();
+            String title = "GAME OVER";
+            g2d.drawString(title, x + (panelWidth - fm.stringWidth(title)) / 2, y + 65);
+
+            g2d.setFont(new Font("SansSerif", Font.PLAIN, 16));
+            fm = g2d.getFontMetrics();
+            String restart = "Press R to Restart";
+            g2d.drawString(restart, x + (panelWidth - fm.stringWidth(restart)) / 2, y + 120);
         }
+
         if (gameWon) {
-            g.drawString("YOU WIN",            390, 300);
-            g.drawString("Press R to Restart", 360, 330);
+            g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.8f));
+            g2d.setColor(Color.BLACK);
+            g2d.fillRect(0, 0, 990, 780);
+            g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f));
+
+            int panelWidth = 340;
+            int panelHeight = 180;
+            int x = (990 - panelWidth) / 2;
+            int y = (780 - panelHeight) / 2;
+
+            g2d.setColor(Color.BLUE);
+            g2d.fillRect(x, y, panelWidth, panelHeight);
+            g2d.setColor(Color.WHITE);
+            g2d.drawRect(x, y, panelWidth, panelHeight);
+
+            FontMetrics fm;
+
+            g2d.setFont(new Font("SansSerif", Font.BOLD, 28));
+            fm = g2d.getFontMetrics();
+            String title = "YOU WIN!";
+            g2d.drawString(title, x + (panelWidth - fm.stringWidth(title)) / 2, y + 65);
+
+            g2d.setFont(new Font("SansSerif", Font.PLAIN, 16));
+            fm = g2d.getFontMetrics();
+            String restart = "Press R to Restart";
+            g2d.drawString(restart, x + (panelWidth - fm.stringWidth(restart)) / 2, y + 120);
         }
+
         if (gamePaused) {
-            g.drawString("PAUSED",                 390, 280);
-            g.drawString("Press ESC to Resume",    350, 310);
-            g.drawString("Press R to Restart",     355, 340);
+            g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.8f));
+            g2d.setColor(Color.BLACK);
+            g2d.fillRect(0, 0, 990, 780);
+            g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f));
+
+            int panelWidth = 340;
+            int panelHeight = 210;
+            int x = (990 - panelWidth) / 2;
+            int y = (780 - panelHeight) / 2;
+
+            g2d.setColor(Color.BLUE);
+            g2d.fillRect(x, y, panelWidth, panelHeight);
+            g2d.setColor(Color.WHITE);
+            g2d.drawRect(x, y, panelWidth, panelHeight);
+
+            FontMetrics fm;
+
+            g2d.setFont(new Font("SansSerif", Font.BOLD, 28));
+            fm = g2d.getFontMetrics();
+            String title = "PAUSED";
+            g2d.drawString(title, x + (panelWidth - fm.stringWidth(title)) / 2, y + 60);
+
+            g2d.setFont(new Font("SansSerif", Font.PLAIN, 16));
+            fm = g2d.getFontMetrics();
+
+            String resume  = "ESC - Resume";
+            String restart = "R - Restart";
+            g2d.drawString(resume,  x + (panelWidth - fm.stringWidth(resume))  / 2, y + 120);
+            g2d.drawString(restart, x + (panelWidth - fm.stringWidth(restart)) / 2, y + 150);
         }
     }
 
     private void Paint_Notification(Graphics g, List<Item_Main> mainItems) {
         if (!Item_Main.areAllCollected(mainItems)) {
             g.setColor(Color.WHITE);
-            g.drawString("Collect all items, then go to EXIT", 290, 645);
+
+            Font font = new Font("DialogInput", Font.BOLD, 16);
+            g.setFont(font);
+
+            g.drawString("Collect all items, then go to EXIT", 330, 755);
         }
     }
 
@@ -252,19 +333,19 @@ public class Game_Painting {
             g.fillRoundRect(30,100,930,600,5,5);
 
             g.setColor(Color.BLACK);
-            Font font = new Font("Dialog", Font.BOLD, 48); // 48pt font
+            Font font = new Font("Dialog", Font.BOLD, 48);
             g.setFont(font);
             g.drawString("HIGHSCORES",340, 65);
 
-            Font font2 = new Font("DialogInput", Font.BOLD, 36); // 48pt font
+            Font font2 = new Font("DialogInput", Font.BOLD, 36);
             g.setFont(font2);
 
             for (int i = 0; i < Highscores.size(); i++) {
-                g.drawString(String.valueOf(Highscores_Label.get(i)),410, 210 + (60*i));
-                g.drawString(String.valueOf(Highscores.get(i)),510, 210 + (60*i));
+                g.drawString(String.valueOf(Highscores_Label.get(i)),410, 210 + (80*i));
+                g.drawString(String.valueOf(Highscores.get(i)),510, 210 + (80*i));
             }
 
-            Font font3 = new Font("DialogInput", Font.BOLD, 24); // 48pt font
+            Font font3 = new Font("DialogInput", Font.BOLD, 24);
             g.setFont(font3);
 
             g.drawString("Press R to Return to the Main Menu",50, 750);
