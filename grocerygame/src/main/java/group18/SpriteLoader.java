@@ -125,4 +125,12 @@ public class SpriteLoader {
             return null;
         }
     }
+    public static Image loadStartMenuImage() {
+        try (InputStream stream = SpriteLoader.class.getClassLoader().getResourceAsStream("startMenu.png")) {
+            return ImageIO.read(stream);
+        } catch (Exception e) {
+            System.err.println("Failed to load start menu image: " + e.getMessage());
+            return null;
+        }
+    }
 }

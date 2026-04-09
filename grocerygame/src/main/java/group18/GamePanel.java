@@ -45,6 +45,7 @@ public class GamePanel extends JPanel {
     private boolean score_saved = false;
     private long startTime;
     private long endTime = 0;
+    private long pauseTime = 0;
     private List<Integer> Highscores;
     private boolean showHighscores = false;
 
@@ -71,6 +72,8 @@ public class GamePanel extends JPanel {
     private Spawn_Main main_spawner;
     private Spawn_Bonus bonus_spawner;
     private Spawn_Penalty penalty_spawner;
+
+    private Image startMenuImage;
 
     /**
      * this panel runs the main gameplay loop and handles input, updates, and drawing.
@@ -100,10 +103,11 @@ public class GamePanel extends JPanel {
         loadBonusSprite();
         loadPenaltySprite();
         loadMainSprite();
+        loadStartMenuImage();
     }
 
     private void initializePainterAndState() {
-        Painter = new Game_Painting(map_builder, playerFrames, securityFrames, bonusSprite, penaltySprite, mainSprite);
+        Painter = new Game_Painting(map_builder, playerFrames, securityFrames, bonusSprite, penaltySprite, mainSprite, startMenuImage);
         resetGameState();
     }
 
@@ -170,6 +174,8 @@ public class GamePanel extends JPanel {
 
         if (gameStarted && !gameOver && !gameWon && key == KeyEvent.VK_ESCAPE) {
             gamePaused = !gamePaused;
+
+
             repaint();
             return true;
         }
@@ -198,6 +204,7 @@ public class GamePanel extends JPanel {
 
         startTime = data.startTime;
         endTime = data.endTime;
+        pauseTime = 0;
 
         gameOver = data.gameOver;
         gameWon = data.gameWon;
@@ -489,5 +496,8 @@ public class GamePanel extends JPanel {
                 Main_Items, Bonus_Items, Penalty_Items,
                 Highscores, showHighscores
         );
+    }
+    private void loadStartMenuImage() {
+        startMenuImage = SpriteLoader.loadStartMenuImage();
     }
 }

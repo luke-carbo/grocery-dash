@@ -16,14 +16,16 @@ public class Game_Painting {
     private final Image bonusSprite;
     private final Image penaltySprite;
     private final Image mainSprite;
+    private final Image startMenuImage;
 
-    public Game_Painting(Map_Builder mapBuilder, Image[] playerFrames, Image[] securityFrames, Image bonusSprite, Image penaltySprite, Image mainSprite) {
+    public Game_Painting(Map_Builder mapBuilder, Image[] playerFrames, Image[] securityFrames, Image bonusSprite, Image penaltySprite, Image mainSprite, Image startMenuImage) {
         this.mapBuilder = mapBuilder;
         this.playerFrames = playerFrames;
         this.securityFrames = securityFrames;
         this.bonusSprite = bonusSprite;
         this.mainSprite = mainSprite;
         this.penaltySprite = penaltySprite;
+        this.startMenuImage = startMenuImage;
     }
 
     public void Paint(
@@ -48,8 +50,8 @@ public class Game_Painting {
         mapBuilder.draw(g);
 
         if (!gameStarted) {
-            Paint_Start(g);
             Paint_HUD(g);
+            Paint_Start(g);
             Paint_Scores(g, showHighscores, Highscores);
             return;
         }
@@ -67,45 +69,51 @@ public class Game_Painting {
     }
 
     private void Paint_Start(Graphics g) {
-        int panelWidth = 420;
-        int panelHeight = 240;
+        int panelWidth = g.getClipBounds().width;
+        int panelHeight = g.getClipBounds().height;
 
-        int x = (g.getClipBounds().width - panelWidth) / 2;
-        int y = (g.getClipBounds().height - panelHeight) / 2;
-
-        // Background box (no transparency, solid color)
-        g.setColor(Color.BLUE);
-        g.fillRect(x, y, panelWidth, panelHeight);
-
-        // Border
-        g.setColor(Color.WHITE);
-        g.drawRect(x, y, panelWidth, panelHeight);
-
-        // Title
-        g.setColor(Color.WHITE);
-        g.setFont(new Font("Arial Black", Font.BOLD, 26));
-        g.drawString("GROCERY GAME", x + 90, y + 45);
-
-        // Draw player sprite
-        if (playerFrames != null && playerFrames.length > 1) {
-            g.drawImage(playerFrames[Player.FRAME_DOWN], x + 50, y + 70, 50, 50, null);
+        if (startMenuImage != null) {
+            g.drawImage(startMenuImage, 0, 0, panelWidth, panelHeight, null);
+        } else {
+            g.setColor(Color.BLACK);
+            g.fillRect(0, 0, panelWidth, panelHeight);
         }
 
-        // Draw security guard sprite
-        if (securityFrames != null && securityFrames.length > 1) {
-            g.drawImage(securityFrames[Player.FRAME_DOWN], x + 320, y + 70, 50, 50, null);
-        }
-        // Start text
-        g.setColor(Color.WHITE);
-        g.setFont(new Font("Verdana", Font.BOLD, 18));
-        g.drawString("Press ENTER to Start", x + 105, y + 85);
+        // Small controls box in top right
+        int boxWidth = 220;
+        int boxHeight = 140;
+        int boxX = panelWidth - boxWidth - 30;
+        int boxY = 90;
 
-        // Controls
-        g.setFont(new Font("Trebuchet MS", Font.PLAIN, 15));
-        g.drawString("WASD  -  Move", x + 150, y + 120);
-        g.drawString("ESC   -  Pause", x + 150, y + 145);
-        g.drawString("R     -  Restart", x + 150, y + 170);
-        g.drawString("H     -  Highscores", x + 150, y + 195);
+        g.setColor(new Color(0, 0, 0, 180));
+        g.fillRoundRect(boxX, boxY, boxWidth, boxHeight, 20, 20);
+
+        g.setColor(Color.WHITE);
+        g.drawRoundRect(boxX, boxY, boxWidth, boxHeight, 20, 20);
+
+        g.setFont(new Font("Verdana", Font.BOLD, 16));
+        g.drawString("CONTROLS", boxX + 65, boxY + 25);
+
+        g.setFont(new Font("Tahoma", Font.PLAIN, 15));
+        g.drawString("WASD  -   Move", boxX + 30, boxY + 55);
+        g.drawString("ESC     -   Pause", boxX + 30, boxY + 80);
+        g.drawString("R        -   Restart", boxX + 30, boxY + 105);
+        g.drawString("H        -   Highscores", boxX + 30, boxY + 130);
+
+        // Bouncing press enter to play
+        long time = System.currentTimeMillis();
+        int bounceOffset = (int)(Math.sin(time / 180.0) * 8);
+
+        g.setFont(new Font("Impact", Font.PLAIN, 30));
+        g.setColor(Color.WHITE);
+
+        String startText = "PRESS ENTER TO PLAY";
+        int textWidth = g.getFontMetrics().stringWidth(startText);
+        int textX = (panelWidth - textWidth) / 2;
+        int textY = panelHeight - 70 + bounceOffset;
+
+        g.drawString(startText, textX, textY);
+
     }
 
     private void Paint_HUD(Graphics g) {
@@ -118,7 +126,7 @@ public class Game_Painting {
         Paint_Stats(g, 850, 10, "TIME", "");
 
         g.setColor(Color.BLUE);
-        g.drawString("CMPT 276 GROCERY GAME", 400, 30);
+        g.drawString("GROCERY DASH", 400, 30);
     }
 
     private void Paint_Stats(Graphics g, int x, int y, String label, String value) {
