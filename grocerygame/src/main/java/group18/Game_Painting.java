@@ -83,20 +83,29 @@ public class Game_Painting {
 
         // Title
         g.setColor(Color.WHITE);
-        g.setFont(new Font("SansSerif", Font.BOLD, 26));
-        g.drawString("GROCERY GAME", x + 95, y + 45);
+        g.setFont(new Font("Arial Black", Font.BOLD, 26));
+        g.drawString("GROCERY GAME", x + 90, y + 45);
 
+        // Draw player sprite
+        if (playerFrames != null && playerFrames.length > 1) {
+            g.drawImage(playerFrames[Player.FRAME_DOWN], x + 50, y + 70, 50, 50, null);
+        }
+
+        // Draw security guard sprite
+        if (securityFrames != null && securityFrames.length > 1) {
+            g.drawImage(securityFrames[Player.FRAME_DOWN], x + 320, y + 70, 50, 50, null);
+        }
         // Start text
         g.setColor(Color.WHITE);
-        g.setFont(new Font("SansSerif", Font.BOLD, 18));
+        g.setFont(new Font("Verdana", Font.BOLD, 18));
         g.drawString("Press ENTER to Start", x + 105, y + 85);
 
         // Controls
-        g.setFont(new Font("SansSerif", Font.PLAIN, 15));
-        g.drawString("WASD  -  Move", x + 130, y + 120);
-        g.drawString("ESC   -  Pause", x + 130, y + 145);
-        g.drawString("R     -  Restart", x + 130, y + 170);
-        g.drawString("H     -  Highscores", x + 130, y + 195);
+        g.setFont(new Font("Trebuchet MS", Font.PLAIN, 15));
+        g.drawString("WASD  -  Move", x + 150, y + 120);
+        g.drawString("ESC   -  Pause", x + 150, y + 145);
+        g.drawString("R     -  Restart", x + 150, y + 170);
+        g.drawString("H     -  Highscores", x + 150, y + 195);
     }
 
     private void Paint_HUD(Graphics g) {
@@ -106,10 +115,10 @@ public class Game_Painting {
         g.drawLine(0, 60, g.getClipBounds().width, 60);
 
         Paint_Stats(g, 10, 10, "SCORE", "");
-        Paint_Stats(g, 680, 10, "TIME", "");
+        Paint_Stats(g, 850, 10, "TIME", "");
 
         g.setColor(Color.BLUE);
-        g.drawString("CMPT 276 GROCERY GAME", 320, 30);
+        g.drawString("CMPT 276 GROCERY GAME", 400, 30);
     }
 
     private void Paint_Stats(Graphics g, int x, int y, String label, String value) {
@@ -124,7 +133,7 @@ public class Game_Painting {
 
     private void Start_Stats(Graphics g, int score, long elapsedSeconds) {
         Paint_Stats(g, 10, 10, "SCORE", String.valueOf(score));
-        Paint_Stats(g, 680, 10, "TIME", elapsedSeconds + "s");
+        Paint_Stats(g, 850, 10, "TIME", elapsedSeconds + "s");
     }
 
     private void Paint_Enemy(Graphics g, SecurityGuard securityGuard, SecurityGuard.ChaseState chaseState) {
