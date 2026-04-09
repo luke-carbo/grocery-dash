@@ -320,8 +320,6 @@ public class GamePanel extends JPanel {
         mainSprite = SpriteLoader.loadMainSprite();
     }
 
-
-
     /**
      * this updates one game tick for movement, collisions, and win or lose checks.
      * it returns early when the game is not active.
