@@ -117,16 +117,26 @@ public class Game_Painting {
     }
 
     private void Paint_HUD(Graphics g) {
-        g.setColor(Color.WHITE);
-        g.fillRect(0, 0, g.getClipBounds().width, 60);
+        int width = g.getClipBounds().width;
+
+        g.setColor(new Color(25, 25, 25));
+        g.fillRect(0, 0, width, 60);
+
+        g.setColor(new Color(80, 80, 80));
+        g.drawLine(0, 60, width, 60);
+
+        drawStatBox(g, 20, 10, "SCORE", "");
+        drawStatBox(g, width - 160, 10, "TIME", "");
+
+        String title = "GROCERY DASH";
+        g.setFont(new Font("Impact", Font.PLAIN, 28));
+        int textWidth = g.getFontMetrics().stringWidth(title);
+
         g.setColor(Color.BLACK);
-        g.drawLine(0, 60, g.getClipBounds().width, 60);
+        g.drawString(title, (width - textWidth) / 2 + 2, 37);
 
-        Paint_Stats(g, 10, 10, "SCORE", "");
-        Paint_Stats(g, 850, 10, "TIME", "");
-
-        g.setColor(Color.BLUE);
-        g.drawString("GROCERY DASH", 400, 30);
+        g.setColor(new Color(0, 200, 255));
+        g.drawString(title, (width - textWidth) / 2, 35);
     }
 
     private void Paint_Stats(Graphics g, int x, int y, String label, String value) {
@@ -140,8 +150,9 @@ public class Game_Painting {
     }
 
     private void Start_Stats(Graphics g, int score, long elapsedSeconds) {
-        Paint_Stats(g, 10, 10, "SCORE", String.valueOf(score));
-        Paint_Stats(g, 850, 10, "TIME", elapsedSeconds + "s");
+        int width = g.getClipBounds().width;
+        drawStatBox(g, 20, 10, "SCORE", String.valueOf(score));
+        drawStatBox(g, width - 160, 10, "TIME", elapsedSeconds + "s");
     }
 
     private void Paint_Enemy(Graphics g, SecurityGuard securityGuard, SecurityGuard.ChaseState chaseState) {
@@ -350,5 +361,23 @@ public class Game_Painting {
 
             g.drawString("Press R to Return to the Main Menu",50, 750);
         }
+    }
+    private void drawStatBox(Graphics g, int x, int y, String label, String value) {
+        int w = 140;
+        int h = 40;
+
+        g.setColor(new Color(50, 50, 50));
+        g.fillRoundRect(x, y, w, h, 15, 15);
+
+        g.setColor(new Color(120, 120, 120));
+        g.drawRoundRect(x, y, w, h, 15, 15);
+
+        g.setFont(new Font("Verdana", Font.BOLD, 12));
+        g.setColor(Color.WHITE);
+        g.drawString(label, x + 12, y + 16);
+
+        g.setFont(new Font("Verdana", Font.BOLD, 16));
+        g.setColor(Color.RED);
+        g.drawString(value, x + 12, y + 33);
     }
 }
