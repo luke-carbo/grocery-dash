@@ -51,7 +51,7 @@ mvn compile
 **Run (recommended):**
 
 ```bash
-mvn exec:java -Dexec.mainClass="group18.Main"
+mvn exec:java "-Dexec.mainClass=group18.Main"
 ```
 
 **Or build and run a JAR:**
