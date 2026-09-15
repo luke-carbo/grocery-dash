@@ -15,8 +15,10 @@ You've got a grocery list, an empty stomach, and zero patience for checkout line
 ## Gameplay
 
 - Navigate a 2D grocery store map
-- Collect all items scattered across the store
+- Collect all bananas scattered across the store
 - Avoid the patrolling security guard
+- Avoid the rotten meat
+- Collect money for extra score
 - Reach the exit to win the level
 - Get caught — and it's game over
 
