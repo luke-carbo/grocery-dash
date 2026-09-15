@@ -40,7 +40,7 @@ cd grocerygame
 **Compile:**
 
 ```bash
-mvn compile
+mvn clean compile
 ```
 
 **Run (recommended):**
