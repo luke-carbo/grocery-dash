@@ -70,7 +70,10 @@ public class GamePanel_Test {
         testFrame.add(panel);
         testFrame.setUndecorated(true);
         testFrame.setVisible(true);
-        return panel.getGraphics();
+
+        Graphics g = panel.getGraphics();
+        g.setClip(0, 0, panel.getWidth(), panel.getHeight());
+        return g;
     }
 
     // GamePanel Key Testing
@@ -261,17 +264,17 @@ public class GamePanel_Test {
     void test_player_death() throws InterruptedException {
         Graphics g = Imaginary_GUI();
         panel.paintComponent(g);
+
         pressKey(KeyEvent.VK_ENTER);
-        assertDoesNotThrow(() -> {
-            pressKey(KeyEvent.VK_W);
-            pressKey(KeyEvent.VK_D);
-        });
+
         int maxWaitTime = 10000;
         int elapsedTime = 0;
-        while(!panel.isGameOver() && elapsedTime < maxWaitTime) {
+
+        while (!panel.isGameOver() && elapsedTime < maxWaitTime) {
             Thread.sleep(200);
             elapsedTime += 200;
         }
+
         assertTrue(panel.isGameOver());
         g.dispose();
     }

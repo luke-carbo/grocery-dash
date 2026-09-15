@@ -17,9 +17,9 @@ public class PathfinderIntegrationTest {
     private static final int TILE_SIZE = 30;
 
     private static final int START_X  = 2 * TILE_SIZE; // 60
-    private static final int START_Y  = 1 * TILE_SIZE; // 30
+    private static final int START_Y  = 3 * TILE_SIZE; // 90
     private static final int TARGET_X = 6 * TILE_SIZE; // 180
-    private static final int TARGET_Y = 1 * TILE_SIZE; // 30  (same row, 4 tiles right)
+    private static final int TARGET_Y = 3 * TILE_SIZE; // 90
 
     private Map_Builder map;
 

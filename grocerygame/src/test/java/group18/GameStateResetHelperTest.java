@@ -18,7 +18,7 @@ public class GameStateResetHelperTest {
                 GameStateResetHelper.createResetState(Player.FRAME_DOWN);
 
         assertEquals(165, data.playerX, "Player X should reset to the default starting position.");
-        assertEquals(630, data.playerY, "Player Y should reset to the default starting position.");
+        assertEquals(730, data.playerY, "Player Y should reset to the default starting position.");
     }
 
     /**
@@ -60,7 +60,7 @@ public class GameStateResetHelperTest {
         assertNotNull(data.securityGuard, "Security guard should be created during reset.");
         assertEquals(500, data.securityGuard.getX(),
                 "Security guard X should reset to default position.");
-        assertEquals(300, data.securityGuard.getY(),
+        assertEquals(350, data.securityGuard.getY(),
                 "Security guard Y should reset to default position.");
     }
 

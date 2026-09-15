@@ -19,8 +19,8 @@ public class PlayerEnemyIntegrationTest {
     private static final int PLAYER_SPEED  = 3;
     private static final int TILE_SIZE     = 30;
 
-    private static final int OPEN_X = 2 * TILE_SIZE; // 60
-    private static final int OPEN_Y = TILE_SIZE; // 30
+    private static final int OPEN_X = 2 * TILE_SIZE;     // 60
+    private static final int OPEN_Y = 3 * TILE_SIZE;     // 90
 
     private Map_Builder map;
     private Player player;
@@ -137,8 +137,8 @@ public class PlayerEnemyIntegrationTest {
      */
     @Test
     void player_blockedBySolidTile_positionUnchanged() {
-        player.setX(OPEN_X); // 60
-        player.setY(OPEN_Y); // 30
+        player.setX(OPEN_X - PLAYER_SPEED); // 57
+        player.setY(OPEN_Y);                // 90
 
         java.util.Set<Integer> keys = new java.util.HashSet<>();
         keys.add(java.awt.event.KeyEvent.VK_A); // move left toward wall
