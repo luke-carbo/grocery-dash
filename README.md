@@ -49,13 +49,6 @@ mvn compile
 mvn exec:java "-Dexec.mainClass=group18.Main"
 ```
 
-**Or build and run a JAR:**
-
-```bash
-mvn package
-java -jar target/grocerygame-1.0-SNAPSHOT.jar
-```
-
 ---
 
 ## Testing
